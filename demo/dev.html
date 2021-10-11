@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <ul>
+        <li>Head Item</li>
+        <li be-repeated='{
+            "list": ["hello", "world"],
+            "transform": {"li": "."}
+        }'>...</li>
+        <li>Footer Item</li>
+    </ul>
+
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "xtal-decor/": "../node_modules/xtal-decor/",
+                "on-to-me/": "../node_modules/on-to-me/",
+                "be-observant/": "../node_modules/be-observant/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-repeated.js';
+    </script>
+</body>
+</html>
