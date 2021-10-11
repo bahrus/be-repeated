@@ -16,14 +16,24 @@ const ce = new CE({
                 if (list === undefined || transform === undefined)
                     return;
                 let tail = self;
+                let cnt = 0;
+                let idx = 0;
                 for (const item of list) {
+                    const templ = document.createElement('template');
+                    templ.dataset.idx = idx.toString();
+                    idx++;
+                    tail.insertAdjacentElement('afterend', templ);
+                    cnt++;
+                    tail = templ;
                     const clone = self.content.cloneNode(true);
                     const children = Array.from(clone.children);
                     for (const child of children) {
                         tail.insertAdjacentElement('afterend', child);
+                        cnt++;
                         tail = child;
                     }
                 }
+                self.dataset.cnt = cnt.toString();
             }
         ],
         on: {},
