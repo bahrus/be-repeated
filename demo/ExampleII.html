@@ -17,11 +17,19 @@
         <li>Footer Item</li>
     </ul>
 
-    <button onclick="updateList()">Update List</button>
+    <button onclick="updateListSameSize()">Update List Same Size</button>
     <script>
-        function updateList(){
+        function updateListSameSize(){
             objML.value = {
                 prop1: ['good', 'morning']
+            };
+        }
+    </script>
+    <button onclick="updateListLargeSize()">Update List To Larger Size</button>
+    <script>
+        function updateListLargeSize(){
+            objML.value = {
+                prop1: ['a', 'b', 'c', 'd']
             };
         }
     </script>

@@ -73,9 +73,17 @@ const ce = new CE<XtalDecorCore<Element>>({
                         idx = rs.idx;
                     }else{
                         const grp = findGroup(tail, `[data-idx="${idx}"]`);
-                        processTargets(ctx, grp);
-                        tail = grp.pop();
-                        idx++;
+                        if(grp.length > 0){
+                            processTargets(ctx, grp);
+                            tail = grp.pop();
+                            idx++;
+                        }else{
+                            const rs = cloneAndTransform(idx, tail, cnt, ctx, self);
+                            tail = rs.tail;
+                            cnt = rs.cnt;
+                            idx = rs.idx;         
+                        }
+
                     }
                     
 
