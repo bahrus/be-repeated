@@ -71,6 +71,8 @@ const ce = new CE({
                     else {
                         const grp = findGroup(tail, `[data-idx="${idx}"]`);
                         processTargets(ctx, grp);
+                        tail = grp.pop();
+                        idx++;
                     }
                 }
                 self.dataset.cnt = cnt.toString();
