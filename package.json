@@ -3,6 +3,16 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "be-observant": "0.0.15",
+    "xtal-decor": "0.0.52",
+    "trans-render": "0.0.419"
+  },
+  "devDependencies": {
+    "xtal-test": "0.0.51",
+    "@skypack/package-check": "0.2.2",
+    "@custom-elements-manifest/analyzer": "0.5.5"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
