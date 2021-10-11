@@ -3,7 +3,7 @@ import { CE } from 'trans-render/lib/CE.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
-import { transform as xf } from 'trans-render/lib/transform.js';
+import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
 const ce = new CE({
     config: {
         tagName: 'be-repeated',
@@ -33,7 +33,9 @@ const ce = new CE({
                 if (listVal === undefined || transform === undefined)
                     return;
                 let ctx = self.ctx;
+                let firstTime = false;
                 if (ctx === undefined) {
+                    firstTime = true;
                     ctx = {
                         match: transform,
                         postMatch: [
@@ -60,19 +62,15 @@ const ce = new CE({
                 let idx = 0;
                 for (const item of listVal) {
                     ctx.host = item;
-                    const templ = document.createElement('template');
-                    templ.dataset.idx = idx.toString();
-                    idx++;
-                    tail.insertAdjacentElement('afterend', templ);
-                    cnt++;
-                    tail = templ;
-                    const clone = self.content.cloneNode(true);
-                    xf(clone, ctx);
-                    const children = Array.from(clone.children);
-                    for (const child of children) {
-                        tail.insertAdjacentElement('afterend', child);
-                        cnt++;
-                        tail = child;
+                    if (firstTime) {
+                        const rs = cloneAndTransform(idx, tail, cnt, ctx, self);
+                        tail = rs.tail;
+                        cnt = rs.cnt;
+                        idx = rs.idx;
+                    }
+                    else {
+                        const grp = findGroup(tail, `[data-idx="${idx}"]`);
+                        processTargets(ctx, grp);
                     }
                 }
                 self.dataset.cnt = cnt.toString();
@@ -97,4 +95,46 @@ const ce = new CE({
     },
     superclass: XtalDecor
 });
+function findGroup(tail, sel) {
+    const returnArr = [];
+    let ns = tail.nextElementSibling;
+    while (ns !== null) {
+        if (ns.matches(sel)) {
+            const n = Number(ns.dataset.cnt);
+            for (let i = 0; i < n; i++) {
+                if (ns !== null) {
+                    ns = ns.nextElementSibling;
+                    if (ns !== null)
+                        returnArr.push(ns);
+                }
+                else {
+                    return returnArr;
+                }
+            }
+            return returnArr;
+        }
+        ns = ns.nextElementSibling;
+    }
+    return returnArr;
+}
+function cloneAndTransform(idx, tail, cnt, ctx, self) {
+    const templ = document.createElement('template');
+    templ.dataset.idx = idx.toString();
+    idx++;
+    tail.insertAdjacentElement('afterend', templ);
+    cnt++;
+    tail = templ;
+    let templCount = 0;
+    const clone = self.content.cloneNode(true);
+    xf(clone, ctx);
+    const children = Array.from(clone.children);
+    for (const child of children) {
+        tail.insertAdjacentElement('afterend', child);
+        cnt++;
+        templCount++;
+        tail = child;
+    }
+    templ.dataset.cnt = templCount.toString();
+    return { idx, tail, cnt };
+}
 document.head.appendChild(document.createElement('be-repeated'));
