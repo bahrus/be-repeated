@@ -2,7 +2,7 @@
 
 Attribute based version of ib-id
 
-## Syntax Example I -- Basic, template free. [TODO]
+## Syntax Example I -- Basic, template free. 
 
 ```html
 <ul>
@@ -16,4 +16,6 @@ Attribute based version of ib-id
 ```
 
 Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant).
+
+## Example II
 

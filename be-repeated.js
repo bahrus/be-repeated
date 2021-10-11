@@ -2,6 +2,7 @@ import { XtalDecor } from 'xtal-decor/xtal-decor.js';
 import { CE } from 'trans-render/lib/CE.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
+import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
 import { transform as xf } from 'trans-render/lib/transform.js';
 const ce = new CE({
     config: {
@@ -10,13 +11,26 @@ const ce = new CE({
             upgrade: '*',
             ifWantsToBe: 'repeated',
             forceVisible: true,
-            virtualProps: ['eventHandlers', 'list', 'transform', 'ctx']
+            virtualProps: ['eventHandlers', 'list', 'listVal', 'transform', 'ctx']
         }
     },
     complexPropDefaults: {
         actions: [
-            ({ list, transform, self }) => {
-                if (list === undefined || transform === undefined)
+            ({ list, self }) => {
+                if (Array.isArray(list)) {
+                    self.listVal = list;
+                    return;
+                }
+                const observeParams = list;
+                const elementToObserve = getElementToObserve(self, observeParams);
+                if (elementToObserve === null) {
+                    console.warn({ msg: '404', observeParams });
+                    return;
+                }
+                addListener(elementToObserve, observeParams, 'listVal', self);
+            },
+            ({ listVal, transform, self }) => {
+                if (listVal === undefined || transform === undefined)
                     return;
                 let ctx = self.ctx;
                 if (ctx === undefined) {
@@ -44,7 +58,7 @@ const ce = new CE({
                 let tail = self;
                 let cnt = 0;
                 let idx = 0;
-                for (const item of list) {
+                for (const item of listVal) {
                     ctx.host = item;
                     const templ = document.createElement('template');
                     templ.dataset.idx = idx.toString();

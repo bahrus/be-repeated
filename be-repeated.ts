@@ -15,13 +15,26 @@ const ce = new CE<XtalDecorCore<Element>>({
             upgrade: '*',
             ifWantsToBe: 'repeated',
             forceVisible: true,
-            virtualProps: ['eventHandlers', 'list', 'transform', 'ctx']
+            virtualProps: ['eventHandlers', 'list', 'listVal', 'transform', 'ctx']
         }
     },
     complexPropDefaults: {
         actions:[
-            ({list, transform, self}) => {
-                if(list === undefined || transform === undefined) return;
+            ({list, self}) => {
+                if(Array.isArray(list)){
+                    self.listVal = list;
+                    return;
+                }
+                const observeParams = list as IObserve;
+                const elementToObserve = getElementToObserve(self, observeParams);
+                if(elementToObserve === null){
+                    console.warn({msg:'404',observeParams});
+                    return;
+                }
+                addListener(elementToObserve, observeParams, 'listVal', self);
+            },
+            ({listVal, transform, self}) => {
+                if(listVal === undefined || transform === undefined) return;
                 let ctx = self.ctx;
                 if(ctx === undefined){
                     ctx ={
@@ -49,7 +62,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                 let tail = self;
                 let cnt = 0;
                 let idx = 0;
-                for(const item of list){
+                for(const item of listVal){
                     ctx.host = item;
                     const templ = document.createElement('template');
                     templ.dataset.idx = idx.toString();

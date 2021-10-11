@@ -11,7 +11,8 @@
   "devDependencies": {
     "xtal-test": "0.0.51",
     "@skypack/package-check": "0.2.2",
-    "@custom-elements-manifest/analyzer": "0.5.5"
+    "@custom-elements-manifest/analyzer": "0.5.5",
+    "obj-ml": "0.0.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
