@@ -19,3 +19,15 @@ Note that the "list" property can come from the host or other DOM elements via t
 
 ## Example II
 
+```html
+    <obj-ml prop1-obj='["hello", "world"]'></obj-ml>
+    <ul>
+        <li>Head Item</li>
+        <li be-repeated='{
+            "transform": {"li": "."},
+            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"}
+        }'>...</li>
+        <li>Footer Item</li>
+    </ul>
+```
+

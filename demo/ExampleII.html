@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <obj-ml prop1-obj='["hello", "world"]'></obj-ml>
+    <obj-ml id=objML prop1-obj='["hello", "world"]'></obj-ml>
     <ul>
         <li>Head Item</li>
         <li be-repeated='{
@@ -17,6 +17,14 @@
         <li>Footer Item</li>
     </ul>
 
+    <button onclick="updateList()">Update List</button>
+    <script>
+        function updateList(){
+            objML.value = {
+                prop1: ['good', 'morning']
+            };
+        }
+    </script>
     <script type=importmap>
         {
             "imports": {
