@@ -2,6 +2,13 @@
 
 Attribute based version of ib-id
 
+Goals remain the same:
+
+1.  Can complement server-rendered lists
+2.  Can be 100% conformant to proper HTML decorum.
+3.  Can use dynamic list of tags
+4.  Can use enumerated set of templates.
+
 ## Syntax Example I -- Basic, template free. 
 
 ```html
@@ -16,6 +23,8 @@ Attribute based version of ib-id
 ```
 
 Working with JSON-in-HTML, like the example above shows, is much more pleasant in VSCode if using the web-friendly [JSON-in-HTML extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html).
+
+As always with xtal-decor based web components, we can use data-be-repeated instead of be-repeated.  And the attribute can be configured to be different in each ShadowDOM realm.
 
 Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant).
 
@@ -56,7 +65,7 @@ Note that the "list" property can come from the host or other DOM elements via t
 </dl>
 ```
 
-templates are required when more than one element needs to repeat per iteration.
+Template tags are required when more than one element needs to repeat per iteration.
 
 
 
