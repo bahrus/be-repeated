@@ -1,6 +1,6 @@
-# be-repeated [TODO]
+# be-repeated [WIP]
 
-Attribute-based version of [ib-id](https://github.com/bahrus/ib-id).
+Attribute-based version of [ib-id](https://github.com/bahrus/ib-id) -- a repeating decorator web component.
 
 Goals remain the same:
 
