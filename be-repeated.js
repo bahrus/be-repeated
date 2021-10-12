@@ -70,10 +70,12 @@ const ce = new CE({
                     }
                     else {
                         const grp = findGroup(tail, `[data-idx="${idx}"]`);
-                        if (grp.length > 0) {
+                        const len = grp.length;
+                        if (len > 0) {
                             for (const el of grp) {
                                 el.classList.remove('be-repeated-hidden');
                             }
+                            cnt += grp.length + 1; //count template
                             processTargets(ctx, grp);
                             tail = grp.pop();
                             idx++;
@@ -93,7 +95,10 @@ const ce = new CE({
                         el.classList.add('be-repeated-hidden');
                     }
                     idx++;
+                    cnt++;
                 }
+                if (cnt === 0)
+                    debugger;
                 self.dataset.cnt = cnt.toString();
             }
         ],
