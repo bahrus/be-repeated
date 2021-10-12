@@ -78,7 +78,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                             for(const el of grp){
                                 el.classList.remove('be-repeated-hidden');
                             }
-                            cnt += grp.length + 1; //count template
+                            cnt += len + 1; //count template
                             processTargets(ctx, grp);
                             tail = grp.pop();
                             idx++;
@@ -96,11 +96,15 @@ const ce = new CE<XtalDecorCore<Element>>({
                 const prevCnt = Number(self.dataset.cnt);
                 while(idx < prevCnt){
                     const grp = findGroup(tail, `[data-idx="${idx}"]`);
-                    for(const el of grp){
-                        el.classList.add('be-repeated-hidden');
+                    const len = grp.length;
+                    if(len > 0){
+                        for(const el of grp){
+                            el.classList.add('be-repeated-hidden');
+                        }
+                        cnt += len + 1;
                     }
                     idx++;
-                    cnt++;
+                    
                 }
                 if(cnt === 0) debugger;
                 self.dataset.cnt = cnt.toString();
