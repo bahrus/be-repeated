@@ -19,7 +19,7 @@ Working with JSON-in-HTML, like the example above shows, is much more pleasant i
 
 Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant).
 
-## Example II
+## Example II -- Updatable via binding.
 
 ```html
     <obj-ml prop1-obj='["hello", "world"]'></obj-ml>
@@ -32,6 +32,31 @@ Note that the "list" property can come from the host or other DOM elements via t
         <li>Footer Item</li>
     </ul>
 ```
+
+## Example III multiple elements per iteration.  Use of template [TODO]
+
+```html
+<dl>
+    <dt>Definition</dt>
+    <dd>Meaning of the word</dd>
+    <obj-ml defs-obj='[
+        {"term": "nah", "def": "not so"}, 
+        {"term":"goo", "def": "a viscid or sticky substance"}]'>
+    </obj-ml>
+
+    <template be-repeated='{
+        "transform": {
+            "dtElements": ["term"],
+            "ddElements": ["def"]
+        }
+    }'>
+        <dt></dt>
+        <dd></dd>
+    </template>
+</dl>
+```
+
+templates are required when more than one element needs to repeat per iteration.
 
 
 
