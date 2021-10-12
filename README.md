@@ -33,7 +33,7 @@ Note that the "list" property can come from the host or other DOM elements via t
     </ul>
 ```
 
-## Example III multiple elements per iteration.  Use of template [TODO]
+## Example III multiple elements per iteration.  First required use of template
 
 ```html
 <obj-ml defs-obj='[
