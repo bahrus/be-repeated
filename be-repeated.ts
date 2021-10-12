@@ -74,6 +74,9 @@ const ce = new CE<XtalDecorCore<Element>>({
                     }else{
                         const grp = findGroup(tail, `[data-idx="${idx}"]`);
                         if(grp.length > 0){
+                            for(const el of grp){
+                                el.classList.remove('be-repeated-hidden');
+                            }
                             processTargets(ctx, grp);
                             tail = grp.pop();
                             idx++;
