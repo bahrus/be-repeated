@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .be-repeated-hidden{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <obj-ml defs-obj='[
+        {"term": "nah", "def": "not so"}, 
+        {"term":"goo", "def": "a viscid or sticky substance"}]'>
+    </obj-ml>
+    <dl>
+        <dt>Definition</dt>
+        <dd>Meaning of the word</dd>
+
+    
+        <template be-repeated='{
+            "transform": {
+                "dt": "term",
+                "dd": "def"
+            },
+            "list":  {"observe": "obj-ml", "on": "value-changed", "vft": "value.defs"}
+        }'>
+            <dt></dt>
+            <dd></dd>
+        </template>
+    </dl>
+
+    <!-- <button onclick="updateListSameSize()">Update List Same Size</button>
+    <script>
+        function updateListSameSize(){
+            objML.value = {
+                prop1: ['good', 'morning']
+            };
+        }
+    </script>
+    <button onclick="updateListLargeSize()">Update List To Larger Size</button>
+    <script>
+        function updateListLargeSize(){
+            objML.value = {
+                prop1: ['a', 'b', 'c', 'd']
+            };
+        }
+    </script>
+    <button onclick="updateListSmallSize()">Update List To Small Size</button>
+    <script>
+        function updateListSmallSize(){
+            objML.value = {
+                prop1: ['z'],
+            };
+        }
+    </script> -->
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "xtal-decor/": "../node_modules/xtal-decor/",
+                "on-to-me/": "../node_modules/on-to-me/",
+                "be-observant/": "../node_modules/be-observant/",
+                "obj-ml/": "../node_modules/obj-ml/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-repeated.js';
+        import 'obj-ml/obj-ml.js';
+    </script>
+</body>
+</html>

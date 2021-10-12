@@ -36,18 +36,17 @@ Note that the "list" property can come from the host or other DOM elements via t
 ## Example III multiple elements per iteration.  Use of template [TODO]
 
 ```html
+<obj-ml defs-obj='[
+    {"term": "nah", "def": "not so"}, 
+    {"term":"goo", "def": "a viscid or sticky substance"}]'>
+</obj-ml>
 <dl>
     <dt>Definition</dt>
     <dd>Meaning of the word</dd>
-    <obj-ml defs-obj='[
-        {"term": "nah", "def": "not so"}, 
-        {"term":"goo", "def": "a viscid or sticky substance"}]'>
-    </obj-ml>
-
     <template be-repeated='{
         "transform": {
-            "dtElements": ["term"],
-            "ddElements": ["def"]
+            "dt": "term",
+            "dd": "def"
         },
         "list":  {"observe": "obj-ml", "on": "value-changed", "vft": "value.defs"}
     }'>
