@@ -48,7 +48,8 @@ Note that the "list" property can come from the host or other DOM elements via t
         "transform": {
             "dtElements": ["term"],
             "ddElements": ["def"]
-        }
+        },
+        "list":  {"observe": "obj-ml", "on": "value-changed", "vft": "value.defs"}
     }'>
         <dt></dt>
         <dd></dd>
