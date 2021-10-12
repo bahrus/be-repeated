@@ -83,6 +83,14 @@ const ce = new CE({
                         }
                     }
                 }
+                const prevCnt = Number(self.dataset.cnt);
+                while (idx < prevCnt) {
+                    const grp = findGroup(tail, `[data-idx="${idx}"]`);
+                    for (const el of grp) {
+                        el.classList.add('be-repeated-hidden');
+                    }
+                    idx++;
+                }
                 self.dataset.cnt = cnt.toString();
             }
         ],
