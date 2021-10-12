@@ -15,6 +15,8 @@ Attribute based version of ib-id
 </ul>
 ```
 
+Working with JSON-in-HTML, like the example above shows, is much more pleasant in VSCode if using the web-friendly [JSON-in-HTML extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html).
+
 Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant).
 
 ## Example II
@@ -30,4 +32,6 @@ Note that the "list" property can come from the host or other DOM elements via t
         <li>Footer Item</li>
     </ul>
 ```
+
+
 
