@@ -21,7 +21,7 @@ const ce = new CE({
                     self.listVal = list;
                     return;
                 }
-                const observeParams = list;
+                const observeParams = ((typeof list === 'string') ? { vft: list } : list);
                 const elementToObserve = getElementToObserve(self, observeParams);
                 if (elementToObserve === null) {
                     console.warn({ msg: '404', observeParams });

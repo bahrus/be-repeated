@@ -25,7 +25,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                     self.listVal = list;
                     return;
                 }
-                const observeParams = list as IObserve;
+                const observeParams = ((typeof list === 'string') ? {vft: list} : list) as IObserve;
                 const elementToObserve = getElementToObserve(self, observeParams);
                 if(elementToObserve === null){
                     console.warn({msg:'404',observeParams});
