@@ -171,6 +171,9 @@ function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
         const originalEl = firstElementMap.get(target);
         children = [originalEl];
         processTargets(ctx, children);
+        cnt++;
+        templCount++;
+        tail = originalEl;
         firstElementMap.delete(target);
         //console.log(originalEl);
     }
@@ -178,12 +181,12 @@ function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
         const clone = self.content.cloneNode(true);
         xf(clone, ctx);
         children = Array.from(clone.children);
-    }
-    for (const child of children) {
-        tail.insertAdjacentElement('afterend', child);
-        cnt++;
-        templCount++;
-        tail = child;
+        for (const child of children) {
+            tail.insertAdjacentElement('afterend', child);
+            cnt++;
+            templCount++;
+            tail = child;
+        }
     }
     templ.dataset.cnt = templCount.toString();
     return { idx, tail, cnt };
