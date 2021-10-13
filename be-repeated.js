@@ -4,6 +4,7 @@ import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
+const firstElementMap = new WeakMap();
 const ce = new CE({
     config: {
         tagName: 'be-repeated',
@@ -29,7 +30,7 @@ const ce = new CE({
                 }
                 addListener(elementToObserve, observeParams, 'listVal', self);
             },
-            ({ listVal, transform, self }) => {
+            ({ listVal, transform, self, target }) => {
                 if (listVal === undefined || transform === undefined)
                     return;
                 let ctx = self.ctx;
@@ -63,7 +64,7 @@ const ce = new CE({
                 for (const item of listVal) {
                     ctx.host = item;
                     if (firstTime) {
-                        const rs = cloneAndTransform(idx, tail, cnt, ctx, self);
+                        const rs = cloneAndTransform(idx, tail, cnt, ctx, self, target);
                         tail = rs.tail;
                         cnt = rs.cnt;
                         idx = rs.idx;
@@ -114,7 +115,9 @@ const ce = new CE({
                 templ.setAttribute(attrBe, self.getAttribute(attrIs));
                 self.insertAdjacentElement('afterend', templ);
                 target.removeAttribute(attrIs);
-                templ.content.appendChild(target);
+                const clonedTarget = target.cloneNode(true);
+                firstElementMap.set(templ, target);
+                templ.content.appendChild(clonedTarget);
             }
         },
         finale: (self, target) => {
@@ -146,7 +149,7 @@ function findGroup(tail, sel) {
     }
     return returnArr;
 }
-function cloneAndTransform(idx, tail, cnt, ctx, self) {
+function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
     const templ = document.createElement('template');
     templ.dataset.idx = idx.toString();
     idx++;
@@ -154,9 +157,19 @@ function cloneAndTransform(idx, tail, cnt, ctx, self) {
     cnt++;
     tail = templ;
     let templCount = 0;
-    const clone = self.content.cloneNode(true);
-    xf(clone, ctx);
-    const children = Array.from(clone.children);
+    let children = [];
+    if (target !== undefined && firstElementMap.has(target)) {
+        const originalEl = firstElementMap.get(target);
+        children = [originalEl];
+        processTargets(ctx, children);
+        firstElementMap.delete(target);
+        //console.log(originalEl);
+    }
+    else {
+        const clone = self.content.cloneNode(true);
+        xf(clone, ctx);
+        children = Array.from(clone.children);
+    }
     for (const child of children) {
         tail.insertAdjacentElement('afterend', child);
         cnt++;

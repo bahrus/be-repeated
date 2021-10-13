@@ -8,6 +8,8 @@ import {getElementToObserve, addListener} from 'be-observant/be-observant.js';
 import {upShadowSearch} from 'trans-render/lib/upShadowSearch.js';
 import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
 
+const firstElementMap = new WeakMap<HTMLTemplateElement, Element>();
+
 const ce = new CE<XtalDecorCore<Element>>({
     config:{
         tagName: 'be-repeated',
@@ -33,7 +35,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                 }
                 addListener(elementToObserve, observeParams, 'listVal', self);
             },
-            ({listVal, transform, self}) => {
+            ({listVal, transform, self, target}) => {
                 if(listVal === undefined || transform === undefined) return;
                 let ctx = self.ctx;
                 let firstTime = false;
@@ -67,7 +69,7 @@ const ce = new CE<XtalDecorCore<Element>>({
                 for(const item of listVal){
                     ctx.host = item;
                     if(firstTime){
-                        const rs = cloneAndTransform(idx, tail, cnt, ctx, self);
+                        const rs = cloneAndTransform(idx, tail, cnt, ctx, self, target);
                         tail = rs.tail;
                         cnt = rs.cnt;
                         idx = rs.idx;
@@ -119,7 +121,9 @@ const ce = new CE<XtalDecorCore<Element>>({
                 templ.setAttribute(attrBe, self.getAttribute(attrIs)!);
                 self.insertAdjacentElement('afterend', templ);
                 target.removeAttribute(attrIs);
-                templ.content.appendChild(target);
+                const clonedTarget = target.cloneNode(true);
+                firstElementMap.set(templ, target);
+                templ.content.appendChild(clonedTarget);
             }
         },
         finale:(self: Element, target: Element) => {
@@ -148,7 +152,7 @@ function findGroup(tail: Element, sel: string){
     }
     return returnArr;
 }
-function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, self: HTMLTemplateElement){
+function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, self: HTMLTemplateElement, target?: HTMLTemplateElement){
     const templ = document.createElement('template');
     templ.dataset.idx = idx.toString();
     idx++;
@@ -156,9 +160,19 @@ function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, se
     cnt++;
     tail = templ;
     let templCount = 0;
-    const clone = self.content.cloneNode(true) as Element;
-    xf(clone, ctx);
-    const children = Array.from(clone.children);
+    let children: Element[] = [];
+    if(target !== undefined && firstElementMap.has(target)){
+        const originalEl = firstElementMap.get(target)!;
+        children = [originalEl];
+        processTargets(ctx, children);
+        firstElementMap.delete(target);
+        //console.log(originalEl);
+    }else{
+        const clone = self.content.cloneNode(true) as Element;
+        xf(clone, ctx);
+        children = Array.from(clone.children);
+    }
+
 
     for(const child of children){
         tail.insertAdjacentElement('afterend', child)!;
