@@ -122,8 +122,8 @@ const ce = new CE({
                     const name = attrib.name;
                     if (name.startsWith('is-')) {
                         const newName = 'be-' + name.substr(3);
-                        target.setAttribute(newName, attrib.value);
-                        target.removeAttribute(name);
+                        clonedTarget.setAttribute(newName, attrib.value);
+                        clonedTarget.removeAttribute(name);
                     }
                 }
                 templ.content.appendChild(clonedTarget);
