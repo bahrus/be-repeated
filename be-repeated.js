@@ -117,6 +117,15 @@ const ce = new CE({
                 target.removeAttribute(attrIs);
                 const clonedTarget = target.cloneNode(true);
                 firstElementMap.set(templ, target);
+                const attribs = clonedTarget.attributes;
+                for (const attrib of attribs) {
+                    const name = attrib.name;
+                    if (name.startsWith('is-')) {
+                        const newName = 'be-' + name.substr(3);
+                        target.setAttribute(newName, attrib.value);
+                        target.removeAttribute(name);
+                    }
+                }
                 templ.content.appendChild(clonedTarget);
             }
         },
