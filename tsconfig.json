@@ -9,7 +9,7 @@
 		"watch": true
 	},
 	"files": [
-		"be-repeated2.ts"
+		"be-repeated.ts"
 	],
 	"exclude":[
 		"build",
