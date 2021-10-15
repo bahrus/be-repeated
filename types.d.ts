@@ -7,7 +7,7 @@ export interface BeRepeatedVirtualProps{
     listVal: any[],
     transform: any, 
     ctx: RenderContext,
-    target: HTMLTemplateElement,
+    templ: HTMLTemplateElement,
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{

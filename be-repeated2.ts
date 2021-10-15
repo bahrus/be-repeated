@@ -29,7 +29,9 @@ export class BeRepeatedController implements BeRepeatedActions {
                 }
             }
             templ.content.appendChild(clonedTarget);
-            proxy.target = templ;
+            
+        }else{
+            proxy.templ = target as HTMLTemplateElement;
         }
     }
     finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
@@ -48,7 +50,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         }
         addListener(elementToObserve, observeParams, 'listVal', proxy);
     }
-    renderList({listVal, transform, proxy, target}: this){
+    renderList({listVal, transform, proxy, templ}: this){
         let ctx = proxy.ctx;
         let firstTime = false;
         if(ctx === undefined){
@@ -81,7 +83,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         for(const item of listVal){
             ctx.host = item;
             if(firstTime){
-                const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy, target);
+                const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy, templ);
                 tail = rs.tail;
                 cnt = rs.cnt;
                 idx = rs.idx;
@@ -138,14 +140,14 @@ define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, B
             forceVisible: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'target', 'transform'],
+            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform'],
         },
         actions:{
             onList:{
                 ifAllOf:['list']
             },
             renderList:{
-                ifAllOf:['transform', 'listVal']
+                ifAllOf:['transform', 'listVal', 'templ']
             }
         }
     },

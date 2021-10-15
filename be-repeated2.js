@@ -25,7 +25,9 @@ export class BeRepeatedController {
                 }
             }
             templ.content.appendChild(clonedTarget);
-            proxy.target = templ;
+        }
+        else {
+            proxy.templ = target;
         }
     }
     finale(proxy, target) {
@@ -45,7 +47,7 @@ export class BeRepeatedController {
         }
         addListener(elementToObserve, observeParams, 'listVal', proxy);
     }
-    renderList({ listVal, transform, proxy, target }) {
+    renderList({ listVal, transform, proxy, templ }) {
         let ctx = proxy.ctx;
         let firstTime = false;
         if (ctx === undefined) {
@@ -77,7 +79,7 @@ export class BeRepeatedController {
         for (const item of listVal) {
             ctx.host = item;
             if (firstTime) {
-                const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy, target);
+                const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy, templ);
                 tail = rs.tail;
                 cnt = rs.cnt;
                 idx = rs.idx;
@@ -129,14 +131,14 @@ define({
             forceVisible: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'target', 'transform'],
+            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform'],
         },
         actions: {
             onList: {
                 ifAllOf: ['list']
             },
             renderList: {
-                ifAllOf: ['transform', 'listVal']
+                ifAllOf: ['transform', 'listVal', 'templ']
             }
         }
     },
