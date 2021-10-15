@@ -24,7 +24,7 @@ Goals remain the same:
 
 Working with JSON-in-HTML, like the example above shows, is much more pleasant in VSCode if using the web-friendly [JSON-in-HTML extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html).
 
-As always with [xtal-decor](https://github.com/bahrus/xtal-decor) based web components, we can use data-be-repeated instead of be-repeated.  And the attribute can be configured to be different in each ShadowDOM realm.
+As always with [be-decorated](https://github.com/bahrus/be-decorated) based web components, we can use data-be-repeated instead of be-repeated.  And the attribute can be configured to be different in each Shadow DOM realm.
 
 Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant).
 
