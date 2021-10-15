@@ -50,8 +50,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         }
         addListener(elementToObserve, observeParams, 'listVal', proxy);
     }
-    renderList({listVal, transform, proxy, templ}: this){
-        let ctx = proxy.ctx;
+    renderList({listVal, transform, proxy, templ, ctx}: this){
         let firstTime = false;
         if(ctx === undefined){
             firstTime = true;
@@ -77,7 +76,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.ctx = ctx;
         }
         
-        let tail = proxy as Element;
+        let tail = templ as Element;
         let cnt = 0;
         let idx = 0;
         for(const item of listVal){
@@ -192,6 +191,7 @@ function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, se
         processTargets(ctx, children);
         cnt++;
         templCount++;
+        tail.insertAdjacentElement('afterend', originalEl);
         tail = originalEl;
         firstElementMap.delete(target);
         //console.log(originalEl);
