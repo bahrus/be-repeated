@@ -13,8 +13,8 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.17",
-    "be-decorated": "0.0.12",
+    "be-observant": "0.0.18",
+    "be-decorated": "0.0.13",
     "trans-render": "0.0.419"
   },
   "devDependencies": {
