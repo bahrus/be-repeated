@@ -13,9 +13,9 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.18",
-    "be-decorated": "0.0.13",
-    "trans-render": "0.0.419"
+    "be-observant": "0.0.19",
+    "be-decorated": "0.0.18",
+    "trans-render": "0.0.420"
   },
   "devDependencies": {
     "xtal-test": "0.0.51",
