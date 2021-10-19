@@ -130,12 +130,16 @@ export interface BeRepeatedController extends BeRepeatedProps{}
 
 const tagName = 'be-repeated';
 
+const ifWantsToBe = 'repeated';
+
+const upgrade = '*';
+
 define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, BeRepeatedActions>({
     config:{
         tagName,
         propDefaults:{
-            upgrade: '*',
-            ifWantsToBe: 'repeated',
+            upgrade,
+            ifWantsToBe,
             forceVisible: true,
             intro: 'intro',
             finale: 'finale',
@@ -209,4 +213,15 @@ function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, se
     templ.dataset.cnt = templCount.toString();
     return {idx, tail, cnt};
 }
-document.head.appendChild(document.createElement(tagName));
+const beHive = document.querySelector('be-hive') as any;
+if(beHive !== null){
+    customElements.whenDefined(beHive.localName).then(() => {
+        beHive.register({
+            ifWantsToBe,
+            upgrade,
+            localName: tagName,
+        })
+    })
+}else{
+    document.head.appendChild(document.createElement(tagName));
+}

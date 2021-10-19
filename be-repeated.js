@@ -121,12 +121,14 @@ export class BeRepeatedController {
     }
 }
 const tagName = 'be-repeated';
+const ifWantsToBe = 'repeated';
+const upgrade = '*';
 define({
     config: {
         tagName,
         propDefaults: {
-            upgrade: '*',
-            ifWantsToBe: 'repeated',
+            upgrade,
+            ifWantsToBe,
             forceVisible: true,
             intro: 'intro',
             finale: 'finale',
@@ -201,4 +203,16 @@ function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
     templ.dataset.cnt = templCount.toString();
     return { idx, tail, cnt };
 }
-document.head.appendChild(document.createElement(tagName));
+const beHive = document.querySelector('be-hive');
+if (beHive !== null) {
+    customElements.whenDefined(beHive.localName).then(() => {
+        beHive.register({
+            ifWantsToBe,
+            upgrade,
+            localName: tagName,
+        });
+    });
+}
+else {
+    document.head.appendChild(document.createElement(tagName));
+}
