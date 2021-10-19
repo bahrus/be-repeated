@@ -13,14 +13,14 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.20",
-    "be-decorated": "0.0.19",
-    "trans-render": "0.0.422"
+    "be-observant": "0.0.21",
+    "be-decorated": "0.0.20",
+    "trans-render": "0.0.425"
   },
   "devDependencies": {
     "xtal-test": "0.0.51",
     "@skypack/package-check": "0.2.2",
-    "@custom-elements-manifest/analyzer": "0.5.5",
+    "@custom-elements-manifest/analyzer": "0.5.6",
     "xtal-decor": "0.0.52",
     "obj-ml": "0.0.3"
   },
