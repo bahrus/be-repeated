@@ -11,7 +11,7 @@ export class BeRepeatedController {
             const attrIs = 'is-' + beDecorProps.ifWantsToBe;
             const attrBe = 'be-' + beDecorProps.ifWantsToBe;
             templ.setAttribute(attrBe, proxy.getAttribute(attrIs));
-            proxy.insertAdjacentElement('afterend', templ);
+            proxy.insertAdjacentElement('beforebegin', templ);
             target.removeAttribute(attrIs);
             const clonedTarget = target.cloneNode(true);
             firstElementMap.set(templ, target);
@@ -173,23 +173,25 @@ function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
     const templ = document.createElement('template');
     templ.dataset.idx = idx.toString();
     idx++;
-    tail.insertAdjacentElement('afterend', templ);
-    cnt++;
-    tail = templ;
+    // tail.insertAdjacentElement('afterend', templ);
     let templCount = 0;
     let children = [];
     if (target !== undefined && firstElementMap.has(target)) {
         const originalEl = firstElementMap.get(target);
+        originalEl.insertAdjacentElement('beforebegin', templ);
+        cnt++;
+        tail = originalEl;
         children = [originalEl];
         processTargets(ctx, children);
         cnt++;
         templCount++;
-        tail.insertAdjacentElement('afterend', originalEl);
-        tail = originalEl;
         firstElementMap.delete(target);
         //console.log(originalEl);
     }
     else {
+        tail.insertAdjacentElement('afterend', templ);
+        cnt++;
+        tail = templ;
         const clone = self.content.cloneNode(true);
         xf(clone, ctx);
         children = Array.from(clone.children);
