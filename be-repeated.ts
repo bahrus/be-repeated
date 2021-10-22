@@ -1,10 +1,12 @@
 import {BeRepeatedProps, BeRepeatedActions, BeRepeatedVirtualProps} from './types';
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {IObserve} from 'be-observant/types';
-import {getElementToObserve, addListener} from 'be-observant/be-observant.js';
+import {getElementToObserve, } from 'be-observant/getElementToObserve.js';
+import { addListener } from 'be-observant/addListener.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
+import {register} from 'be-hive/register.js';
 
 const firstElementMap = new WeakMap<HTMLTemplateElement, Element>();
 
@@ -216,15 +218,5 @@ function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, se
     templ.dataset.cnt = templCount.toString();
     return {idx, tail, cnt};
 }
-const beHive = document.querySelector('be-hive') as any;
-if(beHive !== null){
-    customElements.whenDefined(beHive.localName).then(() => {
-        beHive.register({
-            ifWantsToBe,
-            upgrade,
-            localName: tagName,
-        })
-    })
-}else{
-    document.head.appendChild(document.createElement(tagName));
-}
+
+register(ifWantsToBe, upgrade, tagName);

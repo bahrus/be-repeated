@@ -1,8 +1,10 @@
 import { define } from 'be-decorated/be-decorated.js';
-import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
+import { getElementToObserve, } from 'be-observant/getElementToObserve.js';
+import { addListener } from 'be-observant/addListener.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
+import { register } from 'be-hive/register.js';
 const firstElementMap = new WeakMap();
 export class BeRepeatedController {
     intro(proxy, target, beDecorProps) {
@@ -205,16 +207,4 @@ function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
     templ.dataset.cnt = templCount.toString();
     return { idx, tail, cnt };
 }
-const beHive = document.querySelector('be-hive');
-if (beHive !== null) {
-    customElements.whenDefined(beHive.localName).then(() => {
-        beHive.register({
-            ifWantsToBe,
-            upgrade,
-            localName: tagName,
-        });
-    });
-}
-else {
-    document.head.appendChild(document.createElement(tagName));
-}
+register(ifWantsToBe, upgrade, tagName);
