@@ -68,4 +68,35 @@ Note that the "list" property can come from the host or other DOM elements via t
 Template tags are required when more than one element needs to repeat per iteration.
 
 
+## Example IV -- Nested Loops [TODO]
+
+```html
+<ul>
+    <template be-repeated='{
+        "list": [
+            {"description": "first item", "innerList": [{"name": "a"}, {"name": "b"}]},
+            {"description": "second item", "innerList": [{"name": "c"}, {"name": "b"}]}
+        ],
+        "transform": {".description": "description"}
+    }'>
+        <li>
+            <span class=description></span>
+            <ul>
+                <li be-repeated='{
+                    "nestedLoopProp": "innerList",
+                    "transform": {
+                        ".name": "name"
+                    }
+                }'>
+                    <span class=name></span>
+                </li>
+            </ul>
+            <i-bid updatable auto-nest -list-src list-prop=innerList from-previous=ul search-for=li transform='{".name": "name"}'></i-bid>
+        </li>
+    </template>
+</ul>
+```
+
+Templates required for outer loops (?)
+
 
