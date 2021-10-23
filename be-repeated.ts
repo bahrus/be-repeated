@@ -1,7 +1,7 @@
 import {BeRepeatedProps, BeRepeatedActions, BeRepeatedVirtualProps} from './types';
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {IObserve} from 'be-observant/types';
-import {getElementToObserve, } from 'be-observant/getElementToObserve.js';
+import {getElementToObserve, getObserve} from 'be-observant/getElementToObserve.js';
 import { addListener } from 'be-observant/addListener.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
@@ -44,7 +44,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.listVal = list;
             return;
         }
-        const observeParams = ((typeof list === 'string') ? {vft: list} : list) as IObserve;
+        const observeParams = getObserve(list);
         const elementToObserve = getElementToObserve(proxy, observeParams);
         if(elementToObserve === null){
             console.warn({msg:'404',observeParams});
