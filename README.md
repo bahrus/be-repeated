@@ -91,7 +91,6 @@ Template tags are required when more than one element needs to repeat per iterat
                     <span class=name></span>
                 </li>
             </ul>
-            <i-bid updatable auto-nest -list-src list-prop=innerList from-previous=ul search-for=li transform='{".name": "name"}'></i-bid>
         </li>
     </template>
 </ul>
