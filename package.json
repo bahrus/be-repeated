@@ -13,9 +13,9 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.32",
+    "be-observant": "0.0.33",
     "be-decorated": "0.0.32",
-    "be-hive": "0.0.6",
+    "be-hive": "0.0.7",
     "trans-render": "0.0.425"
   },
   "devDependencies": {
