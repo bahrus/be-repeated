@@ -133,7 +133,8 @@ export class BeRepeatedController implements BeRepeatedActions {
     onNestedLoopProp({nestedLoopProp, proxy}: this){
         const templ = upSearch(this.proxy, 'template[data-idx]') as HTMLTemplateElement;
         const loopContext = templToCtxMap.get(templ);
-        proxy.listVal = loopContext!.item[nestedLoopProp];
+        const subList = loopContext!.item[nestedLoopProp];
+        proxy.listVal = subList;
     }
 }
 
@@ -154,7 +155,7 @@ define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, B
             forceVisible: true,
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform'],
+            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp'],
         },
         actions:{
             onList:{
