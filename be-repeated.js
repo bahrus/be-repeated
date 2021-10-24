@@ -5,7 +5,9 @@ import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
 import { register } from 'be-hive/register.js';
+import { upSearch } from 'trans-render/lib/upSearch.js';
 const firstElementMap = new WeakMap();
+const templToCtxMap = new WeakMap();
 export class BeRepeatedController {
     intro(proxy, target, beDecorProps) {
         if (proxy.localName !== 'template') {
@@ -121,6 +123,11 @@ export class BeRepeatedController {
             debugger;
         proxy.dataset.cnt = cnt.toString();
     }
+    onNestedLoopProp({ nestedLoopProp, proxy }) {
+        const templ = upSearch(this.proxy, 'template[data-idx]');
+        const loopContext = templToCtxMap.get(templ);
+        proxy.listVal = loopContext.item[nestedLoopProp];
+    }
 }
 const tagName = 'be-repeated';
 const ifWantsToBe = 'repeated';
@@ -142,6 +149,9 @@ define({
             },
             renderList: {
                 ifAllOf: ['transform', 'listVal', 'templ']
+            },
+            onNestedLoopProp: {
+                ifAllOf: ['nestedLoopProp']
             }
         }
     },
@@ -173,6 +183,10 @@ function findGroup(tail, sel) {
 }
 function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
     const templ = document.createElement('template');
+    templToCtxMap.set(templ, {
+        idx,
+        item: ctx.host
+    });
     templ.dataset.idx = idx.toString();
     idx++;
     // tail.insertAdjacentElement('afterend', templ);

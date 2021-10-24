@@ -1,4 +1,4 @@
-import {BeRepeatedProps, BeRepeatedActions, BeRepeatedVirtualProps} from './types';
+import {BeRepeatedProps, BeRepeatedActions, BeRepeatedVirtualProps, LoopContext} from './types';
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {IObserve} from 'be-observant/types';
 import {getElementToObserve, getObserve} from 'be-observant/getElementToObserve.js';
@@ -7,8 +7,11 @@ import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
 import {register} from 'be-hive/register.js';
+import {upSearch} from 'trans-render/lib/upSearch.js';
 
 const firstElementMap = new WeakMap<HTMLTemplateElement, Element>();
+
+const templToCtxMap = new WeakMap<HTMLTemplateElement, LoopContext>();
 
 export class BeRepeatedController implements BeRepeatedActions {
     intro(proxy: Element & BeRepeatedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
@@ -126,6 +129,12 @@ export class BeRepeatedController implements BeRepeatedActions {
         if(cnt === 0) debugger;
         proxy.dataset.cnt = cnt.toString();
     }
+
+    onNestedLoopProp({nestedLoopProp, proxy}: this){
+        const templ = upSearch(this.proxy, 'template[data-idx]') as HTMLTemplateElement;
+        const loopContext = templToCtxMap.get(templ);
+        proxy.listVal = loopContext!.item[nestedLoopProp];
+    }
 }
 
 export interface BeRepeatedController extends BeRepeatedProps{}
@@ -153,6 +162,9 @@ define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, B
             },
             renderList:{
                 ifAllOf:['transform', 'listVal', 'templ']
+            },
+            onNestedLoopProp:{
+                ifAllOf:['nestedLoopProp']
             }
         }
     },
@@ -184,6 +196,10 @@ function findGroup(tail: Element, sel: string){
 
 function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, self: HTMLTemplateElement, target?: HTMLTemplateElement){
     const templ = document.createElement('template');
+    templToCtxMap.set(templ, {
+        idx,
+        item: ctx.host
+    });
     templ.dataset.idx = idx.toString();
     idx++;
     // tail.insertAdjacentElement('afterend', templ);

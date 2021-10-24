@@ -5,6 +5,7 @@ export interface BeRepeatedVirtualProps{
     eventHandlers: EventHandler[], 
     list: string | any[],
     listVal: any[],
+    nestedLoopProp: string,
     transform: any, 
     ctx: RenderContext,
     templ: HTMLTemplateElement,
@@ -18,5 +19,12 @@ export interface BeRepeatedActions {
     intro(proxy: Element & BeRepeatedVirtualProps, target: Element, beDecorProps: BeDecoratedProps): void;
     finale(proxy: Element & BeRepeatedVirtualProps, target:Element): void; 
     onList(self: this): void; 
+    onNestedLoopProp(self: this): void;
     renderList(self: this): void; 
+}
+
+export interface LoopContext {
+    //list: any[];
+    idx: number;
+    item: any;
 }
