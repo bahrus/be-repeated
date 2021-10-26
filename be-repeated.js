@@ -1,6 +1,5 @@
 import { define } from 'be-decorated/be-decorated.js';
-import { getElementToObserve, getObserve } from 'be-observant/getElementToObserve.js';
-import { addListener } from 'be-observant/addListener.js';
+import { hookUp } from 'be-observant/addListener.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
@@ -43,13 +42,7 @@ export class BeRepeatedController {
             proxy.listVal = list;
             return;
         }
-        const observeParams = getObserve(list);
-        const elementToObserve = getElementToObserve(proxy, observeParams);
-        if (elementToObserve === null) {
-            console.warn({ msg: '404', observeParams });
-            return;
-        }
-        addListener(elementToObserve, observeParams, 'listVal', proxy);
+        hookUp(list, proxy, 'listVal');
     }
     renderList({ listVal, transform, proxy, templ, ctx }) {
         let firstTime = false;
