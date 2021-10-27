@@ -118,7 +118,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             idx++;
             
         }
-        if(cnt === 0) debugger;
+        //if(cnt === 0) debugger;
         proxy.dataset.cnt = cnt.toString();
     }
 

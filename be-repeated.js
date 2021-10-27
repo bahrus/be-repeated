@@ -112,8 +112,7 @@ export class BeRepeatedController {
             }
             idx++;
         }
-        if (cnt === 0)
-            debugger;
+        //if(cnt === 0) debugger;
         proxy.dataset.cnt = cnt.toString();
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
