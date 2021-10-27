@@ -1,5 +1,5 @@
 import { define } from 'be-decorated/be-decorated.js';
-import { hookUp } from 'be-observant/addListener.js';
+import { hookUp } from 'be-observant/hookUp.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
