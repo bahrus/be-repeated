@@ -47,6 +47,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         hookUp(list, proxy, 'listVal');
     }
     renderList({listVal, transform, proxy, templ, ctx}: this){
+        console.log('here we go again')
     }
 
     onNestedLoopProp({nestedLoopProp, proxy}: this){

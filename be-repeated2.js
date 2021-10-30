@@ -42,6 +42,7 @@ export class BeRepeatedController {
         hookUp(list, proxy, 'listVal');
     }
     renderList({ listVal, transform, proxy, templ, ctx }) {
+        console.log('here we go again');
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
         const templ = upSearch(this.proxy, 'template[data-idx]');
