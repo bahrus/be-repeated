@@ -106,7 +106,8 @@ export class BeRepeatedController {
             const len = grp.length;
             if (len > 0) {
                 for (const el of grp) {
-                    el.classList.add('be-repeated-hidden');
+                    //el.classList.add('be-repeated-hidden');
+                    el.remove();
                 }
                 cnt += len + 1;
             }
