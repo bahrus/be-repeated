@@ -47,7 +47,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         hookUp(list, proxy, 'listVal');
     }
     #prevCount = 0;
-    renderList({listVal, transform, proxy, templ, ctx}: this){
+    renderList({listVal, transform, proxy, templ, ctx, }: this){
         let firstTime = false;
         if(ctx === undefined){
             firstTime = true;
@@ -87,9 +87,9 @@ export class BeRepeatedController implements BeRepeatedActions {
                     idx++;
                     if(idx === len){
                         if(len < this.#prevCount){
-                            const lastTemplIdx = parent.querySelector(`template[data-idx="${len - 1}"]`) as HTMLElement; //TODO:  what if multiple loops in the same parent?
+                            const lastTemplIdx = parent.querySelector(`template[data-idx="${this.#prevCount - 1}"]`) as HTMLElement; //TODO:  what if multiple loops in the same parent?
                             if(lastTemplIdx !== null){
-                                const cnt = Number(lastTemplIdx.dataset.cnt!);
+                                const cnt = Number(lastTemplIdx.dataset.cnt!) - 1;
                                 let ns = lastTemplIdx;
                                 for(let i = 0; i < cnt; i++){
                                     ns = ns.nextElementSibling as HTMLElement;
@@ -98,13 +98,10 @@ export class BeRepeatedController implements BeRepeatedActions {
                                 range.setStartAfter(tail);
                                 range.setEndAfter(ns);
                                 range.deleteContents();
+                                return;
                             }
                         }
-                        //remove remaining;
-                        
 
-                        const range = new Range();
-                        range.setStartBefore
                     }
                     continue;
                 }else{
