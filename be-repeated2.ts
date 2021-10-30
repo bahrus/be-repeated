@@ -31,7 +31,11 @@ export class BeRepeatedController implements BeRepeatedActions {
                 }
             }
             templ.content.appendChild(clonedTarget);
-            
+            //create first templ index
+            const templIdx = document.createElement('template');
+            templIdx.dataset.cnt = "2";
+            templIdx.dataset.idx = "0";
+            templ.insertAdjacentElement('afterend', templIdx);
         }else{
             proxy.templ = target as HTMLTemplateElement;
         }
@@ -48,9 +52,9 @@ export class BeRepeatedController implements BeRepeatedActions {
     }
     #prevCount = 0;
     renderList({listVal, transform, proxy, templ, ctx, }: this){
-        let firstTime = false;
+        //let firstTime = false;
         if(ctx === undefined){
-            firstTime = true;
+            //firstTime = true;
             ctx ={
                 match: transform,
                 postMatch: [
@@ -79,7 +83,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         const parent = proxy.parentElement!;
         for(const item of listVal){
             ctx.host = item;
-            if(!firstTime && tail !== undefined){
+            if(tail !== undefined){
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`);
                 if(grp.length > 0){
                     processTargets(ctx, grp);
@@ -98,6 +102,7 @@ export class BeRepeatedController implements BeRepeatedActions {
                                 range.setStartAfter(tail);
                                 range.setEndAfter(ns);
                                 range.deleteContents();
+                                this.#prevCount = len;
                                 return;
                             }
                         }

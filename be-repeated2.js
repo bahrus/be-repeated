@@ -28,6 +28,11 @@ export class BeRepeatedController {
                 }
             }
             templ.content.appendChild(clonedTarget);
+            //create first templ index
+            const templIdx = document.createElement('template');
+            templIdx.dataset.cnt = "2";
+            templIdx.dataset.idx = "0";
+            templ.insertAdjacentElement('afterend', templIdx);
         }
         else {
             proxy.templ = target;
@@ -46,9 +51,9 @@ export class BeRepeatedController {
     }
     #prevCount = 0;
     renderList({ listVal, transform, proxy, templ, ctx, }) {
-        let firstTime = false;
+        //let firstTime = false;
         if (ctx === undefined) {
-            firstTime = true;
+            //firstTime = true;
             ctx = {
                 match: transform,
                 postMatch: [
@@ -77,7 +82,7 @@ export class BeRepeatedController {
         const parent = proxy.parentElement;
         for (const item of listVal) {
             ctx.host = item;
-            if (!firstTime && tail !== undefined) {
+            if (tail !== undefined) {
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`);
                 if (grp.length > 0) {
                     processTargets(ctx, grp);
@@ -96,6 +101,7 @@ export class BeRepeatedController {
                                 range.setStartAfter(tail);
                                 range.setEndAfter(ns);
                                 range.deleteContents();
+                                this.#prevCount = len;
                                 return;
                             }
                         }
