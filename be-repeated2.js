@@ -47,7 +47,7 @@ export class BeRepeatedController {
             const clone = templ.content.cloneNode(true);
             fragment.append(clone);
         }
-        proxy.parentElement.appendChild(fragment);
+        proxy.parentElement.append(fragment);
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
         const templ = upSearch(this.proxy, 'template[data-idx]');

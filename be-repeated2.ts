@@ -52,7 +52,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             const clone = templ.content.cloneNode(true);
             fragment.append(clone);
         }
-        proxy.parentElement!.appendChild(fragment);
+        proxy.parentElement!.append(fragment);
     }
 
     onNestedLoopProp({nestedLoopProp, proxy}: this){
