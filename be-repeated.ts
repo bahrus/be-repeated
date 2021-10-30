@@ -76,11 +76,13 @@ export class BeRepeatedController implements BeRepeatedActions {
         let tail = templ as Element;
         let cnt = 0;
         let idx = 0;
+        //https://howchoo.com/code/learn-the-slow-and-fast-way-to-append-elements-to-the-dom
+        const docFrag = document.createDocumentFragment();
         for(const item of listVal){
             ctx.host = item;
             if(firstTime){
-                const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy, templ);
-                tail = rs.tail;
+                const rs = cloneAndTransform(idx, docFrag, cnt, ctx, proxy, templ);
+                //tail = rs.tail;
                 cnt = rs.cnt;
                 idx = rs.idx;
             }else{
@@ -188,7 +190,7 @@ function findGroup(tail: Element, sel: string){
     return returnArr;
 }
 
-function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, self: HTMLTemplateElement, target?: HTMLTemplateElement){
+function cloneAndTransform(idx: number, tail: DocumentFragment, cnt: number, ctx: any, self: HTMLTemplateElement, target?: HTMLTemplateElement){
     const templ = document.createElement('template');
     templToCtxMap.set(templ, {
         idx,
@@ -204,7 +206,7 @@ function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, se
         const originalEl = firstElementMap.get(target)!;
         originalEl.insertAdjacentElement('beforebegin', templ);
         cnt++;
-        tail = originalEl;
+        //tail = originalEl;
         children = [originalEl];
         processTargets(ctx, children);
         cnt++;
@@ -212,17 +214,19 @@ function cloneAndTransform(idx: number, tail: Element, cnt: number, ctx: any, se
         firstElementMap.delete(target);
         //console.log(originalEl);
     }else{
-        tail.insertAdjacentElement('afterend', templ);
+        //tail.insertAdjacentElement('afterend', templ);
+        tail.appendChild(templ)
         cnt++;
-        tail = templ;
+        //tail = templ;
         const clone = self.content.cloneNode(true) as Element;
         xf(clone, ctx);
         children = Array.from(clone.children);
         for(const child of children){
-            tail.insertAdjacentElement('afterend', child)!;
+            //tail.insertAdjacentElement('afterend', child)!;
+            tail.appendChild(templ);
             cnt++;
             templCount++;
-            tail = child;
+            //tail = child;
         }
     }
     templ.dataset.cnt = templCount.toString();
