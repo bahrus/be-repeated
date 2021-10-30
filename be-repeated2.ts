@@ -47,9 +47,45 @@ export class BeRepeatedController implements BeRepeatedActions {
         hookUp(list, proxy, 'listVal');
     }
     renderList({listVal, transform, proxy, templ, ctx}: this){
+        let firstTime = false;
+        if(ctx === undefined){
+            firstTime = true;
+            ctx ={
+                match: transform,
+                postMatch: [
+                    {
+                        rhsType: Array,
+                        rhsHeadType: Object,
+                        ctor: PE
+                    },
+                    {
+                        rhsType: Array,
+                        rhsHeadType: String,
+                        ctor: SplitText
+                    },
+                    {
+                        rhsType: String,
+                        ctor: SplitText,
+                    }
+                ],
+            };
+            proxy.ctx = ctx;
+        }
         const fragment = document.createDocumentFragment();
+        let idx = 0;
         for(const item of listVal){
-            const clone = templ.content.cloneNode(true);
+            const idxTempl = document.createElement('template');
+            ctx.host = item;
+            templToCtxMap.set(idxTempl, {
+                idx,
+                item
+            });
+            idxTempl.dataset.idx = idx.toString();
+            idx++;
+            fragment.append(idxTempl);
+            const clone = templ.content.cloneNode(true) as Element;
+            
+            xf(clone , ctx)
             fragment.append(clone);
         }
         proxy.parentElement!.append(fragment);

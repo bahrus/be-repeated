@@ -1,5 +1,8 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { hookUp } from 'be-observant/hookUp.js';
+import { PE } from 'trans-render/lib/PE.js';
+import { SplitText } from 'trans-render/lib/SplitText.js';
+import { transform as xf } from 'trans-render/lib/transform.js';
 import { register } from 'be-hive/register.js';
 import { upSearch } from 'trans-render/lib/upSearch.js';
 const firstElementMap = new WeakMap();
@@ -42,9 +45,44 @@ export class BeRepeatedController {
         hookUp(list, proxy, 'listVal');
     }
     renderList({ listVal, transform, proxy, templ, ctx }) {
+        let firstTime = false;
+        if (ctx === undefined) {
+            firstTime = true;
+            ctx = {
+                match: transform,
+                postMatch: [
+                    {
+                        rhsType: Array,
+                        rhsHeadType: Object,
+                        ctor: PE
+                    },
+                    {
+                        rhsType: Array,
+                        rhsHeadType: String,
+                        ctor: SplitText
+                    },
+                    {
+                        rhsType: String,
+                        ctor: SplitText,
+                    }
+                ],
+            };
+            proxy.ctx = ctx;
+        }
         const fragment = document.createDocumentFragment();
+        let idx = 0;
         for (const item of listVal) {
+            const idxTempl = document.createElement('template');
+            ctx.host = item;
+            templToCtxMap.set(idxTempl, {
+                idx,
+                item
+            });
+            idxTempl.dataset.idx = idx.toString();
+            idx++;
+            fragment.append(idxTempl);
             const clone = templ.content.cloneNode(true);
+            xf(clone, ctx);
             fragment.append(clone);
         }
         proxy.parentElement.append(fragment);
