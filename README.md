@@ -1,5 +1,9 @@
 # be-repeated [WIP]
 
+[![Actions Status](https://github.com/bahrus/be-repeated/workflows/CI/badge.svg)](https://github.com/bahrus/be-repeated/actions?query=workflow%3ACI)
+
+<a href="https://nodei.co/npm/be-repeated/"><img src="https://nodei.co/npm/be-repeated.png"></a>
+
 Attribute-based version of [ib-id](https://github.com/bahrus/ib-id) -- a repeating decorator web component.
 
 Goals remain the same:
