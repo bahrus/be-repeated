@@ -5,19 +5,28 @@ import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
 import { register } from 'be-hive/register.js';
 import { upSearch } from 'trans-render/lib/upSearch.js';
-const firstElementMap = new WeakMap();
+//const firstElementMap = new WeakMap<HTMLTemplateElement, Element>();
 const templToCtxMap = new WeakMap();
+const templToFooterRange = new WeakMap();
 export class BeRepeatedController {
+    //#footerRange: Range | undefined;
     intro(proxy, target, beDecorProps) {
         if (proxy.localName !== 'template') {
+            const ns = proxy.nextElementSibling;
             const templ = document.createElement('template');
+            if (ns !== null) {
+                const range = new Range();
+                range.setStartBefore(ns);
+                range.setEndAfter(proxy.parentElement.lastElementChild);
+                templToFooterRange.set(templ, range);
+            }
             const attrIs = 'is-' + beDecorProps.ifWantsToBe;
             const attrBe = 'be-' + beDecorProps.ifWantsToBe;
             templ.setAttribute(attrBe, proxy.getAttribute(attrIs));
             proxy.insertAdjacentElement('beforebegin', templ);
             target.removeAttribute(attrIs);
             const clonedTarget = target.cloneNode(true);
-            firstElementMap.set(templ, target);
+            //firstElementMap.set(templ, target);
             const attribs = clonedTarget.attributes;
             for (const attrib of attribs) {
                 const name = attrib.name;
@@ -51,6 +60,10 @@ export class BeRepeatedController {
     }
     #prevCount = 0;
     renderList({ listVal, transform, proxy, templ, ctx, }) {
+        let footerFragment;
+        if (templToFooterRange.has(proxy.templ) !== undefined) {
+            footerFragment = templToFooterRange.get(proxy.templ).extractContents();
+        }
         //let firstTime = false;
         if (ctx === undefined) {
             //firstTime = true;
@@ -102,6 +115,9 @@ export class BeRepeatedController {
                                 range.setEndAfter(ns);
                                 range.deleteContents();
                                 this.#prevCount = len;
+                                if (footerFragment !== undefined) {
+                                    parent.appendChild(footerFragment);
+                                }
                                 return;
                             }
                         }
@@ -127,6 +143,9 @@ export class BeRepeatedController {
         }
         parent.append(fragment);
         this.#prevCount = len;
+        if (footerFragment !== undefined) {
+            parent.appendChild(footerFragment);
+        }
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
         const templ = upSearch(this.proxy, 'template[data-idx]');
