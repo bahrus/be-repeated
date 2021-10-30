@@ -140,7 +140,7 @@ export class BeRepeatedController {
         while (ns !== null) {
             if (ns.matches(sel)) {
                 const n = Number(ns.dataset.cnt);
-                for (let i = 0; i < n; i++) {
+                for (let i = 1; i < n; i++) {
                     if (ns !== null) {
                         ns = ns.nextElementSibling;
                         if (ns !== null)
