@@ -42,7 +42,12 @@ export class BeRepeatedController {
         hookUp(list, proxy, 'listVal');
     }
     renderList({ listVal, transform, proxy, templ, ctx }) {
-        console.log('here we go again');
+        const fragment = document.createDocumentFragment();
+        for (const item of listVal) {
+            const clone = templ.content.cloneNode(true);
+            fragment.append(clone);
+        }
+        proxy.parentElement.appendChild(fragment);
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
         const templ = upSearch(this.proxy, 'template[data-idx]');
