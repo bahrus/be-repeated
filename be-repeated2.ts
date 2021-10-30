@@ -46,6 +46,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         }
         hookUp(list, proxy, 'listVal');
     }
+    #prevCount = 0;
     renderList({listVal, transform, proxy, templ, ctx}: this){
         let firstTime = false;
         if(ctx === undefined){
@@ -74,13 +75,37 @@ export class BeRepeatedController implements BeRepeatedActions {
         const fragment = document.createDocumentFragment();
         let idx = 0;
         let tail = proxy as Element | undefined;
+        const len = listVal.length;
+        const parent = proxy.parentElement!;
         for(const item of listVal){
             ctx.host = item;
             if(!firstTime && tail !== undefined){
-                const grp = this.findGroup(tail, `[data-idx="${idx}"]`);
+                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`);
                 if(grp.length > 0){
                     processTargets(ctx, grp);
-                    tail = grp.pop();
+                    tail = grp.pop()!;
+                    idx++;
+                    if(idx === len){
+                        if(len < this.#prevCount){
+                            const lastTemplIdx = parent.querySelector(`template[data-idx="${len - 1}"]`) as HTMLElement; //TODO:  what if multiple loops in the same parent?
+                            if(lastTemplIdx !== null){
+                                const cnt = Number(lastTemplIdx.dataset.cnt!);
+                                let ns = lastTemplIdx;
+                                for(let i = 0; i < cnt; i++){
+                                    ns = ns.nextElementSibling as HTMLElement;
+                                }
+                                const range = new Range();
+                                range.setStartAfter(tail);
+                                range.setEndAfter(ns);
+                                range.deleteContents();
+                            }
+                        }
+                        //remove remaining;
+                        
+
+                        const range = new Range();
+                        range.setStartBefore
+                    }
                     continue;
                 }else{
                     tail = undefined;
@@ -101,7 +126,8 @@ export class BeRepeatedController implements BeRepeatedActions {
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
         }
-        proxy.parentElement!.append(fragment);
+        parent.append(fragment);
+        this.#prevCount = len;
     }
 
     onNestedLoopProp({nestedLoopProp, proxy}: this){
