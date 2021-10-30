@@ -73,9 +73,21 @@ export class BeRepeatedController implements BeRepeatedActions {
         }
         const fragment = document.createDocumentFragment();
         let idx = 0;
+        let tail = proxy as Element | undefined;
         for(const item of listVal){
-            const idxTempl = document.createElement('template');
             ctx.host = item;
+            if(!firstTime && tail !== undefined){
+                const grp = this.findGroup(tail, `[data-idx="${idx}"]`);
+                if(grp.length > 0){
+                    processTargets(ctx, grp);
+                    tail = grp.pop();
+                    continue;
+                }else{
+                    tail = undefined;
+                }
+            }
+            const idxTempl = document.createElement('template');
+            
             templToCtxMap.set(idxTempl, {
                 idx,
                 item
@@ -85,7 +97,8 @@ export class BeRepeatedController implements BeRepeatedActions {
             fragment.append(idxTempl);
             const clone = templ.content.cloneNode(true) as Element;
             
-            xf(clone , ctx)
+            xf(clone , ctx);
+            idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
         }
         proxy.parentElement!.append(fragment);
@@ -96,6 +109,27 @@ export class BeRepeatedController implements BeRepeatedActions {
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext!.item[nestedLoopProp];
         proxy.listVal = subList;
+    }
+
+    findGroup(tail: Element, sel: string){
+        const returnArr: Element[] = [];
+        let ns = tail.nextElementSibling;
+        while(ns !== null){
+            if(ns.matches(sel)){
+                const n = Number((ns as HTMLTemplateElement).dataset.cnt);
+                for(let i = 0; i < n; i++){
+                    if(ns !== null) {
+                        ns = ns.nextElementSibling;
+                        if(ns !== null) returnArr.push(ns);
+                    }else{
+                        return returnArr;
+                    }
+                }
+                return returnArr;
+            }
+            ns = ns!.nextElementSibling;
+        }
+        return returnArr;        
     }
 }
 

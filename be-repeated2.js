@@ -2,7 +2,7 @@ import { define } from 'be-decorated/be-decorated.js';
 import { hookUp } from 'be-observant/hookUp.js';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
-import { transform as xf } from 'trans-render/lib/transform.js';
+import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
 import { register } from 'be-hive/register.js';
 import { upSearch } from 'trans-render/lib/upSearch.js';
 const firstElementMap = new WeakMap();
@@ -71,9 +71,21 @@ export class BeRepeatedController {
         }
         const fragment = document.createDocumentFragment();
         let idx = 0;
+        let tail = proxy;
         for (const item of listVal) {
-            const idxTempl = document.createElement('template');
             ctx.host = item;
+            if (!firstTime && tail !== undefined) {
+                const grp = this.findGroup(tail, `[data-idx="${idx}"]`);
+                if (grp.length > 0) {
+                    processTargets(ctx, grp);
+                    tail = grp.pop();
+                    continue;
+                }
+                else {
+                    tail = undefined;
+                }
+            }
+            const idxTempl = document.createElement('template');
             templToCtxMap.set(idxTempl, {
                 idx,
                 item
@@ -83,6 +95,7 @@ export class BeRepeatedController {
             fragment.append(idxTempl);
             const clone = templ.content.cloneNode(true);
             xf(clone, ctx);
+            idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
         }
         proxy.parentElement.append(fragment);
@@ -92,6 +105,28 @@ export class BeRepeatedController {
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext.item[nestedLoopProp];
         proxy.listVal = subList;
+    }
+    findGroup(tail, sel) {
+        const returnArr = [];
+        let ns = tail.nextElementSibling;
+        while (ns !== null) {
+            if (ns.matches(sel)) {
+                const n = Number(ns.dataset.cnt);
+                for (let i = 0; i < n; i++) {
+                    if (ns !== null) {
+                        ns = ns.nextElementSibling;
+                        if (ns !== null)
+                            returnArr.push(ns);
+                    }
+                    else {
+                        return returnArr;
+                    }
+                }
+                return returnArr;
+            }
+            ns = ns.nextElementSibling;
+        }
+        return returnArr;
     }
 }
 const tagName = 'be-repeated';
