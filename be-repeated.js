@@ -17,7 +17,8 @@ export class BeRepeatedController {
             if (ns !== null) {
                 const range = new Range();
                 range.setStartBefore(ns);
-                range.setEndAfter(proxy.parentElement.lastElementChild);
+                const parent = proxy.parentElement || proxy.getRootNode();
+                range.setEndAfter(parent.lastElementChild);
                 templToFooterRange.set(templ, range);
             }
             const attrIs = 'is-' + beDecorProps.ifWantsToBe;
@@ -92,7 +93,7 @@ export class BeRepeatedController {
         let idx = 0;
         let tail = proxy;
         const len = listVal.length;
-        const parent = proxy.parentElement;
+        const parent = proxy.parentElement || proxy.getRootNode();
         for (const item of listVal) {
             ctx.host = item;
             if (tail !== undefined) {
