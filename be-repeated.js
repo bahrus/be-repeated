@@ -5,19 +5,28 @@ import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
 import { register } from 'be-hive/register.js';
 import { upSearch } from 'trans-render/lib/upSearch.js';
-const firstElementMap = new WeakMap();
+//const firstElementMap = new WeakMap<HTMLTemplateElement, Element>();
 const templToCtxMap = new WeakMap();
+const templToFooterRange = new WeakMap();
 export class BeRepeatedController {
+    //#footerRange: Range | undefined;
     intro(proxy, target, beDecorProps) {
         if (proxy.localName !== 'template') {
+            const ns = proxy.nextElementSibling;
             const templ = document.createElement('template');
+            if (ns !== null) {
+                const range = new Range();
+                range.setStartBefore(ns);
+                range.setEndAfter(proxy.parentElement.lastElementChild);
+                templToFooterRange.set(templ, range);
+            }
             const attrIs = 'is-' + beDecorProps.ifWantsToBe;
             const attrBe = 'be-' + beDecorProps.ifWantsToBe;
             templ.setAttribute(attrBe, proxy.getAttribute(attrIs));
             proxy.insertAdjacentElement('beforebegin', templ);
             target.removeAttribute(attrIs);
             const clonedTarget = target.cloneNode(true);
-            firstElementMap.set(templ, target);
+            //firstElementMap.set(templ, target);
             const attribs = clonedTarget.attributes;
             for (const attrib of attribs) {
                 const name = attrib.name;
@@ -28,6 +37,11 @@ export class BeRepeatedController {
                 }
             }
             templ.content.appendChild(clonedTarget);
+            //create first templ index
+            const templIdx = document.createElement('template');
+            templIdx.dataset.cnt = "2";
+            templIdx.dataset.idx = "0";
+            templ.insertAdjacentElement('afterend', templIdx);
         }
         else {
             proxy.templ = target;
@@ -44,10 +58,15 @@ export class BeRepeatedController {
         }
         hookUp(list, proxy, 'listVal');
     }
-    renderList({ listVal, transform, proxy, templ, ctx }) {
-        let firstTime = false;
+    #prevCount = 0;
+    renderList({ listVal, transform, proxy, templ, ctx, }) {
+        let footerFragment;
+        if (templToFooterRange.has(proxy.templ)) {
+            footerFragment = templToFooterRange.get(proxy.templ).extractContents();
+        }
+        //let firstTime = false;
         if (ctx === undefined) {
-            firstTime = true;
+            //firstTime = true;
             ctx = {
                 match: transform,
                 postMatch: [
@@ -69,58 +88,99 @@ export class BeRepeatedController {
             };
             proxy.ctx = ctx;
         }
-        let tail = templ;
-        let cnt = 0;
+        const fragment = document.createDocumentFragment();
         let idx = 0;
+        let tail = proxy;
+        const len = listVal.length;
+        const parent = proxy.parentElement;
         for (const item of listVal) {
             ctx.host = item;
-            if (firstTime) {
-                const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy, templ);
-                tail = rs.tail;
-                cnt = rs.cnt;
-                idx = rs.idx;
-            }
-            else {
-                const grp = findGroup(tail, `[data-idx="${idx}"]`);
-                const len = grp.length;
-                if (len > 0) {
-                    for (const el of grp) {
-                        el.classList.remove('be-repeated-hidden');
-                    }
-                    cnt += len + 1; //count template
+            if (tail !== undefined) {
+                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`);
+                if (grp.length > 0) {
                     processTargets(ctx, grp);
                     tail = grp.pop();
                     idx++;
+                    if (idx === len) {
+                        if (len < this.#prevCount) {
+                            const lastTemplIdx = parent.querySelector(`template[data-idx="${this.#prevCount - 1}"]`); //TODO:  what if multiple loops in the same parent?
+                            if (lastTemplIdx !== null) {
+                                const cnt = Number(lastTemplIdx.dataset.cnt) - 1;
+                                let ns = lastTemplIdx;
+                                for (let i = 0; i < cnt; i++) {
+                                    ns = ns.nextElementSibling;
+                                }
+                                const range = new Range();
+                                range.setStartAfter(tail);
+                                range.setEndAfter(ns);
+                                range.deleteContents();
+                                this.#prevCount = len;
+                                this.appendFooter(footerFragment, parent, proxy);
+                                return;
+                            }
+                        }
+                    }
+                    continue;
                 }
                 else {
-                    const rs = cloneAndTransform(idx, tail, cnt, ctx, proxy);
-                    tail = rs.tail;
-                    cnt = rs.cnt;
-                    idx = rs.idx;
+                    tail = undefined;
                 }
             }
-        }
-        const prevCnt = Number(proxy.dataset.cnt);
-        while (idx < prevCnt) {
-            const grp = findGroup(tail, `[data-idx="${idx}"]`);
-            const len = grp.length;
-            if (len > 0) {
-                for (const el of grp) {
-                    //el.classList.add('be-repeated-hidden');
-                    el.remove();
-                }
-                cnt += len + 1;
-            }
+            const idxTempl = document.createElement('template');
+            templToCtxMap.set(idxTempl, {
+                idx,
+                item
+            });
+            idxTempl.dataset.idx = idx.toString();
             idx++;
+            fragment.append(idxTempl);
+            const clone = templ.content.cloneNode(true);
+            xf(clone, ctx);
+            idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
+            fragment.append(clone);
         }
-        //if(cnt === 0) debugger;
-        proxy.dataset.cnt = cnt.toString();
+        parent.append(fragment);
+        this.#prevCount = len;
+        this.appendFooter(footerFragment, parent, proxy);
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
         const templ = upSearch(this.proxy, 'template[data-idx]');
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext.item[nestedLoopProp];
         proxy.listVal = subList;
+    }
+    appendFooter(footerFragment, parent, proxy) {
+        if (footerFragment === undefined)
+            return;
+        const initialLastElement = parent.lastElementChild;
+        parent.appendChild(footerFragment);
+        const finalLastElement = parent.lastElementChild;
+        const range = new Range();
+        range.setStartAfter(initialLastElement);
+        range.setEndAfter(finalLastElement);
+        templToFooterRange.set(proxy.templ, range);
+    }
+    findGroup(tail, sel) {
+        const returnArr = [];
+        let ns = tail.nextElementSibling;
+        while (ns !== null) {
+            if (ns.matches(sel)) {
+                const n = Number(ns.dataset.cnt);
+                for (let i = 1; i < n; i++) {
+                    if (ns !== null) {
+                        ns = ns.nextElementSibling;
+                        if (ns !== null)
+                            returnArr.push(ns);
+                    }
+                    else {
+                        return returnArr;
+                    }
+                }
+                return returnArr;
+            }
+            ns = ns.nextElementSibling;
+        }
+        return returnArr;
     }
 }
 const tagName = 'be-repeated';
@@ -153,66 +213,4 @@ define({
         controller: BeRepeatedController
     }
 });
-function findGroup(tail, sel) {
-    const returnArr = [];
-    let ns = tail.nextElementSibling;
-    while (ns !== null) {
-        if (ns.matches(sel)) {
-            const n = Number(ns.dataset.cnt);
-            for (let i = 0; i < n; i++) {
-                if (ns !== null) {
-                    ns = ns.nextElementSibling;
-                    if (ns !== null)
-                        returnArr.push(ns);
-                }
-                else {
-                    return returnArr;
-                }
-            }
-            return returnArr;
-        }
-        ns = ns.nextElementSibling;
-    }
-    return returnArr;
-}
-function cloneAndTransform(idx, tail, cnt, ctx, self, target) {
-    const templ = document.createElement('template');
-    templToCtxMap.set(templ, {
-        idx,
-        item: ctx.host
-    });
-    templ.dataset.idx = idx.toString();
-    idx++;
-    // tail.insertAdjacentElement('afterend', templ);
-    let templCount = 0;
-    let children = [];
-    if (target !== undefined && firstElementMap.has(target)) {
-        const originalEl = firstElementMap.get(target);
-        originalEl.insertAdjacentElement('beforebegin', templ);
-        cnt++;
-        tail = originalEl;
-        children = [originalEl];
-        processTargets(ctx, children);
-        cnt++;
-        templCount++;
-        firstElementMap.delete(target);
-        //console.log(originalEl);
-    }
-    else {
-        tail.insertAdjacentElement('afterend', templ);
-        cnt++;
-        tail = templ;
-        const clone = self.content.cloneNode(true);
-        xf(clone, ctx);
-        children = Array.from(clone.children);
-        for (const child of children) {
-            tail.insertAdjacentElement('afterend', child);
-            cnt++;
-            templCount++;
-            tail = child;
-        }
-    }
-    templ.dataset.cnt = templCount.toString();
-    return { idx, tail, cnt };
-}
 register(ifWantsToBe, upgrade, tagName);
