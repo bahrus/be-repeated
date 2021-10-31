@@ -96,7 +96,7 @@ export class BeRepeatedController {
         for (const item of listVal) {
             ctx.host = item;
             if (tail !== undefined) {
-                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`);
+                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 if (grp.length > 0) {
                     processTargets(ctx, grp);
                     tail = grp.pop();
@@ -160,12 +160,17 @@ export class BeRepeatedController {
         range.setEndAfter(finalLastElement);
         templToFooterRange.set(proxy.templ, range);
     }
-    findGroup(tail, sel) {
+    findGroup(tail, sel, idx, item) {
         const returnArr = [];
         let ns = tail.nextElementSibling;
         while (ns !== null) {
             if (ns.matches(sel)) {
-                const n = Number(ns.dataset.cnt);
+                const idxTempl = ns;
+                templToCtxMap.set(idxTempl, {
+                    idx,
+                    item
+                });
+                const n = Number(idxTempl.dataset.cnt);
                 for (let i = 1; i < n; i++) {
                     if (ns !== null) {
                         ns = ns.nextElementSibling;

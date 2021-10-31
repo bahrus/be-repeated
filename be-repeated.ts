@@ -97,7 +97,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         for(const item of listVal){
             ctx.host = item;
             if(tail !== undefined){
-                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`);
+                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 if(grp.length > 0){
                     processTargets(ctx, grp);
                     tail = grp.pop()!;
@@ -165,12 +165,17 @@ export class BeRepeatedController implements BeRepeatedActions {
         templToFooterRange.set(proxy.templ, range);
     }
 
-    findGroup(tail: Element, sel: string){
+    findGroup(tail: Element, sel: string, idx: number, item: any){
         const returnArr: Element[] = [];
         let ns = tail.nextElementSibling;
         while(ns !== null){
             if(ns.matches(sel)){
-                const n = Number((ns as HTMLTemplateElement).dataset.cnt);
+                const idxTempl = ns as HTMLTemplateElement;
+                templToCtxMap.set(idxTempl, {
+                    idx,
+                    item
+                });
+                const n = Number(idxTempl.dataset.cnt);
                 for(let i = 1; i < n; i++){
                     if(ns !== null) {
                         ns = ns.nextElementSibling;
