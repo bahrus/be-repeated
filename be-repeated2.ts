@@ -62,7 +62,7 @@ export class BeRepeatedController implements BeRepeatedActions {
     #prevCount = 0;
     renderList({listVal, transform, proxy, templ, ctx, }: this){
         let footerFragment: DocumentFragment | undefined;
-        if(templToFooterRange.has(proxy.templ) !== undefined){
+        if(templToFooterRange.has(proxy.templ)){
             footerFragment = templToFooterRange.get(proxy.templ)!.extractContents();
         }
         //let firstTime = false;

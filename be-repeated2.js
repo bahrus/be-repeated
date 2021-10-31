@@ -61,7 +61,7 @@ export class BeRepeatedController {
     #prevCount = 0;
     renderList({ listVal, transform, proxy, templ, ctx, }) {
         let footerFragment;
-        if (templToFooterRange.has(proxy.templ) !== undefined) {
+        if (templToFooterRange.has(proxy.templ)) {
             footerFragment = templToFooterRange.get(proxy.templ).extractContents();
         }
         //let firstTime = false;
