@@ -116,9 +116,7 @@ export class BeRepeatedController implements BeRepeatedActions {
                                 range.setEndAfter(ns);
                                 range.deleteContents();
                                 this.#prevCount = len;
-                                if(footerFragment !== undefined){
-                                    parent.appendChild(footerFragment);
-                                }
+                                this.appendFooter(footerFragment, parent, proxy);
                                 return;
                             }
                         }
@@ -146,9 +144,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         }
         parent.append(fragment);
         this.#prevCount = len;
-        if(footerFragment !== undefined){
-            parent.appendChild(footerFragment);
-        }
+        this.appendFooter(footerFragment, parent, proxy);
     }
 
     onNestedLoopProp({nestedLoopProp, proxy}: this){
@@ -156,6 +152,17 @@ export class BeRepeatedController implements BeRepeatedActions {
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext!.item[nestedLoopProp];
         proxy.listVal = subList;
+    }
+
+    appendFooter(footerFragment: DocumentFragment | undefined, parent: Element, proxy: HTMLTemplateElement & BeRepeatedVirtualProps){
+        if(footerFragment === undefined) return;
+        const initialLastElement = parent.lastElementChild!;
+        parent.appendChild(footerFragment);
+        const finalLastElement = parent.lastElementChild!;
+        const range = new Range();
+        range.setStartAfter(initialLastElement);
+        range.setEndAfter(finalLastElement);
+        templToFooterRange.set(proxy.templ, range);
     }
 
     findGroup(tail: Element, sel: string){

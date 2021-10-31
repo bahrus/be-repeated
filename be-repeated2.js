@@ -115,9 +115,7 @@ export class BeRepeatedController {
                                 range.setEndAfter(ns);
                                 range.deleteContents();
                                 this.#prevCount = len;
-                                if (footerFragment !== undefined) {
-                                    parent.appendChild(footerFragment);
-                                }
+                                this.appendFooter(footerFragment, parent, proxy);
                                 return;
                             }
                         }
@@ -143,15 +141,24 @@ export class BeRepeatedController {
         }
         parent.append(fragment);
         this.#prevCount = len;
-        if (footerFragment !== undefined) {
-            parent.appendChild(footerFragment);
-        }
+        this.appendFooter(footerFragment, parent, proxy);
     }
     onNestedLoopProp({ nestedLoopProp, proxy }) {
         const templ = upSearch(this.proxy, 'template[data-idx]');
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext.item[nestedLoopProp];
         proxy.listVal = subList;
+    }
+    appendFooter(footerFragment, parent, proxy) {
+        if (footerFragment === undefined)
+            return;
+        const initialLastElement = parent.lastElementChild;
+        parent.appendChild(footerFragment);
+        const finalLastElement = parent.lastElementChild;
+        const range = new Range();
+        range.setStartAfter(initialLastElement);
+        range.setEndAfter(finalLastElement);
+        templToFooterRange.set(proxy.templ, range);
     }
     findGroup(tail, sel) {
         const returnArr = [];
