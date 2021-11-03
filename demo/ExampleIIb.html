@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .be-repeated-hidden{
+            display:none;
+        }
+    </style>
+</head>
+    <body>
+        <obj-ml id=objML prop1-obj='["hello", "third", "planet"]'></obj-ml>
+        <div be-definitive=my-test>
+            <slot></slot>
+        </div>
+
+        <my-test be-repeated='{
+            "transform": {"my-test": "."},
+            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"}
+        }'></my-test>
+
+        <button onclick="updateListSameSize()">Update List Same Size</button>
+        <script>
+            function updateListSameSize() {
+                objML.value = {
+                    prop1: ['good', 'morning']
+                };
+            }
+        </script>
+        <button onclick="updateListLargeSize()">Update List To Larger Size</button>
+        <script>
+            function updateListLargeSize() {
+                const arr = [];
+                for (let i = 0; i < 10000; i++) {
+                    arr.push(i.toString());
+                }
+                objML.value = {
+                    prop1: arr
+                };
+            }
+        </script>
+        <button onclick="updateListSmallSize()">Update List To Small Size</button>
+        <script>
+            function updateListSmallSize() {
+                objML.value = {
+                    prop1: ['z'],
+                };
+            }
+        </script>
+        <script type=importmap>
+            {
+                "imports": {
+                    "trans-render/": "../node_modules/trans-render/",
+                    "xtal-element/": "../node_modules/xtal-element/",
+                    "be-decorated/": "../node_modules/be-decorated/",
+                    "on-to-me/": "../node_modules/on-to-me/",
+                    "be-observant/": "../node_modules/be-observant/",
+                    "obj-ml/": "../node_modules/obj-ml/",
+                    "be-observant/": "../node_modules/be-observant/",
+                    "be-hive/": "../node_modules/be-hive/",
+                    "be-definitive/": "../node_modules/be-definitive/",
+                    "xodus/": "../node_modules/xodus/"
+                }
+            }
+        </script>
+        <script type=module>
+            import '../be-repeated.js';
+            import 'obj-ml/obj-ml.js';
+            import 'be-definitive/be-definitive.js';
+        </script>
+    </body>
+
+    </html>
