@@ -198,7 +198,7 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            forceVisible: true,
+            forceVisible: ['template'],
             intro: 'intro',
             finale: 'finale',
             virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp'],
