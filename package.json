@@ -13,18 +13,18 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.66",
-    "be-decorated": "0.0.51",
+    "be-observant": "0.0.67",
+    "be-decorated": "0.0.52",
     "be-hive": "0.0.13",
     "trans-render": "0.0.433",
     "xtal-element": "0.0.453"
   },
   "devDependencies": {
     "xtal-test": "0.0.54",
-    "be-definitive": "0.0.18",
+    "be-definitive": "0.0.19",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7",
-    "xtal-editor": "0.0.104",
+    "xtal-editor": "0.0.108",
     "xtal-shell": "0.0.25",
     "obj-ml": "0.0.3"
   },
