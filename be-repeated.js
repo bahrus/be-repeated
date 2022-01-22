@@ -204,15 +204,11 @@ define({
             virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp'],
         },
         actions: {
-            onList: {
-                ifAllOf: ['list']
-            },
+            onList: 'list',
             renderList: {
                 ifAllOf: ['transform', 'listVal', 'templ']
             },
-            onNestedLoopProp: {
-                ifAllOf: ['nestedLoopProp']
-            }
+            onNestedLoopProp: 'nestedLoopProp'
         }
     },
     complexPropDefaults: {
