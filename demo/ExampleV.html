@@ -17,7 +17,8 @@
         <li>Head Item</li>
         <template be-repeated='{
             "transform": {"li": "."},
-            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"}
+            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"},
+            "deferRendering": true
         }'><li>...</li></template>
         <template data-cnt="2" data-idx="0"></template>
         <li>hello</li>

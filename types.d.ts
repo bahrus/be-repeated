@@ -2,13 +2,13 @@ import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
 import {RenderContext} from 'trans-render/lib/types';
 
 export interface BeRepeatedVirtualProps{
-    eventHandlers: EventHandler[], 
-    list: string | any[],
-    listVal: any[],
-    nestedLoopProp: string,
-    transform: any, 
-    ctx: RenderContext,
-    templ: HTMLTemplateElement,
+    list?: string | any[],
+    listVal?: any[],
+    nestedLoopProp?: string,
+    transform?: any, 
+    ctx?: RenderContext,
+    templ?: HTMLTemplateElement,
+    deferRendering?: boolean,
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{

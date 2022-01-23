@@ -60,7 +60,12 @@ export class BeRepeatedController {
         hookUp(list, proxy, 'listVal');
     }
     #prevCount = 0;
-    renderList({ listVal, transform, proxy, templ, ctx, }) {
+    renderList({ listVal, transform, proxy, templ, ctx, deferRendering }) {
+        if (deferRendering) {
+            proxy.deferRendering = false;
+            return;
+        }
+        console.log('renderList');
         let footerFragment;
         if (templToFooterRange.has(proxy.templ)) {
             footerFragment = templToFooterRange.get(proxy.templ).extractContents();
@@ -201,7 +206,7 @@ define({
             forceVisible: ['template'],
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp'],
+            virtualProps: ['ctx', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering'],
         },
         actions: {
             onList: 'list',

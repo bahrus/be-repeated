@@ -61,10 +61,15 @@ export class BeRepeatedController implements BeRepeatedActions {
         hookUp(list, proxy, 'listVal');
     }
     #prevCount = 0;
-    renderList({listVal, transform, proxy, templ, ctx, }: this){
+    renderList({listVal, transform, proxy, templ, ctx, deferRendering}: this){
+        if(deferRendering){
+            proxy.deferRendering = false;
+            return;
+        }
+        console.log('renderList');
         let footerFragment: DocumentFragment | undefined;
-        if(templToFooterRange.has(proxy.templ)){
-            footerFragment = templToFooterRange.get(proxy.templ)!.extractContents();
+        if(templToFooterRange.has(proxy.templ!)){
+            footerFragment = templToFooterRange.get(proxy.templ!)!.extractContents();
         }
         //let firstTime = false;
         if(ctx === undefined){
@@ -93,9 +98,9 @@ export class BeRepeatedController implements BeRepeatedActions {
         const fragment = document.createDocumentFragment();
         let idx = 0;
         let tail = proxy as Element | undefined;
-        const len = listVal.length;
+        const len = listVal!.length;
         const parent = proxy.parentElement || proxy.getRootNode() as Element;
-        for(const item of listVal){
+        for(const item of listVal!){
             ctx.host = item;
             if(tail !== undefined){
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
@@ -137,7 +142,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             idxTempl.dataset.idx = idx.toString();
             idx++;
             fragment.append(idxTempl);
-            const clone = templ.content.cloneNode(true) as Element;
+            const clone = templ!.content.cloneNode(true) as Element;
             
             xf(clone , ctx);
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
@@ -151,7 +156,7 @@ export class BeRepeatedController implements BeRepeatedActions {
     onNestedLoopProp({nestedLoopProp, proxy}: this){
         const templ = upSearch(this.proxy, 'template[data-idx]') as HTMLTemplateElement;
         const loopContext = templToCtxMap.get(templ);
-        const subList = loopContext!.item[nestedLoopProp];
+        const subList = loopContext!.item[nestedLoopProp!];
         proxy.listVal = subList;
     }
 
@@ -163,7 +168,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         const range = new Range();
         range.setStartAfter(initialLastElement);
         range.setEndAfter(finalLastElement);
-        templToFooterRange.set(proxy.templ, range);
+        templToFooterRange.set(proxy.templ!, range);
     }
 
     findGroup(tail: Element, sel: string, idx: number, item: any){
@@ -210,7 +215,7 @@ define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, B
             forceVisible: ['template'],
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['ctx', 'eventHandlers', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp'],
+            virtualProps: ['ctx', 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering'],
         },
         actions:{
             onList:'list',
