@@ -66,7 +66,6 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.deferRendering = false;
             return;
         }
-        console.log('renderList');
         let footerFragment: DocumentFragment | undefined;
         if(templToFooterRange.has(proxy.templ!)){
             footerFragment = templToFooterRange.get(proxy.templ!)!.extractContents();
