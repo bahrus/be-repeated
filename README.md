@@ -4,14 +4,15 @@
 
 <a href="https://nodei.co/npm/be-repeated/"><img src="https://nodei.co/npm/be-repeated.png"></a>
 
-Attribute-based version of [ib-id](https://github.com/bahrus/ib-id) -- a repeating decorator web component.
+be-repeated is a web component decorator that provides standalone support for repeating DOM generation.  
 
-Goals remain the same:
+Goals:
 
-1.  Can complement server-rendered lists
-2.  Can be 100% conformant to proper HTML decorum.
-3.  Can use dynamic list of tags
-4.  Can use enumerated set of templates.
+1.  Can complement server-rendered lists.
+2.  Syntax is truly declarative.  No JS!
+3.  Syntax is compatible Cloudflare's [HTMLRewriter](https://discourse.wicg.io/t/proposal-support-cloudflares-htmlrewriter-api-in-workers/5721/3) (in theory).
+3.  Can be 100% conformant to proper HTML decorum.
+
 
 ## Syntax Example I -- Basic, template free. 
 
@@ -28,9 +29,9 @@ Goals remain the same:
 
 Working with JSON-in-HTML, like the example above shows, is much more pleasant in VSCode if using the web-friendly [JSON-in-HTML extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html).
 
-As always with [be-decorated](https://github.com/bahrus/be-decorated) based web components, we can use data-be-repeated instead of be-repeated.  And the attribute can be configured to be different in each Shadow DOM realm.
+As always with all [be-decorated](https://github.com/bahrus/be-decorated) based web components, we can use data-be-repeated instead of be-repeated.  And the attribute can be configured to be different in each Shadow DOM realm.
 
-Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant).
+Note that the "list" property can come from the host or other DOM elements via the [be-observant binding syntax](https://github.com/bahrus/be-observant) as demonstrated below.
 
 ## Example II -- Updatable via binding.
 
@@ -127,5 +128,11 @@ Templates may not be required, at least for simple examples, but possibly as com
     </li>
 </ul>
 ```
+
+Example V -- Compatibility with server-rendered lists.
+
+If the server can render the initial list, that could significantly improve the initial performance, especially if the client doesn't blindly re-render the entire list.
+
+To indicate the server has rendered the list, and to skip the first rendering on the client, set the property:  deferRendering to true.
 
 
