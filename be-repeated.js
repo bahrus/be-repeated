@@ -5,6 +5,7 @@ import { SplitText } from 'trans-render/lib/SplitText.js';
 import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
 import { register } from 'be-hive/register.js';
 import { upSearch } from 'trans-render/lib/upSearch.js';
+import { unsubscribe } from 'trans-render/lib/subscribe.js';
 //const firstElementMap = new WeakMap<HTMLTemplateElement, Element>();
 const templToCtxMap = new WeakMap();
 const templToFooterRange = new WeakMap();
@@ -49,6 +50,7 @@ export class BeRepeatedController {
         }
     }
     finale(proxy, target) {
+        unsubscribe(proxy);
         if (target.localName !== 'template')
             return; //[TODO]: ?
     }
