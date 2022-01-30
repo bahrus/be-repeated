@@ -1,4 +1,4 @@
-# be-repeated [WIP]
+# be-repeated
 
 [![Actions Status](https://github.com/bahrus/be-repeated/workflows/CI/badge.svg)](https://github.com/bahrus/be-repeated/actions?query=workflow%3ACI)
 
@@ -6,15 +6,14 @@
 
 be-repeated is a web component decorator that provides standalone support for repeating DOM generation.  Like web components, it can work anywhere HTML works.
 
-Goals:
+The package also includes a [trans-render](https://github.com/bahrus/trans-render) plug-in that enables the repeating logic to be performed during "template stamping" [TODO], based on the same syntax.
 
-1.  Can complement server-rendered lists.
-2.  Syntax is truly declarative.  No JS!
-3.  Syntax is compatible Cloudflare's [HTMLRewriter](https://discourse.wicg.io/t/proposal-support-cloudflares-htmlrewriter-api-in-workers/5721/3) (in theory).
-3.  Can be 100% conformant to proper HTML decorum.
+Finally, the package contains a Cloudflare HTMLRewriter helper class, to generate repeating content in the context of a Cloudflare worker, also based on the same syntax. [TODO].
 
 
-## Syntax Example I -- Basic, template free. 
+
+
+## Syntax Example I -- Client-side binding. Basic, template free. 
 
 ```html
 <ul>

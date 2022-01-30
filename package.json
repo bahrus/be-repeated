@@ -20,7 +20,7 @@
     "xtal-element": "0.0.462"
   },
   "devDependencies": {
-    "xtal-test": "0.0.54",
+    "xtal-test": "0.0.55",
     "be-definitive": "0.0.28",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7",
@@ -46,7 +46,7 @@
     "type": "git",
     "url": "git+https://github.com/bahrus/be-repeated.git"
   },
-  "author": "",
+  "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/be-repeated/issues"
