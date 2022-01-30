@@ -9,7 +9,8 @@
 		"watch": true
 	},
 	"files": [
-		"be-repeated.ts"
+		"be-repeated.ts",
+		"trPlugin.ts"
 	],
 	"exclude":[
 		"build",

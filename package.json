@@ -30,7 +30,9 @@
   },
   "exports": {
     ".": "./be-repeated.js",
-    "./be-repeated.js": "./be-repeated.js"
+    "./be-repeated.js": "./be-repeated.js",
+    "./renderList.js": "./renderList.js",
+    "./trPlugin.js": "./trPlugin.js"
   },
   "files": [
     "*.*"
