@@ -1,18 +1,19 @@
 import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
-import {RenderContext} from 'trans-render/lib/types';
+import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
 
 export interface BeRepeatedVirtualProps{
     list?: string | any[],
     listVal?: any[],
     nestedLoopProp?: string,
     transform?: any, 
-    ctx?: RenderContext,
     templ?: HTMLTemplateElement,
     deferRendering?: boolean,
+    transformPluginVals?: TransformPlugins,
+    listRenderer: ListRendererActions,
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{
-    proxy: HTMLTemplateElement & BeRepeatedVirtualProps,
+    proxy: Element & BeRepeatedVirtualProps,
 }
 
 export interface BeRepeatedActions {
@@ -27,4 +28,8 @@ export interface LoopContext {
     //list: any[];
     idx: number;
     item: any;
+}
+
+export interface ListRendererActions{
+    renderList(self: BeRepeatedProps): void;
 }

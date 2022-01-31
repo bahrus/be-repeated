@@ -6,7 +6,7 @@
 
 be-repeated is a web component decorator that provides standalone support for repeating DOM generation.  Like web components, it can work anywhere HTML works.  It provides progressive enhancement to server-rendered content, without requiring being defined inside a template.
 
-The package also includes a [trans-render](https://github.com/bahrus/trans-render) plug-in that *does* enables the repeating logic to be performed during "template stamping", based on the same syntax, and sharing the core logic [TODO].
+The package also includes a [trans-render](https://github.com/bahrus/trans-render) plug-in that *does* enable the repeating logic to be performed during "template stamping", based on the same syntax, and sharing the core logic [TODO].
 
 Finally, the package contains a Cloudflare HTMLRewriter helper class, to generate repeating content in the context of a Cloudflare worker, also based on the same syntax (but logic is by necessity separate). [TODO].
 
