@@ -73,10 +73,10 @@
                 ...settings,
                 templ: beRepeated,
             };
-            settings.deferRendering = true;
-            beRepeated.setAttribute('be-repeated', JSON.stringify(settings));
             const listRenderer = new ListRenderer(obj);
             listRenderer.renderList(obj);
+            settings.deferRendering = true;
+            beRepeated.setAttribute('be-repeated', JSON.stringify(settings));
             dl.appendChild(clone);
         }
     </script>
