@@ -22,7 +22,7 @@
 </head>
 <body>
 
-    <dl>
+    <dl id=dl>
         <dt>Definition</dt>
         <dd>Meaning of the word</dd>
 
@@ -32,7 +32,7 @@
                     "dt": "term",
                     "dd": "def"
                 },
-                "list":  [{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]
+                "listVal":  [{"term": "nah", "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance"}]
             }'>
                 <dt></dt>
                 <dd></dd>
@@ -60,6 +60,23 @@
     <script type=module>
         import '../be-repeated.js';
         import 'obj-ml/obj-ml.js';
+    </script>
+    <script type=module>
+        import { ListRenderer } from '../ListRenderer.js';
+        const clone = container.content.cloneNode(true);
+        const beRepeateds = Array.from(clone.querySelectorAll('[be-repeated]'));
+        for(const beRepeated of beRepeateds){
+            const attr = beRepeated.getAttribute('be-repeated');
+            const settings = JSON.parse(attr);
+            const obj = {
+                proxy: beRepeated,
+                ...settings,
+                templ: beRepeated,
+            };
+            const listRenderer = new ListRenderer(obj);
+            listRenderer.renderList(obj);
+            dl.appendChild(clone);
+        }
     </script>
 </body>
 </html>
