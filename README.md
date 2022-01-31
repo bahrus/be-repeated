@@ -4,7 +4,7 @@
 
 <a href="https://nodei.co/npm/be-repeated/"><img src="https://nodei.co/npm/be-repeated.png"></a>
 
-be-repeated is a web component decorator that provides standalone support for repeating DOM generation.  Like web components, it can work anywhere HTML works.  It provides progressive enhancement to server-rendered content, without requiring use of templates.
+be-repeated is a web component decorator that provides standalone support for repeated DOM generation.  Like web components, it can work anywhere HTML works.  It provides progressive enhancement to server-rendered content, without requiring use of templates.
 
 The package also includes a [trans-render](https://github.com/bahrus/trans-render) plug-in that *does* enable the repeating logic to be performed during "template stamping", based on the same syntax, and sharing the core logic.
 
@@ -17,7 +17,7 @@ Finally, the package will contain a Cloudflare HTMLRewriter helper class, to gen
 <ul>
     <li>Head Item</li>
     <li be-repeated='{
-        "list": ["hello", "world"],
+        "listVal": ["hello", "world"],
         "transform": {"li": "."}
     }'>...</li>
     <li>Footer Item</li>
@@ -75,7 +75,7 @@ Template tags are required when more than one element needs to repeat per iterat
 ```html
 <ul>
     <template be-repeated='{
-        "list": [
+        "listVal": [
             {"description": "first item", "innerList": [{"name": "a"}, {"name": "b"}]},
             {"description": "second item", "innerList": [{"name": "c"}, {"name": "b"}]}
         ],
