@@ -18,8 +18,8 @@ export class ListRenderer {
             return;
         }
         let footerFragment;
-        if (templToFooterRange.has(proxy.templ)) {
-            footerFragment = templToFooterRange.get(proxy.templ).extractContents();
+        if (templToFooterRange.has(templ)) {
+            footerFragment = templToFooterRange.get(templ).extractContents();
         }
         if (this.#ctx === undefined) {
             this.#ctx = {
@@ -69,7 +69,7 @@ export class ListRenderer {
                                 range.setEndAfter(ns);
                                 range.deleteContents();
                                 this.#prevCount = len;
-                                this.appendFooter(footerFragment, parent, proxy);
+                                this.appendFooter(footerFragment, parent, proxy, templ);
                                 return;
                             }
                         }
@@ -95,7 +95,7 @@ export class ListRenderer {
         }
         parent.append(fragment);
         this.#prevCount = len;
-        this.appendFooter(footerFragment, parent, proxy);
+        this.appendFooter(footerFragment, parent, proxy, templ);
     }
     findGroup(tail, sel, idx, item) {
         const returnArr = [];
@@ -124,7 +124,7 @@ export class ListRenderer {
         }
         return returnArr;
     }
-    appendFooter(footerFragment, parent, proxy) {
+    appendFooter(footerFragment, parent, proxy, templ) {
         if (footerFragment === undefined)
             return;
         const initialLastElement = parent.lastElementChild;
@@ -133,6 +133,6 @@ export class ListRenderer {
         const range = new Range();
         range.setStartAfter(initialLastElement);
         range.setEndAfter(finalLastElement);
-        templToFooterRange.set(proxy.templ, range);
+        templToFooterRange.set(templ, range);
     }
 }

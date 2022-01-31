@@ -21,8 +21,8 @@ export class ListRenderer implements ListRendererActions {
             return;
         }
         let footerFragment: DocumentFragment | undefined;
-        if(templToFooterRange.has(proxy.templ!)){
-            footerFragment = templToFooterRange.get(proxy.templ!)!.extractContents();
+        if(templToFooterRange.has(templ!)){
+            footerFragment = templToFooterRange.get(templ!)!.extractContents();
         }
         if(this.#ctx === undefined){
             this.#ctx = {
@@ -72,7 +72,7 @@ export class ListRenderer implements ListRendererActions {
                                 range.setEndAfter(ns);
                                 range.deleteContents();
                                 this.#prevCount = len;
-                                this.appendFooter(footerFragment, parent, proxy);
+                                this.appendFooter(footerFragment, parent, proxy, templ);
                                 return;
                             }
                         }
@@ -100,7 +100,7 @@ export class ListRenderer implements ListRendererActions {
         }
         parent.append(fragment);
         this.#prevCount = len;
-        this.appendFooter(footerFragment, parent, proxy);
+        this.appendFooter(footerFragment, parent, proxy, templ);
     }
 
     findGroup(tail: Element, sel: string, idx: number, item: any){
@@ -129,7 +129,7 @@ export class ListRenderer implements ListRendererActions {
         return returnArr;        
     }
 
-    appendFooter(footerFragment: DocumentFragment | undefined, parent: Element, proxy: Element & BeRepeatedVirtualProps){
+    appendFooter(footerFragment: DocumentFragment | undefined, parent: Element, proxy: Element & BeRepeatedVirtualProps, templ: HTMLTemplateElement | undefined){
         if(footerFragment === undefined) return;
         const initialLastElement = parent.lastElementChild!;
         parent.appendChild(footerFragment);
@@ -137,6 +137,6 @@ export class ListRenderer implements ListRendererActions {
         const range = new Range();
         range.setStartAfter(initialLastElement);
         range.setEndAfter(finalLastElement);
-        templToFooterRange.set(proxy.templ!, range);
+        templToFooterRange.set(templ!, range);
     }
 }
