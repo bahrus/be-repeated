@@ -1,4 +1,5 @@
 import {RenderContext, TransformPluginSettings} from 'trans-render/lib/types';
+import {register} from 'trans-render/lib/pluginMgr.js'
 import {ListRenderer} from './ListRenderer';
 
 export const trPlugin : TransformPluginSettings = {
@@ -17,4 +18,6 @@ export const trPlugin : TransformPluginSettings = {
         target!.setAttribute(attrib!, JSON.stringify(settings));
         
     }
-} 
+}
+
+register(trPlugin);
