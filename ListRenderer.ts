@@ -15,7 +15,7 @@ export class ListRenderer implements ListRendererActions {
         this.#deferRendering = !!props.deferRendering;
         
     }
-    renderList({listVal, transform, proxy, templ}: BeRepeatedProps){
+    renderList({listVal, transform, proxy, templ, transformPlugins}: BeRepeatedProps){
         if(this.#deferRendering){
             this.#deferRendering = false;
             return;
@@ -43,6 +43,7 @@ export class ListRenderer implements ListRendererActions {
                         ctor: SplitText,
                     }
                 ],
+                plugins: transformPlugins,
             };
         }
         const fragment = document.createDocumentFragment();

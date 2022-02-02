@@ -12,7 +12,7 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    renderList({ listVal, transform, proxy, templ }) {
+    renderList({ listVal, transform, proxy, templ, transformPlugins }) {
         if (this.#deferRendering) {
             this.#deferRendering = false;
             return;
@@ -40,6 +40,7 @@ export class ListRenderer {
                         ctor: SplitText,
                     }
                 ],
+                plugins: transformPlugins,
             };
         }
         const fragment = document.createDocumentFragment();

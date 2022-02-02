@@ -1,3 +1,4 @@
+import { register } from 'trans-render/lib/pluginMgr.js';
 import { ListRenderer } from './ListRenderer';
 export const trPlugin = {
     selector: 'beRepeatedAttribs',
@@ -16,3 +17,4 @@ export const trPlugin = {
         target.setAttribute(attrib, JSON.stringify(settings));
     }
 };
+register(trPlugin);

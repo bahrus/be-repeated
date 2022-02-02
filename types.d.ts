@@ -8,7 +8,7 @@ export interface BeRepeatedVirtualProps{
     transform?: any, 
     templ?: HTMLTemplateElement,
     deferRendering?: boolean,
-    transformPluginVals?: TransformPlugins,
+    transformPlugins?: TransformPlugins,
     listRenderer: ListRendererActions,
 }
 
