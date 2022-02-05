@@ -1,7 +1,8 @@
 import {BeRepeatedProps, BeRepeatedVirtualProps, LoopContext, ListRendererActions} from './types';
 import { PE } from 'trans-render/lib/PE.js';
 import { SplitText } from 'trans-render/lib/SplitText.js';
-import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
+//import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
+import {TR, DTR} from 'trans-render/lib/DTR.js';
 import { RenderContext } from 'trans-render/lib/types';
 
 export const templToCtxMap = new WeakMap<HTMLTemplateElement, LoopContext>();
@@ -10,12 +11,13 @@ export const templToFooterRange = new WeakMap<HTMLTemplateElement, Range>();
 export class ListRenderer implements ListRendererActions {
     #deferRendering = false;
     #prevCount = 0;
+    #tr?: TR;
     #ctx: RenderContext | undefined;
     constructor(public props: BeRepeatedProps){
         this.#deferRendering = !!props.deferRendering;
         
     }
-    renderList({listVal, transform, proxy, templ, transformPlugins}: BeRepeatedProps){
+    async renderList({listVal, transform, proxy, templ, transformPlugins}: BeRepeatedProps){
         if(this.#deferRendering){
             this.#deferRendering = false;
             return;
@@ -27,22 +29,6 @@ export class ListRenderer implements ListRendererActions {
         if(this.#ctx === undefined){
             this.#ctx = {
                 match: transform,
-                postMatch: [
-                    {
-                        rhsType: Array,
-                        rhsHeadType: Object,
-                        ctor: PE
-                    },
-                    {
-                        rhsType: Array,
-                        rhsHeadType: String,
-                        ctor: SplitText
-                    },
-                    {
-                        rhsType: String,
-                        ctor: SplitText,
-                    }
-                ],
                 plugins: transformPlugins,
             };
         }
@@ -56,7 +42,12 @@ export class ListRenderer implements ListRendererActions {
             if(tail !== undefined){
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 if(grp.length > 0){
-                    processTargets(this.#ctx, grp);
+                    //processTargets(this.#ctx, grp);
+                    if(this.#tr !== undefined){
+                        this.#tr.transform(grp);
+                    }else{
+                        this.#tr = await DTR.transform(grp, this.#ctx);
+                    }
                     tail = grp.pop()!;
                     idx++;
                     if(idx === len){
@@ -94,8 +85,11 @@ export class ListRenderer implements ListRendererActions {
             idx++;
             fragment.append(idxTempl);
             const clone = templ!.content.cloneNode(true) as Element;
-            
-            xf(clone , this.#ctx);
+            if(this.#tr !== undefined){
+                this.#tr.transform(clone);
+            }else{
+                this.#tr = await DTR.transform(clone, this.#ctx);
+            }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
         }

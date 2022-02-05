@@ -1,18 +1,18 @@
-import { PE } from 'trans-render/lib/PE.js';
-import { SplitText } from 'trans-render/lib/SplitText.js';
-import { transform as xf, processTargets } from 'trans-render/lib/transform.js';
+//import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
+import { DTR } from 'trans-render/lib/DTR.js';
 export const templToCtxMap = new WeakMap();
 export const templToFooterRange = new WeakMap();
 export class ListRenderer {
     props;
     #deferRendering = false;
     #prevCount = 0;
+    #tr;
     #ctx;
     constructor(props) {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    renderList({ listVal, transform, proxy, templ, transformPlugins }) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins }) {
         if (this.#deferRendering) {
             this.#deferRendering = false;
             return;
@@ -24,22 +24,6 @@ export class ListRenderer {
         if (this.#ctx === undefined) {
             this.#ctx = {
                 match: transform,
-                postMatch: [
-                    {
-                        rhsType: Array,
-                        rhsHeadType: Object,
-                        ctor: PE
-                    },
-                    {
-                        rhsType: Array,
-                        rhsHeadType: String,
-                        ctor: SplitText
-                    },
-                    {
-                        rhsType: String,
-                        ctor: SplitText,
-                    }
-                ],
                 plugins: transformPlugins,
             };
         }
@@ -53,7 +37,13 @@ export class ListRenderer {
             if (tail !== undefined) {
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 if (grp.length > 0) {
-                    processTargets(this.#ctx, grp);
+                    //processTargets(this.#ctx, grp);
+                    if (this.#tr !== undefined) {
+                        this.#tr.transform(grp);
+                    }
+                    else {
+                        this.#tr = await DTR.transform(grp, this.#ctx);
+                    }
                     tail = grp.pop();
                     idx++;
                     if (idx === len) {
@@ -90,7 +80,12 @@ export class ListRenderer {
             idx++;
             fragment.append(idxTempl);
             const clone = templ.content.cloneNode(true);
-            xf(clone, this.#ctx);
+            if (this.#tr !== undefined) {
+                this.#tr.transform(clone);
+            }
+            else {
+                this.#tr = await DTR.transform(clone, this.#ctx);
+            }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
         }
