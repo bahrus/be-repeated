@@ -1,6 +1,5 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
-import { unsubscribe } from 'trans-render/lib/subscribe.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
 export class BeRepeatedController {
     //#footerRange: Range | undefined;
@@ -42,7 +41,8 @@ export class BeRepeatedController {
             proxy.templ = target;
         }
     }
-    finale(proxy, target) {
+    async finale(proxy, target) {
+        const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
         if (target.localName !== 'template')
             return; //[TODO]: ?
