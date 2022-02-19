@@ -1,4 +1,3 @@
-//import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
 import { DTR } from 'trans-render/lib/DTR.js';
 export const templToCtxMap = new WeakMap();
 export const templToFooterRange = new WeakMap();

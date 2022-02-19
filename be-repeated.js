@@ -1,7 +1,5 @@
 import { define } from 'be-decorated/be-decorated.js';
-import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
-import { upSearch } from 'trans-render/lib/upSearch.js';
 import { unsubscribe } from 'trans-render/lib/subscribe.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
 export class BeRepeatedController {
@@ -49,11 +47,12 @@ export class BeRepeatedController {
         if (target.localName !== 'template')
             return; //[TODO]: ?
     }
-    onList({ list, proxy }) {
+    async onList({ list, proxy }) {
         if (Array.isArray(list)) {
             proxy.listVal = list;
             return;
         }
+        const { hookUp } = await import('be-observant/hookUp.js');
         hookUp(list, proxy, 'listVal');
     }
     #prevCount = 0;
@@ -63,7 +62,8 @@ export class BeRepeatedController {
         }
         proxy.listRenderer.renderList(this);
     }
-    onNestedLoopProp({ nestedLoopProp, proxy }) {
+    async onNestedLoopProp({ nestedLoopProp, proxy }) {
+        const { upSearch } = await import('trans-render/lib/upSearch.js');
         const templ = upSearch(this.proxy, 'template[data-idx]');
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext.item[nestedLoopProp];

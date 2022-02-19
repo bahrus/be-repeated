@@ -1,7 +1,4 @@
 import {BeRepeatedProps, BeRepeatedVirtualProps, LoopContext, ListRendererActions} from './types';
-import { PE } from 'trans-render/lib/PE.js';
-import { SplitText } from 'trans-render/lib/SplitText.js';
-//import {transform as xf, processTargets} from 'trans-render/lib/transform.js';
 import {TR, DTR} from 'trans-render/lib/DTR.js';
 import { RenderContext } from 'trans-render/lib/types';
 
