@@ -80,8 +80,8 @@ export class ListRenderer implements ListRendererActions {
             }
             //newElements
             const idxTempl = document.createElement('template');
-            
-            templToCtxMap.set(idxTempl, {
+            //const idxTempl = document.createComment('');
+            templToCtxMap.set(idxTempl as any as HTMLTemplateElement, {
                 idx,
                 item
             });
@@ -95,6 +95,7 @@ export class ListRenderer implements ListRendererActions {
                 fragment = intersectionalTempl.content;
             }
             fragment!.append(idxTempl);
+            
             fragmentInsertionCount++;
             const clone = templ!.content.cloneNode(true) as Element;
             if(this.#tr !== undefined){

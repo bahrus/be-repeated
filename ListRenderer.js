@@ -78,6 +78,7 @@ export class ListRenderer {
             }
             //newElements
             const idxTempl = document.createElement('template');
+            //const idxTempl = document.createComment('');
             templToCtxMap.set(idxTempl, {
                 idx,
                 item

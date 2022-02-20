@@ -12,14 +12,24 @@
         }
         template[be-intersectional], template[is-intersectional]{
             display:block;
-            height: 1000px;
+            height: 10000px;
         }
+        /* my-test{
+            display:block;
+        } */
     </style>
 </head>
     <body>
         <obj-ml id=objML prop1-obj='["hello", "third", "planet"]'></obj-ml>
-        <div be-definitive=my-test>
-            <style>
+        <div be-definitive='{
+            "config": {
+                "tagName":"my-test",
+                "propDefaults": {
+                    "noshadow": false
+                }
+            }
+        }'>
+            <style be-adopted>
                 :host{
                     display:block;
                 }
