@@ -22,11 +22,13 @@
             </style>
             <slot></slot>
         </div>
+        <div>
+            <my-test be-repeated='{
+                "transform": {"my-test": "."},
+                "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"}
+            }'></my-test>
+        </div>
 
-        <my-test be-repeated='{
-            "transform": {"my-test": "."},
-            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"}
-        }'></my-test>
 
         <button onclick="updateListSameSize()">Update List Same Size</button>
         <script>

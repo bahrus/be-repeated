@@ -22,10 +22,9 @@ Finally, the package will contain a Cloudflare HTMLRewriter helper class, to gen
         "listVal": ["hello", "world"],
         "transform": {"li": "."}
     }'>...</li>
+    <li>Footer Item</li>
 </ul>
 ```
-
-**NB:** Footer items are not supported (too complicated).
 
 Working with JSON-in-HTML, like the example above shows, is much more pleasant in VSCode if using the web-friendly [JSON-in-HTML extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html).  And the [may-it-be compiler](https://github.com/bahrus/may-it-be) makes working with such attributes quite pleasant.
 

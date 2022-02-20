@@ -87,14 +87,12 @@ export class ListRenderer implements ListRendererActions {
             });
             idxTempl.dataset.idx = idx.toString();
             idx++;
+
             if(fragmentInsertionCount === 0){
-                fragment = document.createDocumentFragment();
-                if(intersectional){
-                    intersectionalTempl = document.createElement('template');
-                    intersectionalTempl.setAttribute('be-intersectional', '');
-                    //fragment.appendChild(templ);
-                    fragment = intersectionalTempl.content;
-                }
+                intersectionalTempl = document.createElement('template');
+                intersectionalTempl.setAttribute('be-intersectional', '');
+                //fragment.appendChild(templ);
+                fragment = intersectionalTempl.content;
             }
             fragment!.append(idxTempl);
             fragmentInsertionCount++;
@@ -111,7 +109,18 @@ export class ListRenderer implements ListRendererActions {
                 fragmentInsertionCount = 0;
             }
         }
-        if(intersectional && fragmentInsertionCount > 0) parent.append(intersectionalTempl!);
+        if(intersectional){
+            if(fragmentInsertionCount > 0) parent.append(intersectionalTempl!);
+        }else{
+            if(tail && tail.nextElementSibling){
+                const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
+                insertAdjacentTemplate(intersectionalTempl!, tail, 'afterend');
+            }else{
+                parent.appendChild(fragment!);
+            }
+            
+        }
+        
         this.#prevCount = len;
         //this.appendFooter(footerFragment, parent, proxy, templ);
     }
