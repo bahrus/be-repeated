@@ -13,11 +13,11 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.95",
-    "be-decorated": "0.0.81",
-    "be-hive": "0.0.31",
-    "trans-render": "0.0.484",
-    "xtal-element": "0.0.477"
+    "be-observant": "0.0.97",
+    "be-decorated": "0.0.83",
+    "be-hive": "0.0.32",
+    "trans-render": "0.0.486",
+    "xtal-element": "0.0.478"
   },
   "devDependencies": {
     "xtal-test": "0.0.55",

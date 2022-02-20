@@ -10,6 +10,7 @@ export interface BeRepeatedVirtualProps{
     deferRendering?: boolean,
     transformPlugins?: TransformPlugins,
     listRenderer: ListRendererActions,
+    beIntersectionalPageSize?: number,
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{

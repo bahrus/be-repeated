@@ -14,7 +14,8 @@ export class ListRenderer implements ListRendererActions {
         this.#deferRendering = !!props.deferRendering;
         
     }
-    async renderList({listVal, transform, proxy, templ, transformPlugins}: BeRepeatedProps){
+    async renderList({listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize}: BeRepeatedProps){
+        const intersectional = !!beIntersectionalPageSize;
         if(this.#deferRendering){
             this.#deferRendering = false;
             return;
@@ -29,7 +30,9 @@ export class ListRenderer implements ListRendererActions {
                 plugins: transformPlugins,
             };
         }
-        const fragment = document.createDocumentFragment();
+        let fragment: DocumentFragment;// = document.createDocumentFragment();
+        let intersectionalTempl: HTMLTemplateElement;
+        let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy as Element | undefined;
         const len = listVal!.length;
@@ -41,7 +44,7 @@ export class ListRenderer implements ListRendererActions {
                 if(grp.length > 0){
                     //processTargets(this.#ctx, grp);
                     if(this.#tr !== undefined){
-                        this.#tr.transform(grp);
+                        await this.#tr.transform(grp);
                     }else{
                         this.#tr = await DTR.transform(grp, this.#ctx);
                     }
@@ -72,6 +75,7 @@ export class ListRenderer implements ListRendererActions {
                     tail = undefined;
                 }
             }
+            //newElements
             const idxTempl = document.createElement('template');
             
             templToCtxMap.set(idxTempl, {
@@ -80,17 +84,31 @@ export class ListRenderer implements ListRendererActions {
             });
             idxTempl.dataset.idx = idx.toString();
             idx++;
-            fragment.append(idxTempl);
+            if(fragmentInsertionCount === 0){
+                fragment = document.createDocumentFragment();
+                if(intersectional){
+                    intersectionalTempl = document.createElement('template');
+                    intersectionalTempl.setAttribute('be-intersectional', '');
+                    //fragment.appendChild(templ);
+                    fragment = intersectionalTempl.content;
+                }
+            }
+            fragment!.append(idxTempl);
+            fragmentInsertionCount++;
             const clone = templ!.content.cloneNode(true) as Element;
             if(this.#tr !== undefined){
-                this.#tr.transform(clone);
+                await this.#tr.transform(clone);
             }else{
                 this.#tr = await DTR.transform(clone, this.#ctx);
             }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
-            fragment.append(clone);
+            fragment!.append(clone);
+            if(intersectional && fragmentInsertionCount >= beIntersectionalPageSize!){
+                parent.append(intersectionalTempl!);
+                fragmentInsertionCount = 0;
+            }
         }
-        parent.append(fragment);
+        if(intersectional && fragmentInsertionCount > 0) parent.append(intersectionalTempl!);
         this.#prevCount = len;
         this.appendFooter(footerFragment, parent, proxy, templ);
     }

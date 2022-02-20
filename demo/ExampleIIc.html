@@ -10,6 +10,10 @@
         .be-repeated-hidden{
             display:none;
         }
+        template[be-intersectional], template[is-intersectional]{
+            display:block;
+            height: 100px;
+        }
     </style>
 </head>
     <body>
@@ -25,7 +29,8 @@
 
         <my-test be-repeated='{
             "transform": {"my-test": "."},
-            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"}
+            "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"},
+            "beIntersectionalPageSize": 10
         }'></my-test>
 
         <button onclick="updateListSameSize()">Update List Same Size</button>
@@ -40,7 +45,7 @@
         <script>
             function updateListLargeSize() {
                 const arr = [];
-                for (let i = 0; i < 100000; i++) {
+                for (let i = 0; i < 1000; i++) {
                     arr.push(i.toString());
                 }
                 objML.value = {

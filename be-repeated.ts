@@ -93,7 +93,7 @@ define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, B
             forceVisible: ['template'],
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins'],
+            virtualProps: ['list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins', 'beIntersectionalPageSize'],
         },
         actions:{
             onList:'list',

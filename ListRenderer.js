@@ -11,7 +11,8 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    async renderList({ listVal, transform, proxy, templ, transformPlugins }) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize }) {
+        const intersectional = !!beIntersectionalPageSize;
         if (this.#deferRendering) {
             this.#deferRendering = false;
             return;
@@ -26,7 +27,9 @@ export class ListRenderer {
                 plugins: transformPlugins,
             };
         }
-        const fragment = document.createDocumentFragment();
+        let fragment; // = document.createDocumentFragment();
+        let intersectionalTempl;
+        let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy;
         const len = listVal.length;
@@ -38,7 +41,7 @@ export class ListRenderer {
                 if (grp.length > 0) {
                     //processTargets(this.#ctx, grp);
                     if (this.#tr !== undefined) {
-                        this.#tr.transform(grp);
+                        await this.#tr.transform(grp);
                     }
                     else {
                         this.#tr = await DTR.transform(grp, this.#ctx);
@@ -70,6 +73,7 @@ export class ListRenderer {
                     tail = undefined;
                 }
             }
+            //newElements
             const idxTempl = document.createElement('template');
             templToCtxMap.set(idxTempl, {
                 idx,
@@ -77,18 +81,33 @@ export class ListRenderer {
             });
             idxTempl.dataset.idx = idx.toString();
             idx++;
+            if (fragmentInsertionCount === 0) {
+                fragment = document.createDocumentFragment();
+                if (intersectional) {
+                    intersectionalTempl = document.createElement('template');
+                    intersectionalTempl.setAttribute('be-intersectional', '');
+                    //fragment.appendChild(templ);
+                    fragment = intersectionalTempl.content;
+                }
+            }
             fragment.append(idxTempl);
+            fragmentInsertionCount++;
             const clone = templ.content.cloneNode(true);
             if (this.#tr !== undefined) {
-                this.#tr.transform(clone);
+                await this.#tr.transform(clone);
             }
             else {
                 this.#tr = await DTR.transform(clone, this.#ctx);
             }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
+            if (intersectional && fragmentInsertionCount >= beIntersectionalPageSize) {
+                parent.append(intersectionalTempl);
+                fragmentInsertionCount = 0;
+            }
         }
-        parent.append(fragment);
+        if (intersectional && fragmentInsertionCount > 0)
+            parent.append(intersectionalTempl);
         this.#prevCount = len;
         this.appendFooter(footerFragment, parent, proxy, templ);
     }
