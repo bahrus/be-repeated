@@ -17,7 +17,7 @@ export class ListRenderer implements ListRendererActions {
     async renderList({listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize}: BeRepeatedProps){
         const intersectional = !!beIntersectionalPageSize;
         if(intersectional){
-            await import('be-intersectional/be-intersectional.js');
+           // await import('be-intersectional/be-intersectional.js');
         }
         if(this.#deferRendering){
             this.#deferRendering = false;
@@ -106,10 +106,12 @@ export class ListRenderer implements ListRendererActions {
             fragment!.append(clone);
             if(intersectional && fragmentInsertionCount >= beIntersectionalPageSize!){
                 parent.append(intersectionalTempl!);
+                await import('be-intersectional/be-intersectional.js');
                 fragmentInsertionCount = 0;
             }
         }
         if(intersectional){
+            await import('be-intersectional/be-intersectional.js');
             if(fragmentInsertionCount > 0) parent.append(intersectionalTempl!);
         }else{
             if(tail && tail.nextElementSibling){
