@@ -14,7 +14,8 @@
   ],
   "dependencies": {
     "be-observant": "0.0.97",
-    "be-decorated": "0.0.83",
+    "be-decorated": "0.0.85",
+    "be-intersectional": "0.0.17",
     "be-hive": "0.0.32",
     "trans-render": "0.0.486",
     "xtal-element": "0.0.478"
