@@ -11,7 +11,7 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize, beIntersectionalProps }) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass }) {
         const intersectional = !!beIntersectionalPageSize;
         if (this.#deferRendering) {
             this.#deferRendering = false;
@@ -75,7 +75,6 @@ export class ListRenderer {
             }
             //newElements
             const idxTempl = document.createElement('template');
-            //const idxTempl = document.createComment('');
             templToCtxMap.set(idxTempl, {
                 idx,
                 item
@@ -85,7 +84,9 @@ export class ListRenderer {
             if (fragmentInsertionCount === 0) {
                 intersectionalTempl = document.createElement('template');
                 intersectionalTempl.setAttribute('be-intersectional', beIntersectionalProps === undefined ? '' : JSON.stringify(beIntersectionalProps));
-                //fragment.appendChild(templ);
+                if (beIntersectionalClass !== undefined) {
+                    intersectionalTempl.classList.add(beIntersectionalClass);
+                }
                 fragment = intersectionalTempl.content;
             }
             fragment.append(idxTempl);
@@ -120,7 +121,6 @@ export class ListRenderer {
             }
         }
         this.#prevCount = len;
-        //this.appendFooter(footerFragment, parent, proxy, templ);
     }
     findGroup(tail, sel, idx, item) {
         const returnArr = [];

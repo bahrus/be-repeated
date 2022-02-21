@@ -12,7 +12,8 @@ export interface BeRepeatedVirtualProps{
     transformPlugins?: TransformPlugins,
     listRenderer: ListRendererActions,
     beIntersectionalPageSize?: number,
-    beIntersectionalProps?: BeIntersectionalVirtualProps
+    beIntersectionalProps?: BeIntersectionalVirtualProps,
+    beIntersectionalClass?: string,
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{
