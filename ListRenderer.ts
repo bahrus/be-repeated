@@ -1,5 +1,5 @@
-import {BeRepeatedProps, BeRepeatedVirtualProps, LoopContext, ListRendererActions} from './types';
-import {TR, DTR} from 'trans-render/lib/DTR.js';
+import { BeRepeatedProps, BeRepeatedVirtualProps, LoopContext, ListRendererActions } from './types';
+import { TR, DTR } from 'trans-render/lib/DTR.js';
 import { RenderContext } from 'trans-render/lib/types';
 
 export const templToCtxMap = new WeakMap<HTMLTemplateElement, LoopContext>();
@@ -14,11 +14,9 @@ export class ListRenderer implements ListRendererActions {
         this.#deferRendering = !!props.deferRendering;
         
     }
-    async renderList({listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize}: BeRepeatedProps){
+    async renderList({listVal, transform, proxy, templ, transformPlugins, 
+        beIntersectionalPageSize, beIntersectionalProps}: BeRepeatedProps){
         const intersectional = !!beIntersectionalPageSize;
-        if(intersectional){
-           // await import('be-intersectional/be-intersectional.js');
-        }
         if(this.#deferRendering){
             this.#deferRendering = false;
             return;
@@ -90,7 +88,7 @@ export class ListRenderer implements ListRendererActions {
 
             if(fragmentInsertionCount === 0){
                 intersectionalTempl = document.createElement('template');
-                intersectionalTempl.setAttribute('be-intersectional', '');
+                intersectionalTempl.setAttribute('be-intersectional', beIntersectionalProps === undefined ? '' : JSON.stringify(beIntersectionalProps));
                 //fragment.appendChild(templ);
                 fragment = intersectionalTempl.content;
             }

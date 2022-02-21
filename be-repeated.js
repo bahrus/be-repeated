@@ -82,7 +82,10 @@ define({
             forceVisible: ['template'],
             intro: 'intro',
             finale: 'finale',
-            virtualProps: ['list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins', 'beIntersectionalPageSize'],
+            virtualProps: [
+                'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins',
+                'beIntersectionalPageSize', 'beIntersectionalProps',
+            ],
         },
         actions: {
             onList: 'list',

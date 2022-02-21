@@ -17,7 +17,7 @@
     "be-decorated": "0.0.86",
     "be-intersectional": "0.0.23",
     "be-hive": "0.0.33",
-    "trans-render": "0.0.486",
+    "trans-render": "0.0.488",
     "xtal-element": "0.0.479"
   },
   "devDependencies": {

@@ -11,11 +11,8 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize }) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize, beIntersectionalProps }) {
         const intersectional = !!beIntersectionalPageSize;
-        if (intersectional) {
-            // await import('be-intersectional/be-intersectional.js');
-        }
         if (this.#deferRendering) {
             this.#deferRendering = false;
             return;
@@ -87,7 +84,7 @@ export class ListRenderer {
             idx++;
             if (fragmentInsertionCount === 0) {
                 intersectionalTempl = document.createElement('template');
-                intersectionalTempl.setAttribute('be-intersectional', '');
+                intersectionalTempl.setAttribute('be-intersectional', beIntersectionalProps === undefined ? '' : JSON.stringify(beIntersectionalProps));
                 //fragment.appendChild(templ);
                 fragment = intersectionalTempl.content;
             }
