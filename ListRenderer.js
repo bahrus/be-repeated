@@ -11,7 +11,7 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass }) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins, beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass, beIntersectionalScaleFactor }) {
         const intersectional = !!beIntersectionalPageSize;
         if (this.#deferRendering) {
             this.#deferRendering = false;
@@ -101,6 +101,9 @@ export class ListRenderer {
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
             if (intersectional && fragmentInsertionCount >= beIntersectionalPageSize) {
+                if (beIntersectionalScaleFactor !== undefined) {
+                    intersectionalTempl.style.height = beIntersectionalPageSize * beIntersectionalScaleFactor + 'px';
+                }
                 parent.append(intersectionalTempl);
                 await import('be-intersectional/be-intersectional.js');
                 fragmentInsertionCount = 0;
@@ -108,8 +111,12 @@ export class ListRenderer {
         }
         if (intersectional) {
             await import('be-intersectional/be-intersectional.js');
-            if (fragmentInsertionCount > 0)
+            if (fragmentInsertionCount > 0) {
+                if (beIntersectionalScaleFactor !== undefined) {
+                    intersectionalTempl.style.height = fragmentInsertionCount * beIntersectionalScaleFactor + 'px';
+                }
                 parent.append(intersectionalTempl);
+            }
         }
         else {
             if (tail && tail.nextElementSibling) {

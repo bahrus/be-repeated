@@ -15,7 +15,7 @@ export class ListRenderer implements ListRendererActions {
         
     }
     async renderList({listVal, transform, proxy, templ, transformPlugins, 
-        beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass}: BeRepeatedProps){
+        beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass, beIntersectionalScaleFactor}: BeRepeatedProps){
         const intersectional = !!beIntersectionalPageSize;
         if(this.#deferRendering){
             this.#deferRendering = false;
@@ -105,6 +105,9 @@ export class ListRenderer implements ListRendererActions {
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment!.append(clone);
             if(intersectional && fragmentInsertionCount >= beIntersectionalPageSize!){
+                if(beIntersectionalScaleFactor !== undefined){
+                    intersectionalTempl!.style.height = beIntersectionalPageSize! * beIntersectionalScaleFactor + 'px';
+                }
                 parent.append(intersectionalTempl!);
                 await import('be-intersectional/be-intersectional.js');
                 fragmentInsertionCount = 0;
@@ -112,7 +115,12 @@ export class ListRenderer implements ListRendererActions {
         }
         if(intersectional){
             await import('be-intersectional/be-intersectional.js');
-            if(fragmentInsertionCount > 0) parent.append(intersectionalTempl!);
+            if(fragmentInsertionCount > 0) {
+                if(beIntersectionalScaleFactor !== undefined){
+                    intersectionalTempl!.style.height = fragmentInsertionCount * beIntersectionalScaleFactor + 'px';
+                }
+                parent.append(intersectionalTempl!);
+            }
         }else{
             if(tail && tail.nextElementSibling){
                 const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');

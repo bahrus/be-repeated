@@ -14,6 +14,7 @@ export interface BeRepeatedVirtualProps{
     beIntersectionalPageSize?: number,
     beIntersectionalProps?: BeIntersectionalVirtualProps,
     beIntersectionalClass?: string,
+    beIntersectionalScaleFactor?: number,
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{
