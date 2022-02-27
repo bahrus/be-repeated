@@ -14,7 +14,7 @@ export class ListRenderer implements ListRendererActions {
         this.#deferRendering = !!props.deferRendering;
         
     }
-    async renderList({listVal, transform, proxy, templ, transformPlugins, 
+    async renderList({listVal, transform, proxy, templ, transformPlugins, uBound, lBound,
         beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass, beIntersectionalScaleFactor}: BeRepeatedProps){
         const intersectional = !!beIntersectionalPageSize;
         if(this.#deferRendering){
@@ -38,7 +38,11 @@ export class ListRenderer implements ListRendererActions {
         let tail = proxy as Element | undefined;
         const len = listVal!.length;
         const parent = proxy.parentElement || proxy.getRootNode() as Element;
-        for(const item of listVal!){
+        if(uBound === undefined) uBound = len;
+        if(lBound === undefined) lBound = 0;
+        //for(const item of listVal!){
+        for(let i = lBound; i < uBound; i++){
+            const item = listVal![i];
             this.#ctx.host = item;
             if(tail !== undefined){
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);

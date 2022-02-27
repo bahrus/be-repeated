@@ -95,7 +95,7 @@ define<BeRepeatedProps & BeDecoratedProps<BeRepeatedProps, BeRepeatedActions>, B
             finale: 'finale',
             virtualProps: [
                 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins', 
-                'beIntersectionalPageSize', 'beIntersectionalProps', 'beIntersectionalScaleFactor'
+                'beIntersectionalPageSize', 'beIntersectionalProps', 'beIntersectionalScaleFactor', 'lBound', 'uBound'
             ],
         },
         actions:{
