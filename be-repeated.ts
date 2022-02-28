@@ -2,9 +2,7 @@ import {BeRepeatedProps, BeRepeatedActions, BeRepeatedVirtualProps, LoopContext}
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {register} from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
-import {hookUp} from 'be-observant/hookUp.js';
-import  {upSearch} from 'trans-render/lib/upSearch.js';
-import {unsubscribe} from 'trans-render/lib/subscribe.js';
+
 
 export class BeRepeatedController implements BeRepeatedActions {
     //#footerRange: Range | undefined;
@@ -45,15 +43,14 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.templ = target as HTMLTemplateElement;
         }
     }
-    finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
-        //const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
+    async finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
+        const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
         if(target.localName !== 'template') return; //[TODO]: ?
     }
-    onList(){
+    async onList(){
         //TODO:  put back list, proxy in the signature.
         //for now, causes a weird browser dev tools crash when debugging xtal-vlist/demo/dev.html
-        //put back async, move hookup load back inside
         console.log('about to execute code dev tools might crash on.');
         const list = this.list;
         const proxy = this.proxy;
@@ -62,7 +59,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.listVal = list;
             return;
         }
-        //const {hookUp} = await import('be-observant/hookUp.js');
+        const {hookUp} = await import('be-observant/hookUp.js')
         hookUp(list, proxy, 'listVal');
     }
     #prevCount = 0;
@@ -74,8 +71,8 @@ export class BeRepeatedController implements BeRepeatedActions {
         
     }
 
-    onNestedLoopProp({nestedLoopProp, proxy}: this){
-        //const {upSearch} = await import('trans-render/lib/upSearch.js');
+    async onNestedLoopProp({nestedLoopProp, proxy}: this){
+        const {upSearch} = await import('trans-render/lib/upSearch.js');
         const templ = upSearch(this.proxy, 'template[data-idx]') as HTMLTemplateElement;
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext!.item[nestedLoopProp!];
