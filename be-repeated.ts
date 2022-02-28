@@ -3,6 +3,8 @@ import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {register} from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
 import {hookUp} from 'be-observant/hookUp.js';
+import  {upSearch} from 'trans-render/lib/upSearch.js';
+import {unsubscribe} from 'trans-render/lib/subscribe.js';
 
 export class BeRepeatedController implements BeRepeatedActions {
     //#footerRange: Range | undefined;
@@ -43,8 +45,8 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.templ = target as HTMLTemplateElement;
         }
     }
-    async finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
-        const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
+    finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
+        //const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
         if(target.localName !== 'template') return; //[TODO]: ?
     }
@@ -72,8 +74,8 @@ export class BeRepeatedController implements BeRepeatedActions {
         
     }
 
-    async onNestedLoopProp({nestedLoopProp, proxy}: this){
-        const {upSearch} = await import('trans-render/lib/upSearch.js');
+    onNestedLoopProp({nestedLoopProp, proxy}: this){
+        //const {upSearch} = await import('trans-render/lib/upSearch.js');
         const templ = upSearch(this.proxy, 'template[data-idx]') as HTMLTemplateElement;
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext!.item[nestedLoopProp!];

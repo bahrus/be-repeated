@@ -2,6 +2,8 @@ import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
 import { hookUp } from 'be-observant/hookUp.js';
+import { upSearch } from 'trans-render/lib/upSearch.js';
+import { unsubscribe } from 'trans-render/lib/subscribe.js';
 export class BeRepeatedController {
     //#footerRange: Range | undefined;
     intro(proxy, target, beDecorProps) {
@@ -42,8 +44,8 @@ export class BeRepeatedController {
             proxy.templ = target;
         }
     }
-    async finale(proxy, target) {
-        const { unsubscribe } = await import('trans-render/lib/subscribe.js');
+    finale(proxy, target) {
+        //const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
         if (target.localName !== 'template')
             return; //[TODO]: ?
@@ -70,8 +72,8 @@ export class BeRepeatedController {
         }
         proxy.listRenderer.renderList(this);
     }
-    async onNestedLoopProp({ nestedLoopProp, proxy }) {
-        const { upSearch } = await import('trans-render/lib/upSearch.js');
+    onNestedLoopProp({ nestedLoopProp, proxy }) {
+        //const {upSearch} = await import('trans-render/lib/upSearch.js');
         const templ = upSearch(this.proxy, 'template[data-idx]');
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext.item[nestedLoopProp];
