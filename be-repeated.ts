@@ -51,8 +51,10 @@ export class BeRepeatedController implements BeRepeatedActions {
     async onList(){
         //TODO:  put back list, proxy in the signature.
         //for now, causes a weird browser dev tools crash when debugging xtal-vlist/demo/dev.html
+        console.log('about to execute code dev tools might crash on.');
         const list = this.list;
         const proxy = this.proxy;
+        console.log('i survived');
         if(Array.isArray(list)){
             proxy.listVal = list;
             return;
