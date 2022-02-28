@@ -2,7 +2,7 @@ import {BeRepeatedProps, BeRepeatedActions, BeRepeatedVirtualProps, LoopContext}
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {register} from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
-
+import {hookUp} from 'be-observant/hookUp.js';
 
 export class BeRepeatedController implements BeRepeatedActions {
     //#footerRange: Range | undefined;
@@ -48,9 +48,10 @@ export class BeRepeatedController implements BeRepeatedActions {
         unsubscribe(proxy);
         if(target.localName !== 'template') return; //[TODO]: ?
     }
-    async onList(){
+    onList(){
         //TODO:  put back list, proxy in the signature.
         //for now, causes a weird browser dev tools crash when debugging xtal-vlist/demo/dev.html
+        //put back async, move hookup load back inside
         console.log('about to execute code dev tools might crash on.');
         const list = this.list;
         const proxy = this.proxy;
@@ -59,7 +60,7 @@ export class BeRepeatedController implements BeRepeatedActions {
             proxy.listVal = list;
             return;
         }
-        const {hookUp} = await import('be-observant/hookUp.js')
+        //const {hookUp} = await import('be-observant/hookUp.js');
         hookUp(list, proxy, 'listVal');
     }
     #prevCount = 0;
