@@ -47,7 +47,11 @@ export class BeRepeatedController {
         if (target.localName !== 'template')
             return; //[TODO]: ?
     }
-    async onList({ list, proxy }) {
+    async onList() {
+        //TODO:  put back list, proxy in the signature.
+        //for now, causes a weird browser dev tools crash when debugging xtal-vlist/demo/dev.html
+        const list = this.list;
+        const proxy = this.proxy;
         if (Array.isArray(list)) {
             proxy.listVal = list;
             return;
