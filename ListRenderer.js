@@ -27,7 +27,7 @@ export class ListRenderer {
                 plugins: transformPlugins,
             };
         }
-        let fragment; // = document.createDocumentFragment();
+        let fragment = undefined; // = document.createDocumentFragment();
         let intersectionalTempl;
         let fragmentInsertionCount = 0;
         let idx = 0;
@@ -129,7 +129,7 @@ export class ListRenderer {
                 const { insertAdjacentTemplate } = await import('trans-render/lib/insertAdjacentTemplate.js');
                 insertAdjacentTemplate(intersectionalTempl, tail, 'afterend');
             }
-            else {
+            else if (fragment !== undefined) {
                 parent.appendChild(fragment);
             }
         }
