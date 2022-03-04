@@ -34,8 +34,12 @@ export class ListRenderer {
         let tail = proxy;
         const len = listVal.length;
         const parent = proxy.parentElement || proxy.getRootNode();
-        if (uBound === undefined)
+        if (uBound === undefined) {
             uBound = len;
+        }
+        else {
+            uBound = Math.min(uBound, len);
+        }
         if (lBound === undefined)
             lBound = 0;
         //for(const item of listVal!){
