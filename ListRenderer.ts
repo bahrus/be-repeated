@@ -32,7 +32,7 @@ export class ListRenderer implements ListRendererActions {
             };
         }
         let fragment: DocumentFragment | undefined = undefined;// = document.createDocumentFragment();
-        let intersectionalTempl: HTMLTemplateElement;
+        let intersectionalTempl: HTMLTemplateElement | undefined = undefined;
         let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy as Element | undefined;
@@ -132,7 +132,11 @@ export class ListRenderer implements ListRendererActions {
         }else{
             if(tail && tail.nextElementSibling){
                 const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
-                insertAdjacentTemplate(intersectionalTempl!, tail, 'afterend');
+                if(intersectionalTempl !== undefined){
+                    //TODO:  do more research if this condition should have somehow been detected earlier
+                    insertAdjacentTemplate(intersectionalTempl!, tail, 'afterend');
+                }
+                
             }else if(fragment !== undefined){
                 parent.appendChild(fragment);
             }

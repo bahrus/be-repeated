@@ -28,7 +28,7 @@ export class ListRenderer {
             };
         }
         let fragment = undefined; // = document.createDocumentFragment();
-        let intersectionalTempl;
+        let intersectionalTempl = undefined;
         let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy;
@@ -131,7 +131,10 @@ export class ListRenderer {
         else {
             if (tail && tail.nextElementSibling) {
                 const { insertAdjacentTemplate } = await import('trans-render/lib/insertAdjacentTemplate.js');
-                insertAdjacentTemplate(intersectionalTempl, tail, 'afterend');
+                if (intersectionalTempl !== undefined) {
+                    //TODO:  do more research if this condition should have somehow been detected earlier
+                    insertAdjacentTemplate(intersectionalTempl, tail, 'afterend');
+                }
             }
             else if (fragment !== undefined) {
                 parent.appendChild(fragment);
