@@ -71,7 +71,7 @@ export class ListRenderer {
                                 range.setStartAfter(tail);
                                 range.setEndAfter(ns);
                                 range.deleteContents();
-                                this.#prevCount = len;
+                                this.#prevCount = uBound;
                                 //this.appendFooter(footerFragment, parent, proxy, templ);
                                 return;
                             }
@@ -140,7 +140,7 @@ export class ListRenderer {
                 parent.appendChild(fragment);
             }
         }
-        this.#prevCount = len;
+        this.#prevCount = uBound;
     }
     findGroup(tail, sel, idx, item) {
         const returnArr = [];
