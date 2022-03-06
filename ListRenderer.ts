@@ -36,13 +36,14 @@ export class ListRenderer implements ListRendererActions {
         let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy as Element | undefined;
-        const len = listVal!.length;
+        let len = listVal!.length;
         const parent = proxy.parentElement || proxy.getRootNode() as Element;
         if(lBound === undefined) lBound = 0;
         if(uBound === undefined) { 
             uBound = lBound + len;
         }else{
             uBound = Math.min(uBound, lBound + len);
+            len = uBound - lBound;
         }
         
         //for(const item of listVal!){
@@ -67,7 +68,7 @@ export class ListRenderer implements ListRendererActions {
                             if(lastTemplIdx !== null){
                                 const cnt = Number(lastTemplIdx.dataset.cnt!) - 1;
                                 let ns = lastTemplIdx;
-                                for(let i = 0; i < cnt; i++){
+                                for(let j = 0; j < cnt; j++){
                                     ns = ns.nextElementSibling as HTMLElement;
                                 }
                                 const range = new Range();

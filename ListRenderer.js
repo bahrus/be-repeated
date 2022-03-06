@@ -32,7 +32,7 @@ export class ListRenderer {
         let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy;
-        const len = listVal.length;
+        let len = listVal.length;
         const parent = proxy.parentElement || proxy.getRootNode();
         if (lBound === undefined)
             lBound = 0;
@@ -41,6 +41,7 @@ export class ListRenderer {
         }
         else {
             uBound = Math.min(uBound, lBound + len);
+            len = uBound - lBound;
         }
         //for(const item of listVal!){
         for (let i = lBound; i < uBound; i++) {
@@ -65,7 +66,7 @@ export class ListRenderer {
                             if (lastTemplIdx !== null) {
                                 const cnt = Number(lastTemplIdx.dataset.cnt) - 1;
                                 let ns = lastTemplIdx;
-                                for (let i = 0; i < cnt; i++) {
+                                for (let j = 0; j < cnt; j++) {
                                     ns = ns.nextElementSibling;
                                 }
                                 const range = new Range();
