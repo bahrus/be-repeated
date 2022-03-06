@@ -34,16 +34,16 @@ export class ListRenderer {
         let tail = proxy;
         const len = listVal.length;
         const parent = proxy.parentElement || proxy.getRootNode();
-        if (uBound === undefined) {
-            uBound = len;
-        }
-        else {
-            uBound = Math.min(uBound, len);
-        }
         if (lBound === undefined)
             lBound = 0;
+        if (uBound === undefined) {
+            uBound = lBound + len;
+        }
+        else {
+            uBound = Math.min(uBound, lBound + len);
+        }
         //for(const item of listVal!){
-        for (let i = lBound; i <= uBound; i++) {
+        for (let i = lBound; i < uBound; i++) {
             const item = listVal[i];
             this.#ctx.host = item;
             if (tail !== undefined) {
