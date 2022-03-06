@@ -1,6 +1,6 @@
 import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
 import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
-import {BeIntersectionalVirtualProps} from 'be-intersectional/types';
+import {BeLazyVirtualProps} from 'be-lazy/types';
 
 export interface BeRepeatedVirtualProps{
     list?: string | any[],
@@ -11,10 +11,10 @@ export interface BeRepeatedVirtualProps{
     deferRendering?: boolean,
     transformPlugins?: TransformPlugins,
     listRenderer: ListRendererActions,
-    beIntersectionalPageSize?: number,
-    beIntersectionalProps?: BeIntersectionalVirtualProps,
-    beIntersectionalClass?: string,
-    beIntersectionalScaleFactor?: number,
+    beLazyPageSize?: number,
+    beLazyProps?: BeLazyVirtualProps,
+    beLazyClass?: string,
+    beLazyScaleFactor?: number,
     lBound?: number,
     uBound?: number,
 }

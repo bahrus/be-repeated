@@ -15,16 +15,13 @@ export class ListRenderer implements ListRendererActions {
         
     }
     async renderList({listVal, transform, proxy, templ, transformPlugins, uBound, lBound,
-        beIntersectionalPageSize, beIntersectionalProps, beIntersectionalClass, beIntersectionalScaleFactor}: BeRepeatedProps){
-        const intersectional = !!beIntersectionalPageSize;
+        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor}: BeRepeatedProps){
+        const lazy = !!beLazyPageSize;
         if(this.#deferRendering){
             this.#deferRendering = false;
             return;
         }
-        // let footerFragment: DocumentFragment | undefined;
-        // if(templToFooterRange.has(templ!)){
-        //     footerFragment = templToFooterRange.get(templ!)!.extractContents();
-        // }
+
         if(this.#ctx === undefined){
             this.#ctx = {
                 match: transform,
@@ -32,7 +29,7 @@ export class ListRenderer implements ListRendererActions {
             };
         }
         let fragment: DocumentFragment | undefined = undefined;// = document.createDocumentFragment();
-        let intersectionalTempl: HTMLTemplateElement | undefined = undefined;
+        let lazyTempl: HTMLTemplateElement | undefined = undefined;
         let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy as Element | undefined;
@@ -46,7 +43,6 @@ export class ListRenderer implements ListRendererActions {
             len = uBound - lBound;
         }
         
-        //for(const item of listVal!){
         for(let i = lBound; i < uBound; i++){
             const item = listVal![i];
             this.#ctx.host = item;
@@ -98,12 +94,12 @@ export class ListRenderer implements ListRendererActions {
             idx++;
 
             if(fragmentInsertionCount === 0){
-                intersectionalTempl = document.createElement('template');
-                intersectionalTempl.setAttribute('be-intersectional', beIntersectionalProps === undefined ? '' : JSON.stringify(beIntersectionalProps));
-                if(beIntersectionalClass !== undefined){
-                    intersectionalTempl.classList.add(beIntersectionalClass);
+                lazyTempl = document.createElement('template');
+                lazyTempl.setAttribute('be-lazy', beLazyProps === undefined ? '' : JSON.stringify(beLazyProps));
+                if(beLazyClass !== undefined){
+                    lazyTempl.classList.add(beLazyClass);
                 }
-                fragment = intersectionalTempl.content;
+                fragment = lazyTempl.content;
             }
             fragment!.append(idxTempl);
             
@@ -116,29 +112,29 @@ export class ListRenderer implements ListRendererActions {
             }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment!.append(clone);
-            if(intersectional && fragmentInsertionCount >= beIntersectionalPageSize!){
-                if(beIntersectionalScaleFactor !== undefined){
-                    intersectionalTempl!.style.height = beIntersectionalPageSize! * beIntersectionalScaleFactor + 'px';
+            if(lazy && fragmentInsertionCount >= beLazyPageSize!){
+                if(beLazyScaleFactor !== undefined){
+                    lazyTempl!.style.height = beLazyPageSize! * beLazyScaleFactor + 'px';
                 }
-                parent.append(intersectionalTempl!);
-                await import('be-intersectional/be-intersectional.js');
+                parent.append(lazyTempl!);
+                await import('be-lazy/be-lazy.js');
                 fragmentInsertionCount = 0;
             }
         }
-        if(intersectional){
-            await import('be-intersectional/be-intersectional.js');
+        if(lazy){
+            await import('be-lazy/be-lazy.js');
             if(fragmentInsertionCount > 0) {
-                if(beIntersectionalScaleFactor !== undefined){
-                    intersectionalTempl!.style.height = fragmentInsertionCount * beIntersectionalScaleFactor + 'px';
+                if(beLazyScaleFactor !== undefined){
+                    lazyTempl!.style.height = fragmentInsertionCount * beLazyScaleFactor + 'px';
                 }
-                parent.append(intersectionalTempl!);
+                parent.append(lazyTempl!);
             }
         }else{
             if(tail && tail.nextElementSibling){
                 const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
-                if(intersectionalTempl !== undefined){
+                if(lazyTempl !== undefined){
                     //TODO:  do more research if this condition should have somehow been detected earlier
-                    insertAdjacentTemplate(intersectionalTempl!, tail, 'afterend');
+                    insertAdjacentTemplate(lazyTempl!, tail, 'afterend');
                 }
                 
             }else if(fragment !== undefined){
