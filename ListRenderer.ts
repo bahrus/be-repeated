@@ -45,7 +45,7 @@ export class ListRenderer implements ListRendererActions {
         }
         if(lBound === undefined) lBound = 0;
         //for(const item of listVal!){
-        for(let i = lBound; i < uBound; i++){
+        for(let i = lBound; i <= uBound; i++){
             const item = listVal![i];
             this.#ctx.host = item;
             if(tail !== undefined){
@@ -84,6 +84,7 @@ export class ListRenderer implements ListRendererActions {
                     tail = undefined;
                 }
             }
+            if(item === undefined) continue;
             //newElements
             const idxTempl = document.createElement('template');
             templToCtxMap.set(idxTempl as any as HTMLTemplateElement, {

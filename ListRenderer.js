@@ -43,7 +43,7 @@ export class ListRenderer {
         if (lBound === undefined)
             lBound = 0;
         //for(const item of listVal!){
-        for (let i = lBound; i < uBound; i++) {
+        for (let i = lBound; i <= uBound; i++) {
             const item = listVal[i];
             this.#ctx.host = item;
             if (tail !== undefined) {
@@ -83,6 +83,8 @@ export class ListRenderer {
                     tail = undefined;
                 }
             }
+            if (item === undefined)
+                continue;
             //newElements
             const idxTempl = document.createElement('template');
             templToCtxMap.set(idxTempl, {
