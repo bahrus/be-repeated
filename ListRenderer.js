@@ -49,12 +49,13 @@ export class ListRenderer {
             if (tail !== undefined) {
                 const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 if (grp.length > 0) {
-                    //processTargets(this.#ctx, grp);
-                    if (this.#tr !== undefined) {
-                        await this.#tr.transform(grp);
-                    }
-                    else {
-                        this.#tr = await DTR.transform(grp, this.#ctx);
+                    if (item !== undefined) {
+                        if (this.#tr !== undefined) {
+                            await this.#tr.transform(grp);
+                        }
+                        else {
+                            this.#tr = await DTR.transform(grp, this.#ctx);
+                        }
                     }
                     tail = grp.pop();
                     idx++;
