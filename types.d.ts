@@ -17,6 +17,7 @@ export interface BeRepeatedVirtualProps{
     beLazyScaleFactor?: number,
     lBound?: number,
     uBound?: number,
+    contextStack: RenderContext[],
 }
 
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{

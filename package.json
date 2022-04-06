@@ -13,17 +13,17 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.101",
-    "be-decorated": "0.0.89",
-    "be-lazy": "0.0.2",
-    "be-hive": "0.0.36",
-    "trans-render": "0.0.511",
-    "xtal-element": "0.0.484"
+    "be-observant": "0.0.108",
+    "be-decorated": "0.0.92",
+    "be-lazy": "0.0.3",
+    "be-hive": "0.0.38",
+    "trans-render": "0.0.518",
+    "xtal-element": "0.0.486"
   },
   "devDependencies": {
-    "xtal-test": "0.0.55",
-    "be-definitive": "0.0.41",
-    "be-intersectional": "0.0.34",
+    "xtal-test": "0.0.56",
+    "be-definitive": "0.0.43",
+    "be-intersectional": "0.0.45",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7",
     "xtal-editor": "0.0.140",
