@@ -13,10 +13,10 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.125",
-    "be-decorated": "0.0.113",
-    "be-lazy": "0.0.8",
-    "be-hive": "0.0.45",
+    "be-observant": "0.0.128",
+    "be-decorated": "0.0.114",
+    "be-lazy": "0.0.10",
+    "be-hive": "0.0.46",
     "trans-render": "0.0.536",
     "xtal-element": "0.0.493"
   },
