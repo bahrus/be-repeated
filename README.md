@@ -23,7 +23,7 @@ be-repeated is a web component decorator that provides standalone support for re
 
     So my thinking up to now, is that we don't need that for be-switched, it is best to wrap in a template to be safe -- not load too early, and be kind to the browser.
 
-    But now that I'm starting to realize these be-decorated components provide a dual purpose of being used during template instantiation, I'm realizing my thinking here was too limited, which is good news.  There's now a good reason to provide the option for be-switched to not have a template either, as the behind-the-scenes conversion to a template can be done *before* the content is added to the live DOM tree.  Meaning, be-switched is unnecessarily torturing the developer for no reason.
+    But now that I'm starting to realize these be-decorated components provide a dual purpose of being used during template instantiation, I'm realizing my thinking here was too limited, which is good news.  There's now a good reason to provide the option for be-switched to not require a template either, as the behind-the-scenes conversion to a template can be done *before* the content is added to the live DOM tree.  Meaning, be-switched is unnecessarily torturing the developer for no reason.
 
     Except...  The way the be-decorated elements are used is such that if the decorator hasn't downloaded yet, proceed with adding the content to the live DOM tree, and apply the logic when it is downloaded.  Drats, that means be-switched is right to forgo this nicety for the developer.  Oh well.
     
