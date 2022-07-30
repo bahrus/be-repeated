@@ -8,6 +8,28 @@
 
 be-repeated is a web component decorator that provides standalone support for repeated DOM generation.  Like web components, it can work anywhere HTML works.  It provides progressive enhancement to server-rendered content, without requiring use of templates.
 
+<details>
+    <summary>What's wrong with templates?  Gollum, gollum</summary>
+
+    Nothing is wrong with them, of course.  Behind the scenes, it uses templates.  
+
+    But why not make life simpler and just require templates?
+
+    Here's my current thinking:  Vue's charm, to me, is its readable, concise logic (and others before and after it do the same, i.e. knockout.js, angular, aurelia, etc) -- only require a template when there's more than one repeating element.  Wonderful for the developer. 
+    
+    So what be-repeated does is nothing new.  However, Vue does the same for its conditional as well.  The counterpart to be-repeated is be-switched, which doesn't provide that option, and forces the developer to wrap the contents in the template.  The thinking is that we don't want to require a build step, and the whole point of be-switched is to not unnecessarily load content into the DOM tree.  Lazy loading is always best. 
+    
+    But there's a strong case to be made that be-repeated should provide that option:  It gives us the ability for the viewer to see the first element of the loop, before the dependencies are downloaded (via server rendering) and then client-side provide the rest of the content via templates.  That case is much weaker in the conditional case.
+
+    So my thinking up to now, is that we don't need that for be-switched, it is best to wrap in a template to be safe -- not load too early, and be kind to the browser.
+
+    But now that I'm starting to realize these be-decorated components provide a dual purpose of being used during template instantiation, I'm realizing my thinking here was too limited, which is good news.  There's now a good reason to provide the option for be-switched to not have a template either, as the behind-the-scenes conversion to a template can be done *before* the content is added to the live DOM tree.  Meaning, be-switched is unnecessarily torturing the developer for no reason.
+
+    Except...  The way the be-decorated elements are used is such that if the decorator hasn't downloaded yet, proceed with adding the content to the live DOM tree, and apply the logic when it is downloaded.  Drats, that means be-switched is right to forgo this nicety for the developer.  Oh well.
+    
+    However, this argument doesn't apply to built-in template instantiation.  Meaning it *ought* to emulate what Vue does, IMHO.
+</details>
+
 The package also includes a [trans-render](https://github.com/bahrus/trans-render) plug-in that *does* enable the repeating logic to be performed during "template stamping", based on the same syntax, and sharing the core logic.  However, the nice thing is that if employed properly, the template instantiation can use the plug-in only if it is already loaded.  If not, no biggie, just render the non expanded HTML to the live DOM tree, and let the component render the repeating content once the library *is* downloaded. (Status:  Experimental).
 
 Finally, the package will contain a Cloudflare HTMLRewriter helper class, to generate repeating content in the context of a Cloudflare worker, also based on the same syntax (but logic is by necessity separate). [TODO].
