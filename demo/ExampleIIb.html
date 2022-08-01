@@ -10,16 +10,14 @@
         .be-repeated-hidden{
             display:none;
         }
+        my-test{
+            display:block;
+        }
     </style>
 </head>
     <body>
         <obj-ml id=objML prop1-obj='["hello", "third", "planet"]'></obj-ml>
         <div be-definitive=my-test>
-            <style>
-                :host{
-                    display:block;
-                }
-            </style>
             <slot></slot>
         </div>
         <div>
