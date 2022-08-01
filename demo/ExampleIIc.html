@@ -10,7 +10,7 @@
         .be-repeated-hidden{
             display:none;
         }
-        template[be-intersectional], template[is-intersectional]{
+        template[be-lazy], template[is-lazy]{
             display:block;
             height: 10000px;
         }
@@ -40,7 +40,7 @@
             <my-test be-repeated='{
                 "transform": {"my-test": "."},
                 "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"},
-                "beIntersectionalPageSize": 100
+                "beLazyPageSize": 100
             }'></my-test>
         </div>
 
@@ -80,7 +80,7 @@
                     "xtal-element/": "../node_modules/xtal-element/",
                     "be-decorated/": "../node_modules/be-decorated/",
                     "on-to-me/": "../node_modules/on-to-me/",
-                    "be-intersectional/": "../node_modules/be-intersectional/",
+                    "be-lazy/": "../node_modules/be-lazy/",
                     "be-observant/": "../node_modules/be-observant/",
                     "obj-ml/": "../node_modules/obj-ml/",
                     "be-observant/": "../node_modules/be-observant/",
