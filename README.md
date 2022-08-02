@@ -92,6 +92,12 @@ Note that the "list" property can come from the host or other DOM elements via t
         }
     }
 }'>
+    <style be-adopted>
+        :host{
+            display:block;
+        }
+    </style>
+    <slot></slot>
 </div>
 <div>
     <my-test be-repeated='{
