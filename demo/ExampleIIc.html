@@ -6,23 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        .be-repeated-hidden{
-            display:none;
-        }
-        template[be-lazy], template[is-lazy]{
-            display:block;
-            height: 1829px;
-        }
-        my-test {
-            min-height: 18px;
-        }
-        /* my-test{
-            display:block;
-        } */
-    </style>
+    
 </head>
     <body>
+        <style>
+            .be-repeated-hidden{
+                display:none;
+            }
+            template[be-lazy], template[is-lazy]{
+                display:block;
+                height: 1829px;
+            }
+            my-test {
+                min-height: 18px;
+            }
+        </style>
         <obj-ml id=objML prop1-obj='["hello", "third", "planet"]'></obj-ml>
         <div be-definitive='{
             "config": {
@@ -32,12 +30,6 @@
                 }
             }
         }'>
-            <style be-adopted>
-                :host{
-                    display:block;
-                }
-            </style>
-            <slot></slot>
         </div>
         <div>
             <my-test be-repeated='{

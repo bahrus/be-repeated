@@ -68,6 +68,53 @@ Note that the "list" property can come from the host or other DOM elements via t
 </ul>
 ```
 
+## Example IIc -- Large lists with lazy loading
+
+```html
+<style>
+    .be-repeated-hidden{
+        display:none;
+    }
+    template[be-lazy], template[is-lazy]{
+        display:block;
+        height: 1829px;
+    }
+    my-test {
+        min-height: 18px;
+    }
+</style>
+<obj-ml id=objML prop1-obj='["hello", "third", "planet"]'></obj-ml>
+<div be-definitive='{
+    "config": {
+        "tagName":"my-test",
+        "propDefaults": {
+            "noshadow": false
+        }
+    }
+}'>
+</div>
+<div>
+    <my-test be-repeated='{
+        "transform": {"my-test": "."},
+        "list": {"observe": "obj-ml", "on": "value-changed", "vft": "value.prop1"},
+        "beLazyPageSize": 100
+    }'></my-test>
+</div>
+
+<button onclick="updateListLargeSize()">Update List To Larger Size</button>
+<script>
+    function updateListLargeSize() {
+        const arr = [];
+        for (let i = 0; i < 100000; i++) {
+            arr.push(i.toString());
+        }
+        objML.value = {
+            prop1: arr
+        };
+    }
+</script>
+```
+
 ## Example III -- Multiple elements per iteration.  First required use of template.
 
 ```html
