@@ -21,7 +21,7 @@
     "xtal-element": "0.0.493"
   },
   "devDependencies": {
-    "@playwright/test": "1.21.1",
+    "@playwright/test": "1.24.2",
     "may-it-serve": "0.0.1",
     "be-definitive": "0.0.55",
     "@skypack/package-check": "0.2.2",
