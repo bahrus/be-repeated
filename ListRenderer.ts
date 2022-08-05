@@ -15,7 +15,7 @@ export class ListRenderer implements ListRendererActions {
         
     }
     async renderList({listVal, transform, proxy, templ, transformPlugins, uBound, lBound,
-        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap}: BeRepeatedProps, target: HTMLTemplateElement){
+        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap}: BeRepeatedProps){
         const lazy = !!beLazyPageSize;
         if(this.#deferRendering){
             this.#deferRendering = false;
@@ -66,7 +66,7 @@ export class ListRenderer implements ListRendererActions {
                         }
                         tail = grp.pop()!;
                     }else{
-                        tail = target;
+                        tail = templ!;
                     }
 
                     idx++;

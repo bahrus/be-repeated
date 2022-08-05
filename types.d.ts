@@ -40,5 +40,5 @@ export interface LoopContext {
 }
 
 export interface ListRendererActions{
-    renderList(self: BeRepeatedProps, target: Element): void;
+    renderList(self: BeRepeatedProps): void;
 }

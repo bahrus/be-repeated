@@ -11,7 +11,7 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    async renderList({ listVal, transform, proxy, templ, transformPlugins, uBound, lBound, beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap }, target) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins, uBound, lBound, beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap }) {
         const lazy = !!beLazyPageSize;
         if (this.#deferRendering) {
             this.#deferRendering = false;
@@ -64,7 +64,7 @@ export class ListRenderer {
                         tail = grp.pop();
                     }
                     else {
-                        tail = target;
+                        tail = templ;
                     }
                     idx++;
                     if (idx >= len) {

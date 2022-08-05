@@ -3,9 +3,7 @@ import { register } from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
 export class BeRepeatedController {
     //#footerRange: Range | undefined;
-    #target;
     intro(proxy, target, beDecorProps) {
-        this.#target = target;
         if (proxy.localName !== 'template') {
             const ns = proxy.nextElementSibling;
             const templ = document.createElement('template');
@@ -69,7 +67,7 @@ export class BeRepeatedController {
         if (proxy.listRenderer === undefined) {
             proxy.listRenderer = new ListRenderer(this);
         }
-        proxy.listRenderer.renderList(this, this.#target);
+        proxy.listRenderer.renderList(this);
     }
     async onNestedLoopProp({ nestedLoopProp, proxy }) {
         const { upSearch } = await import('trans-render/lib/upSearch.js');
