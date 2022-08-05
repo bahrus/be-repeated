@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .be-repeated-hidden{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+
+    <dl id=dl>
+        <dt>Definition</dt>
+        <dd>Meaning of the word</dd>
+
+        <template id='br' be-repeated='{
+            "transform": {
+                "dt": "term",
+                "dd": "def"
+            },
+            "timestampMap":{
+                "timestamp": null
+            },
+            "listVal":  [{"term": "nah", "timestamp": 0, "def": "not so"}, {"term":"goo", "def": "a viscid or sticky substance", "timestamp": 1}]
+        }'>
+            <dt></dt>
+            <dd></dd>
+        </template>
+    
+
+    </dl>
+
+    <button onclick='expandList()'>expandList</button>
+
+    <script>
+        var timestamp = 1;
+        function expandList(){
+            const arr = [...br.beDecorated.repeated.listVal];
+            for(let i = 0; i < 98; i++){
+                const newTerm = {
+                    term: "term " + i,
+                    def: "def " + i^2,
+                    timestamp: timestamp++,
+                };
+                arr.push(newTerm);
+            }
+            br.beDecorated.repeated.listVal = arr;
+        }
+    </script>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "be-decorated/": "../node_modules/be-decorated/",
+                "on-to-me/": "../node_modules/on-to-me/",
+                "be-observant/": "../node_modules/be-observant/",
+                "obj-ml/": "../node_modules/obj-ml/",
+                "be-observant/": "../node_modules/be-observant/",
+                "be-hive/": "../node_modules/be-hive/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-repeated.js';
+        import 'obj-ml/obj-ml.js';
+    </script>
+    
+</body>
+</html>
+</body>
+</html>
