@@ -28,6 +28,9 @@
     <div>
         <button onclick='updateSingleItem()'>updateList</button>
     </div>
+    <div>
+        <button onclick='collapseList()'>collapseList</button>
+    </div>
 
     <dl id=dl>
         <dt>Definition</dt>
@@ -73,6 +76,10 @@
             arr[99].term = "new term";
             arr[99].timestamp = timestamp++;
             br.beDecorated.repeated.listVal = arr;
+        }
+
+        function collapseList(){
+            br.beDecorated.repeated.listVal = [];
         }
     </script>
     <script type=importmap>

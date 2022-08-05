@@ -40,7 +40,7 @@ export class ListRenderer {
             uBound = Math.min(uBound, lBound + len);
             len = uBound - lBound;
         }
-        for (let i = lBound; i < uBound; i++) {
+        for (let i = lBound; i <= uBound; i++) {
             const item = listVal[i];
             this.#ctx.host = item;
             if (tail !== undefined) {
@@ -56,7 +56,7 @@ export class ListRenderer {
                     }
                     tail = grp.pop();
                     idx++;
-                    if (idx === len) {
+                    if (idx >= len) {
                         if (len < this.#prevCount) {
                             const lastTemplIdx = parent.querySelector(`template[data-idx="${this.#prevCount - 1}"]`); //TODO:  what if multiple loops in the same parent?
                             if (lastTemplIdx !== null) {
