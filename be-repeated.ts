@@ -6,7 +6,9 @@ import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.
 
 export class BeRepeatedController implements BeRepeatedActions {
     //#footerRange: Range | undefined;
+    #target!: Element;
     intro(proxy: Element & BeRepeatedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
+        this.#target = target;
         if(proxy.localName !== 'template'){
             const ns = proxy.nextElementSibling;
             const templ = document.createElement('template');
@@ -68,7 +70,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         if(proxy.listRenderer === undefined){
             proxy.listRenderer = new ListRenderer(this);
         }
-        proxy.listRenderer!.renderList(this);
+        proxy.listRenderer!.renderList(this, this.#target);
         
     }
 

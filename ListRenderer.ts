@@ -15,7 +15,7 @@ export class ListRenderer implements ListRendererActions {
         
     }
     async renderList({listVal, transform, proxy, templ, transformPlugins, uBound, lBound,
-        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap}: BeRepeatedProps){
+        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap}: BeRepeatedProps, target: HTMLTemplateElement){
         const lazy = !!beLazyPageSize;
         if(this.#deferRendering){
             this.#deferRendering = false;
@@ -43,21 +43,32 @@ export class ListRenderer implements ListRendererActions {
             uBound = Math.min(uBound, lBound + len);
             len = uBound - lBound;
         }
-        
+        const lBoundEqualsUBound = lBound === uBound;
         for(let i = lBound; i <= uBound; i++){
             const item = listVal![i];
             this.#ctx.host = item;
             if(tail !== undefined){
-                const grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
-                if(grp.length > 0){
-                    if(item !== undefined){
-                        if(this.#tr !== undefined){
-                            await this.#tr.transform(grp);
-                        }else{
-                            this.#tr = await DTR.transform(grp, this.#ctx);
+                let grp: Element[] | undefined;
+                if(!lBoundEqualsUBound){
+                    grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
+                }
+                if(lBoundEqualsUBound || grp!.length > 0){
+                    if(grp !== undefined){
+                        if(item !== undefined){
+                            if(this.#tr !== undefined){
+                                await this.#tr.transform(grp);
+                            }else{
+                                this.#tr = await DTR.transform(grp, this.#ctx);
+                            }
                         }
+                        if(!lBoundEqualsUBound){
+    
+                        }
+                        tail = grp.pop()!;
+                    }else{
+                        tail = target;
                     }
-                    tail = grp.pop()!;
+
                     idx++;
                     if(idx >= len){
                         if(len < this.#prevCount){
