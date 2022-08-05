@@ -17,12 +17,12 @@
     "be-decorated": "0.0.126",
     "be-lazy": "0.0.10",
     "be-hive": "0.0.48",
-    "trans-render": "0.0.539",
+    "trans-render": "0.0.540",
     "xtal-element": "0.0.493"
   },
   "devDependencies": {
     "@playwright/test": "1.24.2",
-    "may-it-serve": "0.0.1",
+    "may-it-serve": "0.0.2",
     "be-definitive": "0.0.55",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.6.3",

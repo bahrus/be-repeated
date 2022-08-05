@@ -10,6 +10,7 @@ export interface BeRepeatedVirtualProps{
     templ?: HTMLTemplateElement,
     deferRendering?: boolean,
     transformPlugins?: TransformPlugins,
+    timeStampMap?:  {[key: string]: string},
     listRenderer: ListRendererActions,
     beLazyPageSize?: number,
     beLazyProps?: BeLazyVirtualProps,

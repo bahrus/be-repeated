@@ -91,7 +91,7 @@ define({
             finale: 'finale',
             virtualProps: [
                 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins',
-                'beLazyPageSize', 'beLazyProps', 'beLazyScaleFactor', 'lBound', 'uBound'
+                'beLazyPageSize', 'beLazyProps', 'beLazyScaleFactor', 'lBound', 'uBound', 'timeStampMap'
             ],
         },
         actions: {
