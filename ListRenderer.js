@@ -11,7 +11,7 @@ export class ListRenderer {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
     }
-    async renderList({ listVal, transform, proxy, templ, transformPlugins, uBound, lBound, beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timeStampMap }) {
+    async renderList({ listVal, transform, proxy, templ, transformPlugins, uBound, lBound, beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timestampKey }) {
         const lazy = !!beLazyPageSize;
         if (this.#deferRendering) {
             this.#deferRendering = false;
@@ -21,7 +21,7 @@ export class ListRenderer {
             this.#ctx = {
                 match: transform,
                 plugins: transformPlugins,
-                lastTimestamp: timeStampMap,
+                timestampKey,
             };
         }
         let fragment = undefined; // = document.createDocumentFragment();
