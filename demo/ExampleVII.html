@@ -31,6 +31,9 @@
     <div>
         <button onclick='collapseList()'>collapseList</button>
     </div>
+    <div>
+        <button onclick='removeMiddleRows()'>remove middle rows</button>
+    </div>
 
     <dl id=dl>
         <dt>Definition</dt>
@@ -80,6 +83,15 @@
 
         function collapseList(){
             br.beDecorated.repeated.listVal = [];
+        }
+
+        function removeMiddleRows(){
+            const arr = [...br.beDecorated.repeated.listVal];
+            const newArr = [arr[0], arr[1], arr[99]];
+            for(const el of newArr){
+                el.timestamp = timestamp++;
+            }
+            br.beDecorated.repeated.listVal = newArr;
         }
     </script>
     <script type=importmap>
