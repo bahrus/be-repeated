@@ -21,6 +21,11 @@ export interface BeRepeatedVirtualProps{
     contextStack: RenderContext[],
 }
 
+export interface IGroup{
+    fragmentManager?: HTMLTemplateElement;
+    fragment?: Element[];
+}
+
 export interface BeRepeatedProps extends BeRepeatedVirtualProps{
     proxy: Element & BeRepeatedVirtualProps,
 }

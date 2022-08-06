@@ -1,4 +1,4 @@
-import { BeRepeatedProps, BeRepeatedVirtualProps, LoopContext, ListRendererActions } from './types';
+import { BeRepeatedProps, BeRepeatedVirtualProps, LoopContext, ListRendererActions, IGroup } from './types';
 import { TR, DTR } from 'trans-render/lib/DTR.js';
 import { RenderContext } from 'trans-render/lib/types';
 
@@ -48,23 +48,23 @@ export class ListRenderer implements ListRendererActions {
             const item = listVal![i];
             this.#ctx.host = item;
             if(tail !== undefined){
-                let grp: Element[] | undefined;
+                let grp: IGroup | undefined;
                 if(!lBoundEqualsUBound){
                     grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 }
-                if(lBoundEqualsUBound || grp!.length > 0){
+                if(lBoundEqualsUBound || grp!.fragment!.length > 0){
                     if(grp !== undefined){
                         if(item !== undefined){
                             if(this.#tr !== undefined){
-                                await this.#tr.transform(grp);
+                                await this.#tr.transform(grp.fragment!, grp.fragmentManager);
                             }else{
-                                this.#tr = await DTR.transform(grp, this.#ctx);
+                                this.#tr = await DTR.transform(grp.fragment!, this.#ctx, undefined, grp.fragmentManager);
                             }
                         }
                         if(!lBoundEqualsUBound){
     
                         }
-                        tail = grp.pop()!;
+                        tail = grp.fragment!.pop()!;
                     }else{
                         tail = templ!;
                     }
@@ -118,9 +118,9 @@ export class ListRenderer implements ListRendererActions {
             fragmentInsertionCount++;
             const clone = templ!.content.cloneNode(true) as Element;
             if(this.#tr !== undefined){
-                await this.#tr.transform(clone);
+                await this.#tr.transform(clone, idxTempl);
             }else{
-                this.#tr = await DTR.transform(clone, this.#ctx);
+                this.#tr = await DTR.transform(clone, this.#ctx, undefined, idxTempl);
             }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment!.append(clone);
@@ -158,12 +158,17 @@ export class ListRenderer implements ListRendererActions {
         this.#prevCount = idx;
     }
 
-    findGroup(tail: Element, sel: string, idx: number, item: any){
+    findGroup(tail: Element, sel: string, idx: number, item: any): IGroup{
+        
         const returnArr: Element[] = [];
+        const returnGrp: IGroup = {
+            fragment: returnArr,
+        }
         let ns = tail.nextElementSibling;
         while(ns !== null){
             if(ns.matches(sel)){
                 const idxTempl = ns as HTMLTemplateElement;
+                returnGrp.fragmentManager = idxTempl;
                 templToCtxMap.set(idxTempl, {
                     idx,
                     item
@@ -174,14 +179,14 @@ export class ListRenderer implements ListRendererActions {
                         ns = ns.nextElementSibling;
                         if(ns !== null) returnArr.push(ns);
                     }else{
-                        return returnArr;
+                        return returnGrp;
                     }
                 }
-                return returnArr;
+                return returnGrp;
             }
             ns = ns!.nextElementSibling;
         }
-        return returnArr;        
+        return returnGrp;        
     }
 
     appendFooter(footerFragment: DocumentFragment | undefined, parent: Element, proxy: Element & BeRepeatedVirtualProps, templ: HTMLTemplateElement | undefined){

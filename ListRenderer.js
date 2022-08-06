@@ -49,19 +49,19 @@ export class ListRenderer {
                 if (!lBoundEqualsUBound) {
                     grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 }
-                if (lBoundEqualsUBound || grp.length > 0) {
+                if (lBoundEqualsUBound || grp.fragment.length > 0) {
                     if (grp !== undefined) {
                         if (item !== undefined) {
                             if (this.#tr !== undefined) {
-                                await this.#tr.transform(grp);
+                                await this.#tr.transform(grp.fragment, grp.fragmentManager);
                             }
                             else {
-                                this.#tr = await DTR.transform(grp, this.#ctx);
+                                this.#tr = await DTR.transform(grp.fragment, this.#ctx, undefined, grp.fragmentManager);
                             }
                         }
                         if (!lBoundEqualsUBound) {
                         }
-                        tail = grp.pop();
+                        tail = grp.fragment.pop();
                     }
                     else {
                         tail = templ;
@@ -114,10 +114,10 @@ export class ListRenderer {
             fragmentInsertionCount++;
             const clone = templ.content.cloneNode(true);
             if (this.#tr !== undefined) {
-                await this.#tr.transform(clone);
+                await this.#tr.transform(clone, idxTempl);
             }
             else {
-                this.#tr = await DTR.transform(clone, this.#ctx);
+                this.#tr = await DTR.transform(clone, this.#ctx, undefined, idxTempl);
             }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
@@ -155,10 +155,14 @@ export class ListRenderer {
     }
     findGroup(tail, sel, idx, item) {
         const returnArr = [];
+        const returnGrp = {
+            fragment: returnArr,
+        };
         let ns = tail.nextElementSibling;
         while (ns !== null) {
             if (ns.matches(sel)) {
                 const idxTempl = ns;
+                returnGrp.fragmentManager = idxTempl;
                 templToCtxMap.set(idxTempl, {
                     idx,
                     item
@@ -171,14 +175,14 @@ export class ListRenderer {
                             returnArr.push(ns);
                     }
                     else {
-                        return returnArr;
+                        return returnGrp;
                     }
                 }
-                return returnArr;
+                return returnGrp;
             }
             ns = ns.nextElementSibling;
         }
-        return returnArr;
+        return returnGrp;
     }
     appendFooter(footerFragment, parent, proxy, templ) {
         if (footerFragment === undefined)
