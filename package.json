@@ -15,7 +15,7 @@
   "dependencies": {
     "be-observant": "0.0.130",
     "be-decorated": "0.0.128",
-    "be-lazy": "0.0.10",
+    "be-lazy": "0.0.12",
     "be-hive": "0.0.50",
     "trans-render": "0.0.557",
     "xtal-element": "0.0.499"
