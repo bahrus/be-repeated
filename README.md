@@ -6,6 +6,10 @@
 
 <a href="https://nodei.co/npm/be-repeated/"><img src="https://nodei.co/npm/be-repeated.png"></a>
 
+[![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-repeated?style=for-the-badge)](https://bundlephobia.com/result?p=be-repeated)
+
+<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-repeated?compression=gzip">
+
 be-repeated is a web component decorator that provides standalone support for repeated DOM generation.  Like web components, it can work anywhere HTML works.  It provides progressive enhancement to server-rendered content, without requiring use of templates.
 
 <details>

@@ -13,17 +13,16 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.130",
-    "be-decorated": "0.0.128",
-    "be-lazy": "0.0.12",
-    "be-hive": "0.0.50",
-    "trans-render": "0.0.557",
-    "xtal-element": "0.0.499"
+    "be-observant": "0.0.131",
+    "be-decorated": "0.0.131",
+    "be-lazy": "0.0.13",
+    "be-hive": "0.0.52",
+    "trans-render": "0.0.562"
   },
   "devDependencies": {
-    "@playwright/test": "1.24.2",
+    "@playwright/test": "1.25.0",
     "may-it-serve": "0.0.2",
-    "be-definitive": "0.0.56",
+    "be-definitive": "0.0.59",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.6.4",
     "xtal-editor": "0.0.176",
