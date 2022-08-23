@@ -13,11 +13,11 @@
     "repeat"
   ],
   "dependencies": {
-    "be-observant": "0.0.131",
-    "be-decorated": "0.0.131",
-    "be-lazy": "0.0.13",
-    "be-hive": "0.0.52",
-    "trans-render": "0.0.562"
+    "be-observant": "0.0.132",
+    "be-decorated": "0.0.133",
+    "be-lazy": "0.0.14",
+    "be-hive": "0.0.56",
+    "trans-render": "0.0.574"
   },
   "devDependencies": {
     "@playwright/test": "1.25.0",
