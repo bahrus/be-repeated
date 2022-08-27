@@ -59,8 +59,6 @@ export class ListRenderer {
                                 this.#tr = await DTR.transform(grp.fragment, this.#ctx, undefined, grp.fragmentManager);
                             }
                         }
-                        if (!lBoundEqualsUBound) {
-                        }
                         tail = grp.fragment.pop();
                     }
                     else {
