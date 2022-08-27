@@ -38,7 +38,7 @@ export class ListRenderer {
         }
         else {
             uBound = Math.min(uBound, lBound + len);
-            len = uBound - lBound;
+            len = uBound - lBound + 1;
         }
         const lBoundEqualsUBound = lBound === uBound;
         for (let i = lBound; i <= uBound; i++) {
