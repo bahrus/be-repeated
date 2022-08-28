@@ -22,7 +22,7 @@
   "devDependencies": {
     "@playwright/test": "1.25.1",
     "may-it-serve": "0.0.2",
-    "be-definitive": "0.0.60",
+    "be-definitive": "0.0.62",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.6.4",
     "xtal-editor": "0.0.187",
