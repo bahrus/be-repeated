@@ -1,8 +1,8 @@
-import {BeDecoratedProps, EventHandler} from 'be-decorated/types';
+import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
 import {BeLazyVirtualProps} from 'be-lazy/types';
 
-export interface BeRepeatedVirtualProps{
+export interface BeRepeatedVirtualProps extends MinimalProxy{
     list?: string | any[],
     listVal?: any[],
     nestedLoopProp?: string,

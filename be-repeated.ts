@@ -4,8 +4,7 @@ import {register} from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
 
 
-export class BeRepeatedController implements BeRepeatedActions {
-    //#footerRange: Range | undefined;
+export class BeRepeatedController extends EventTarget implements BeRepeatedActions {
     intro(proxy: Element & BeRepeatedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
         if(proxy.localName !== 'template'){
             const ns = proxy.nextElementSibling;
@@ -42,6 +41,7 @@ export class BeRepeatedController implements BeRepeatedActions {
         }else{
             proxy.templ = target as HTMLTemplateElement;
         }
+        proxy.resolved = true;
     }
     async finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
         const {unsubscribe}  = await import('trans-render/lib/subscribe.js');

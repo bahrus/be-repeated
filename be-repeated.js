@@ -1,8 +1,7 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 import { ListRenderer, templToCtxMap, templToFooterRange } from './ListRenderer.js';
-export class BeRepeatedController {
-    //#footerRange: Range | undefined;
+export class BeRepeatedController extends EventTarget {
     intro(proxy, target, beDecorProps) {
         if (proxy.localName !== 'template') {
             const ns = proxy.nextElementSibling;
@@ -40,6 +39,7 @@ export class BeRepeatedController {
         else {
             proxy.templ = target;
         }
+        proxy.resolved = true;
     }
     async finale(proxy, target) {
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
