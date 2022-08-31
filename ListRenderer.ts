@@ -8,8 +8,8 @@ export const templToFooterRange = new WeakMap<HTMLTemplateElement, Range>();
 export class ListRenderer implements ListRendererActions {
     #deferRendering = false;
     #prevCount = 0;
-    // #tr?: TR;
-    // #ctx: RenderContext | undefined;
+    #tr?: TR;
+    #ctx: RenderContext | undefined;
     constructor(public props: BeRepeatedProps){
         this.#deferRendering = !!props.deferRendering;
         
@@ -22,13 +22,13 @@ export class ListRenderer implements ListRendererActions {
             return;
         }
 
-        // if(this.#ctx === undefined){
-        //     this.#ctx = {
-        //         match: transform,
-        //         plugins: transformPlugins,
-        //         timestampKey,
-        //     };
-        // }
+        if(this.#ctx === undefined){
+            this.#ctx = {
+                match: transform,
+                plugins: transformPlugins,
+                timestampKey,
+            };
+        }
         let fragment: DocumentFragment | undefined = undefined;// = document.createDocumentFragment();
         let lazyTempl: HTMLTemplateElement | undefined = undefined;
         let fragmentInsertionCount = 0;
@@ -46,12 +46,7 @@ export class ListRenderer implements ListRendererActions {
         const lBoundEqualsUBound = lBound === uBound;
         for(let i = lBound; i <= uBound; i++){
             const item = listVal![i];
-            const ctx = {
-                match: transform,
-                plugins: transformPlugins,
-                timestampKey,
-                host: item,
-            } as RenderContext;
+            this.#ctx.host = item;
             if(tail !== undefined){
                 let grp: IGroup | undefined;
                 if(!lBoundEqualsUBound){
@@ -60,7 +55,11 @@ export class ListRenderer implements ListRendererActions {
                 if(lBoundEqualsUBound || grp!.fragment!.length > 0){
                     if(grp !== undefined){
                         if(item !== undefined){
-                            await DTR.transform(grp.fragment!, ctx, undefined, grp.fragmentManager);
+                            if(this.#tr !== undefined){
+                                await this.#tr.transform(grp.fragment!, grp.fragmentManager);
+                            }else{
+                                this.#tr = await DTR.transform(grp.fragment!, this.#ctx, undefined, grp.fragmentManager);
+                            }
                         }
                         tail = grp.fragment!.pop()!;
                     }else{
@@ -115,7 +114,11 @@ export class ListRenderer implements ListRendererActions {
             
             fragmentInsertionCount++;
             const clone = templ!.content.cloneNode(true) as Element;
-            await DTR.transform(clone, ctx, undefined, idxTempl);
+            if(this.#tr !== undefined){
+                await this.#tr.transform(clone, idxTempl);
+            }else{
+                this.#tr = await DTR.transform(clone, this.#ctx, undefined, idxTempl);
+            }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment!.append(clone);
             if(lazy && fragmentInsertionCount >= beLazyPageSize!){

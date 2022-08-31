@@ -5,8 +5,8 @@ export class ListRenderer {
     props;
     #deferRendering = false;
     #prevCount = 0;
-    // #tr?: TR;
-    // #ctx: RenderContext | undefined;
+    #tr;
+    #ctx;
     constructor(props) {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
@@ -17,13 +17,13 @@ export class ListRenderer {
             this.#deferRendering = false;
             return;
         }
-        // if(this.#ctx === undefined){
-        //     this.#ctx = {
-        //         match: transform,
-        //         plugins: transformPlugins,
-        //         timestampKey,
-        //     };
-        // }
+        if (this.#ctx === undefined) {
+            this.#ctx = {
+                match: transform,
+                plugins: transformPlugins,
+                timestampKey,
+            };
+        }
         let fragment = undefined; // = document.createDocumentFragment();
         let lazyTempl = undefined;
         let fragmentInsertionCount = 0;
@@ -43,12 +43,7 @@ export class ListRenderer {
         const lBoundEqualsUBound = lBound === uBound;
         for (let i = lBound; i <= uBound; i++) {
             const item = listVal[i];
-            const ctx = {
-                match: transform,
-                plugins: transformPlugins,
-                timestampKey,
-                host: item,
-            };
+            this.#ctx.host = item;
             if (tail !== undefined) {
                 let grp;
                 if (!lBoundEqualsUBound) {
@@ -57,7 +52,12 @@ export class ListRenderer {
                 if (lBoundEqualsUBound || grp.fragment.length > 0) {
                     if (grp !== undefined) {
                         if (item !== undefined) {
-                            await DTR.transform(grp.fragment, ctx, undefined, grp.fragmentManager);
+                            if (this.#tr !== undefined) {
+                                await this.#tr.transform(grp.fragment, grp.fragmentManager);
+                            }
+                            else {
+                                this.#tr = await DTR.transform(grp.fragment, this.#ctx, undefined, grp.fragmentManager);
+                            }
                         }
                         tail = grp.fragment.pop();
                     }
@@ -111,7 +111,12 @@ export class ListRenderer {
             fragment.append(idxTempl);
             fragmentInsertionCount++;
             const clone = templ.content.cloneNode(true);
-            await DTR.transform(clone, ctx, undefined, idxTempl);
+            if (this.#tr !== undefined) {
+                await this.#tr.transform(clone, idxTempl);
+            }
+            else {
+                this.#tr = await DTR.transform(clone, this.#ctx, undefined, idxTempl);
+            }
             idxTempl.dataset.cnt = (clone.childElementCount + 1).toString();
             fragment.append(clone);
             if (lazy && fragmentInsertionCount >= beLazyPageSize) {
