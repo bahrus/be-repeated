@@ -17,7 +17,7 @@
     "be-decorated": "0.0.147",
     "be-lazy": "0.0.17",
     "be-hive": "0.0.57",
-    "trans-render": "0.0.578"
+    "trans-render": "0.0.580"
   },
   "devDependencies": {
     "@playwright/test": "1.25.1",
