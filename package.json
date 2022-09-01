@@ -1,6 +1,6 @@
 {
   "name": "be-repeated",
-  "version": "0.0.88",
+  "version": "0.0.89",
   "description": "A repeating decorator web component.",
   "main": "be-repeated.js",
   "module": "be-repeated.js",
