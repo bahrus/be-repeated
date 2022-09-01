@@ -5,8 +5,6 @@ export class ListRenderer {
     props;
     #deferRendering = false;
     #prevCount = 0;
-    // #tr?: TR;
-    // #ctx: RenderContext | undefined;
     constructor(props) {
         this.props = props;
         this.#deferRendering = !!props.deferRendering;
@@ -17,30 +15,25 @@ export class ListRenderer {
             this.#deferRendering = false;
             return;
         }
-        // if(this.#ctx === undefined){
-        //     this.#ctx = {
-        //         match: transform,
-        //         plugins: transformPlugins,
-        //         timestampKey,
-        //     };
-        // }
         let fragment = undefined; // = document.createDocumentFragment();
         let lazyTempl = undefined;
         let fragmentInsertionCount = 0;
         let idx = 0;
         let tail = proxy;
         let len = listVal.length;
+        let pageLen = len;
         const parent = proxy.parentElement || proxy.getRootNode();
         if (lBound === undefined)
             lBound = 0;
         if (uBound === undefined) {
-            uBound = lBound + len;
+            uBound = len - 1;
         }
         else {
-            uBound = Math.min(uBound, lBound + len);
-            len = uBound - lBound + 1;
+            uBound = Math.max(uBound, len - 1);
+            //len = uBound - lBound;
+            pageLen = uBound - lBound + 1;
         }
-        const lBoundEqualsUBound = lBound === uBound;
+        const isEmpty = lBound > uBound;
         for (let i = lBound; i <= uBound; i++) {
             const item = listVal[i];
             const ctx = {
@@ -51,10 +44,10 @@ export class ListRenderer {
             };
             if (tail !== undefined) {
                 let grp;
-                if (!lBoundEqualsUBound) {
+                if (!isEmpty) {
                     grp = this.findGroup(tail, `template[data-idx="${idx}"]`, idx, item);
                 }
-                if (lBoundEqualsUBound || grp.fragment.length > 0) {
+                if (isEmpty || grp.fragment.length > 0) {
                     if (grp !== undefined) {
                         if (item !== undefined) {
                             await DTR.transform(grp.fragment, ctx, undefined, grp.fragmentManager);
@@ -65,8 +58,9 @@ export class ListRenderer {
                         tail = templ;
                     }
                     idx++;
-                    if (idx >= len) {
-                        if (len < this.#prevCount) {
+                    if (idx >= pageLen) {
+                        if (idx < this.#prevCount) {
+                            //clear out extra nodes that are no longer relevant
                             const lastTemplIdx = parent.querySelector(`template[data-idx="${this.#prevCount - 1}"]`); //TODO:  what if multiple loops in the same parent?
                             if (lastTemplIdx !== null) {
                                 const cnt = Number(lastTemplIdx.dataset.cnt) - 1;
@@ -79,7 +73,6 @@ export class ListRenderer {
                                 range.setEndAfter(ns);
                                 range.deleteContents();
                                 this.#prevCount = idx;
-                                //this.appendFooter(footerFragment, parent, proxy, templ);
                                 return;
                             }
                         }
