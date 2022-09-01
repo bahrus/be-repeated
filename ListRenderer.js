@@ -29,7 +29,7 @@ export class ListRenderer {
             uBound = len - 1;
         }
         else {
-            uBound = Math.max(uBound, len - 1);
+            uBound = Math.min(uBound, len - 1);
             //len = uBound - lBound;
             pageLen = uBound - lBound + 1;
         }
