@@ -2,23 +2,32 @@ import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
 import {BeLazyVirtualProps} from 'be-lazy/types';
 
-export interface BeRepeatedVirtualProps extends MinimalProxy{
+
+export interface BeRepeatedEndUserVirtualProps {
     list?: string | any[],
     listVal?: any[],
     nestedLoopProp?: string,
     transform?: any, 
-    templ?: HTMLTemplateElement,
     deferRendering?: boolean,
     transformPlugins?: TransformPlugins,
     timestampKey?:  string,
-    listRenderer: ListRendererActions,
     beLazyPageSize?: number,
     beLazyProps?: BeLazyVirtualProps,
     beLazyClass?: string,
-    beLazyScaleFactor?: number,
     lBound?: number,
     uBound?: number,
-    contextStack: RenderContext[],
+    beLazyScaleFactor?: number,
+}
+export interface BeRepeatedVirtualProps extends BeRepeatedEndUserVirtualProps, MinimalProxy{
+
+    templ?: HTMLTemplateElement,
+    
+    listRenderer: ListRendererActions,
+    beOosoom: string,
+    isVisible?: boolean
+    
+
+    //contextStack: RenderContext[],
 }
 
 export interface IGroup{
