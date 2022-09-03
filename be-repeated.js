@@ -1,6 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
-export class BeRepeatedController extends EventTarget {
+export class BeRepeated extends EventTarget {
     async intro(proxy, target, beDecorProps) {
         if (proxy.localName !== 'template') {
             const { convertToTemplate } = await import('./convertToTemplate.js');
@@ -14,16 +14,8 @@ export class BeRepeatedController extends EventTarget {
     async finale(proxy, target) {
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
-        //if(target.localName !== 'template') return; //[TODO]: ?
     }
-    async onList() {
-        //TODO:  put back list, proxy in the signature.
-        //for now, causes a weird browser dev tools crash when debugging xtal-vlist/demo/dev.html
-        //Not crashing on edge, only chrome
-        //console.log('about to execute code dev tools might crash on.');
-        const list = this.list;
-        const proxy = this.proxy;
-        //console.log('i survived');
+    async onList({ list, proxy }) {
         if (Array.isArray(list)) {
             proxy.listVal = list;
             return;
@@ -32,16 +24,17 @@ export class BeRepeatedController extends EventTarget {
         hookUp(list, proxy, 'listVal');
     }
     #prevList;
-    async renderList({ listVal, transform, proxy, templ, deferRendering }) {
+    async renderList(brp) {
+        const { listVal, transform, proxy, templ, deferRendering } = brp;
         //because of "isVisible" condition, we might be asked to render the list only because visibility changes
         //this logic prevents that:
         if (listVal === this.#prevList)
             return;
         const { ListRenderer } = await import('./ListRenderer.js');
         if (proxy.listRenderer === undefined) {
-            proxy.listRenderer = new ListRenderer(this);
+            proxy.listRenderer = new ListRenderer(brp);
         }
-        proxy.listRenderer.renderList(this);
+        proxy.listRenderer.renderList(brp);
         this.#prevList = listVal;
     }
     async onNestedLoopProp({ nestedLoopProp, proxy }) {
@@ -83,7 +76,7 @@ define({
         }
     },
     complexPropDefaults: {
-        controller: BeRepeatedController
+        controller: BeRepeated
     }
 });
 register(ifWantsToBe, upgrade, tagName);

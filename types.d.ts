@@ -19,15 +19,10 @@ export interface BeRepeatedEndUserVirtualProps {
     beLazyScaleFactor?: number,
 }
 export interface BeRepeatedVirtualProps extends BeRepeatedEndUserVirtualProps, MinimalProxy{
-
     templ?: HTMLTemplateElement,
-    
     listRenderer: ListRendererActions,
     beOosoom: string,
     isVisible?: boolean
-    
-
-    //contextStack: RenderContext[],
 }
 
 export interface IGroup{
@@ -35,24 +30,27 @@ export interface IGroup{
     fragment?: Element[];
 }
 
-export interface BeRepeatedProps extends BeRepeatedVirtualProps{
-    proxy: Element & BeRepeatedVirtualProps,
+export type Proxy = Element & BeRepeatedVirtualProps;
+
+export interface BeRepeatedProxy extends BeRepeatedActions, BeRepeatedVirtualProps{
+    proxy: Proxy,
 }
 
+export type BRP = BeRepeatedProxy
+
 export interface BeRepeatedActions {
-    intro(proxy: Element & BeRepeatedVirtualProps, target: Element, beDecorProps: BeDecoratedProps): void;
-    finale(proxy: Element & BeRepeatedVirtualProps, target:Element): void; 
-    onList(self: this): void; 
-    onNestedLoopProp(self: this): void;
-    renderList(self: this): void; 
+    intro(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
+    finale(proxy: Proxy, target:Element): void; 
+    onList(brp: BRP): void; 
+    onNestedLoopProp(brp: BRP): void;
+    renderList(brp: BRP): void; 
 }
 
 export interface LoopContext {
-    //list: any[];
     idx: number;
     item: any;
 }
 
 export interface ListRendererActions{
-    renderList(self: BeRepeatedProps): void;
+    renderList(brp: BRP): void;
 }
