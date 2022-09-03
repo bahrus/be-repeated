@@ -14,8 +14,7 @@ export class BeRepeatedController extends EventTarget {
     async finale(proxy, target) {
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
-        if (target.localName !== 'template')
-            return; //[TODO]: ?
+        //if(target.localName !== 'template') return; //[TODO]: ?
     }
     async onList() {
         //TODO:  put back list, proxy in the signature.
@@ -32,13 +31,18 @@ export class BeRepeatedController extends EventTarget {
         const { hookUp } = await import('be-observant/hookUp.js');
         hookUp(list, proxy, 'listVal');
     }
-    #prevCount = 0;
+    #prevList;
     async renderList({ listVal, transform, proxy, templ, deferRendering }) {
+        //because of "isVisible" condition, we might be asked to render the list only because visibility changes
+        //this logic prevents that:
+        if (listVal === this.#prevList)
+            return;
         const { ListRenderer } = await import('./ListRenderer.js');
         if (proxy.listRenderer === undefined) {
             proxy.listRenderer = new ListRenderer(this);
         }
         proxy.listRenderer.renderList(this);
+        this.#prevList = listVal;
     }
     async onNestedLoopProp({ nestedLoopProp, proxy }) {
         const { upSearch } = await import('trans-render/lib/upSearch.js');
@@ -63,13 +67,17 @@ define({
             finale: 'finale',
             virtualProps: [
                 'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins',
-                'beLazyPageSize', 'beLazyProps', 'beLazyScaleFactor', 'lBound', 'uBound', 'timestampKey'
+                'beLazyPageSize', 'beLazyProps', 'beLazyScaleFactor', 'lBound', 'uBound', 'timestampKey', 'beOosoom', 'isVisible'
             ],
+            proxyPropDefaults: {
+                beOosoom: 'isVisible',
+                isVisible: true
+            }
         },
         actions: {
             onList: 'list',
             renderList: {
-                ifAllOf: ['transform', 'listVal', 'templ']
+                ifAllOf: ['transform', 'listVal', 'templ', 'isVisible']
             },
             onNestedLoopProp: 'nestedLoopProp'
         }
