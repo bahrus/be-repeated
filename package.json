@@ -14,8 +14,8 @@
   ],
   "dependencies": {
     "be-observant": "0.0.134",
-    "be-decorated": "0.0.148",
-    "be-lazy": "0.0.17",
+    "be-decorated": "0.0.150",
+    "be-lazy": "0.0.19",
     "be-oosoom": "0.0.1",
     "be-hive": "0.0.58",
     "trans-render": "0.0.581"
