@@ -24,22 +24,22 @@ export class BeRepeated extends EventTarget {
         hookUp(list, proxy, 'listVal');
     }
     #prevList;
-    async renderList(brp) {
-        const { listVal, transform, proxy, templ, deferRendering } = brp;
+    async renderList(pp) {
+        const { listVal, transform, proxy, templ, deferRendering } = pp;
         //because of "isVisible" condition, we might be asked to render the list only because visibility changes
         //this logic prevents that:
         if (listVal === this.#prevList)
             return;
         const { ListRenderer } = await import('./ListRenderer.js');
         if (proxy.listRenderer === undefined) {
-            proxy.listRenderer = new ListRenderer(brp);
+            proxy.listRenderer = new ListRenderer(pp);
         }
-        proxy.listRenderer.renderList(brp);
+        proxy.listRenderer.renderList(pp);
         this.#prevList = listVal;
     }
     async onNestedLoopProp({ nestedLoopProp, proxy }) {
         const { upSearch } = await import('trans-render/lib/upSearch.js');
-        const templ = upSearch(this.proxy, 'template[data-idx]');
+        const templ = upSearch(proxy, 'template[data-idx]');
         const { templToCtxMap } = await import('./ListRenderer.js');
         const loopContext = templToCtxMap.get(templ);
         const subList = loopContext.item[nestedLoopProp];

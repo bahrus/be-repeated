@@ -1,4 +1,4 @@
-import { BRP, BeRepeatedVirtualProps, LoopContext, ListRendererActions, IGroup } from './types';
+import { PP, BeRepeatedVirtualProps, LoopContext, ListRendererActions, IGroup } from './types';
 import { TR, DTR } from 'trans-render/lib/DTR.js';
 import { RenderContext } from 'trans-render/lib/types';
 
@@ -9,12 +9,12 @@ export class ListRenderer implements ListRendererActions {
     #deferRendering = false;
     #prevCount = 0;
 
-    constructor(public props: BRP){
+    constructor(public props: PP){
         this.#deferRendering = !!props.deferRendering;
         
     }
     async renderList({listVal, transform, proxy, templ, transformPlugins, uBound, lBound,
-        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timestampKey}: BRP){
+        beLazyPageSize, beLazyProps, beLazyClass, beLazyScaleFactor, timestampKey}: PP){
         const lazy = !!beLazyPageSize;
         if(this.#deferRendering){
             this.#deferRendering = false;

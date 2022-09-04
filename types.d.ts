@@ -3,7 +3,7 @@ import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
 import {BeLazyVirtualProps} from 'be-lazy/types';
 
 
-export interface BeRepeatedEndUserVirtualProps {
+export interface BeRepeatedEndUserProps {
     list?: string | any[],
     listVal?: any[],
     nestedLoopProp?: string,
@@ -18,7 +18,7 @@ export interface BeRepeatedEndUserVirtualProps {
     uBound?: number,
     beLazyScaleFactor?: number,
 }
-export interface BeRepeatedVirtualProps extends BeRepeatedEndUserVirtualProps, MinimalProxy{
+export interface BeRepeatedVirtualProps extends BeRepeatedEndUserProps, MinimalProxy{
     templ?: HTMLTemplateElement,
     listRenderer: ListRendererActions,
     beOosoom: string,
@@ -32,18 +32,18 @@ export interface IGroup{
 
 export type Proxy = Element & BeRepeatedVirtualProps;
 
-export interface BeRepeatedProxy extends BeRepeatedActions, BeRepeatedVirtualProps{
+export interface ProxyProps extends BeRepeatedVirtualProps{
     proxy: Proxy,
 }
 
-export type BRP = BeRepeatedProxy
+export type PP = ProxyProps;
 
 export interface BeRepeatedActions {
     intro(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
     finale(proxy: Proxy, target:Element): void; 
-    onList(brp: BRP): void; 
-    onNestedLoopProp(brp: BRP): void;
-    renderList(brp: BRP): void; 
+    onList(pp: PP): void; 
+    onNestedLoopProp(pp: PP): void;
+    renderList(pp: PP): void; 
 }
 
 export interface LoopContext {
@@ -52,5 +52,5 @@ export interface LoopContext {
 }
 
 export interface ListRendererActions{
-    renderList(brp: BRP): void;
+    renderList(pp: PP): void;
 }
