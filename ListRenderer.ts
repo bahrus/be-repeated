@@ -1,4 +1,4 @@
-import { PP, BeRepeatedVirtualProps, LoopContext, ListRendererActions, IGroup } from './types';
+import { PP, VirtualProps, LoopContext, ListRendererActions, IGroup } from './types';
 import { TR, DTR } from 'trans-render/lib/DTR.js';
 import { RenderContext } from 'trans-render/lib/types';
 
@@ -177,7 +177,7 @@ export class ListRenderer implements ListRendererActions {
         return returnGrp;        
     }
 
-    appendFooter(footerFragment: DocumentFragment | undefined, parent: Element, proxy: Element & BeRepeatedVirtualProps, templ: HTMLTemplateElement | undefined){
+    appendFooter(footerFragment: DocumentFragment | undefined, parent: Element, proxy: Element & VirtualProps, templ: HTMLTemplateElement | undefined){
         if(footerFragment === undefined) return;
         const initialLastElement = parent.lastElementChild!;
         parent.appendChild(footerFragment);

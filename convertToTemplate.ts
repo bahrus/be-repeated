@@ -1,6 +1,6 @@
-import {BeRepeatedVirtualProps} from './types';
+import {VirtualProps} from './types';
 import {BeDecoratedProps} from 'be-decorated/types';
-export async function convertToTemplate(proxy: Element & BeRepeatedVirtualProps, target: Element, beDecorProps: BeDecoratedProps){
+export async function convertToTemplate(proxy: Element & VirtualProps, target: Element, beDecorProps: BeDecoratedProps){
     const ns = proxy.nextElementSibling;
     const templ = document.createElement('template');
     if(ns !== null){

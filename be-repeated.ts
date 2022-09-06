@@ -1,8 +1,8 @@
-import {PP, Proxy, BeRepeatedActions, BeRepeatedVirtualProps, LoopContext} from './types';
+import {PP, Proxy, Actions, VirtualProps, LoopContext} from './types';
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {register} from 'be-hive/register.js';
 
-export class BeRepeated extends EventTarget implements BeRepeatedActions {
+export class BeRepeated extends EventTarget implements Actions {
     async intro(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps){
         if(proxy.localName !== 'template'){
             const {convertToTemplate} = await import('./convertToTemplate.js');
@@ -12,7 +12,7 @@ export class BeRepeated extends EventTarget implements BeRepeatedActions {
         }
         proxy.resolved = true;
     }
-    async finale(proxy: Element & BeRepeatedVirtualProps, target:Element){
+    async finale(proxy: Element & VirtualProps, target:Element){
         const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
@@ -56,7 +56,7 @@ const ifWantsToBe = 'repeated';
 
 const upgrade = '*';
 
-define<BeRepeatedVirtualProps & BeDecoratedProps<BeRepeatedVirtualProps, BeRepeatedActions>, BeRepeatedActions>({
+define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
     config:{
         tagName,
         propDefaults:{

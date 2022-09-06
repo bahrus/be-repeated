@@ -1,9 +1,9 @@
 import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
-import {BeLazyVirtualProps} from 'be-lazy/types';
+import {VirtualProps as BeLazyVirtualProps} from 'be-lazy/types';
 
 
-export interface BeRepeatedEndUserProps {
+export interface EndUserProps {
     list?: string | any[],
     listVal?: any[],
     nestedLoopProp?: string,
@@ -18,7 +18,7 @@ export interface BeRepeatedEndUserProps {
     uBound?: number,
     beLazyScaleFactor?: number,
 }
-export interface BeRepeatedVirtualProps extends BeRepeatedEndUserProps, MinimalProxy{
+export interface VirtualProps extends EndUserProps, MinimalProxy{
     templ?: HTMLTemplateElement,
     listRenderer: ListRendererActions,
     beOosoom: string,
@@ -30,15 +30,15 @@ export interface IGroup{
     fragment?: Element[];
 }
 
-export type Proxy = Element & BeRepeatedVirtualProps;
+export type Proxy = Element & VirtualProps;
 
-export interface ProxyProps extends BeRepeatedVirtualProps{
+export interface ProxyProps extends VirtualProps{
     proxy: Proxy,
 }
 
 export type PP = ProxyProps;
 
-export interface BeRepeatedActions {
+export interface Actions {
     intro(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
     finale(proxy: Proxy, target:Element): void; 
     onList(pp: PP): void; 
