@@ -1,5 +1,5 @@
 import {PP, Proxy, Actions, VirtualProps, LoopContext} from './types';
-import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
+import {define, BeDecoratedProps} from 'be-decorated/DE.js';
 import {register} from 'be-hive/register.js';
 
 export class BeRepeated extends EventTarget implements Actions {
