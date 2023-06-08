@@ -17,7 +17,7 @@
     "be-decorated": "0.0.190",
     "be-lazy": "0.0.26",
     "be-oosoom": "0.0.10",
-    "be-hive": "0.0.77",
+    "be-hive": "0.0.102",
     "trans-render": "0.0.631"
   },
   "devDependencies": {
