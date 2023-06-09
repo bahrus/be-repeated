@@ -10,7 +10,7 @@
 		"forceConsistentCasingInFileNames": true
 	},
 	"files": [
-		"v2/be-repeated.ts"
+		"be-repeated.ts"
 	],
 	"exclude":[
 		"node_modules"

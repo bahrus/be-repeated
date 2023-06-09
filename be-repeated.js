@@ -12,7 +12,6 @@ export class BeRepeated extends BE {
         const { enhancedElement, templIdx } = self;
         if (templIdx === undefined)
             return {};
-        console.log('creating templ');
         const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
         const templ = document.createElement('template');
         for (const el of toBeConvertedToTemplate) {
@@ -33,7 +32,6 @@ export class BeRepeated extends BE {
     }
     #refs;
     cloneIfNeeded(self, newRows) {
-        console.log('cloneIfNeeded');
         const { startIdx, endIdx, templ, enhancedElement } = self;
         if (this.#refs === undefined) {
             this.updateRefs(self);

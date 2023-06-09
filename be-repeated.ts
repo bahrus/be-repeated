@@ -15,7 +15,6 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
     createTempl(self: this): PAP {
         const {enhancedElement, templIdx} = self;
         if(templIdx === undefined) return {};
-        console.log('creating templ');
         const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
         
         const templ = document.createElement('template');
@@ -39,7 +38,6 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
 
     #refs: Map<number, WeakRef<Element>> | undefined;
     cloneIfNeeded(self: this, newRows?: Row[]): PAP{
-        console.log('cloneIfNeeded');
         const {startIdx, endIdx, templ, enhancedElement} = self;
         if(this.#refs === undefined){
             this.updateRefs(self);
