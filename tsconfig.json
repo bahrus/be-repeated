@@ -6,14 +6,13 @@
 		"experimentalDecorators": false,
 		"newLine": "LF",
 		"strict": true,
-		"watch": true
+		"watch": true,
+		"forceConsistentCasingInFileNames": true
 	},
 	"files": [
-		"index.ts"
+		"v2/be-repeated.ts"
 	],
 	"exclude":[
-		"build",
-		"bower_components",
 		"node_modules"
 	]
 

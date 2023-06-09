@@ -2,7 +2,7 @@
 ## Example 1
 
 ```html
-<div role="grid" aria-rowcount="24" >
+<div role="grid" aria-rowcount="100" >
   <div role="rowgroup">
     <div role="row" aria-rowindex="1">
       <span role="columnheader">First Name</span>
@@ -10,8 +10,10 @@
       <span role="columnheader">Position</span>
     </div>
   </div>
-  <div role="rowgroup"be-repeated='{
-      "pageSize": 100
+  <div role="rowgroup" be-repeated='{
+      "startIdx": 2,
+      "endIdx": 99,
+      "templIdx": 0
     }'>
     <div role="row" hidden aria-row-index="0">
         <span role="gridcell" itemprop=first></span>
@@ -20,13 +22,13 @@
     </div>
     <div role="row" aria-rowindex="2">
       <span role="gridcell" itemprop=first>Morgan</span>
-      <span role="gridcell">Brian</span>
-      <span role="gridcell">Midfielder</span>
+      <span role="gridcell" itemprop=second>Brian</span>
+      <span role="gridcell" itemprop=third>Midfielder</span>
     </div>
     <div role="row" aria-rowindex="3">
       <span role="gridcell" itemprop=first>Abby</span>
-      <span role="gridcell">Dahlkemper</span>
-      <span role="gridcell">Defender</span>
+      <span role="gridcell" itemprop=second>Dahlkemper</span>
+      <span role="gridcell" itemprop=third>Defender</span>
     </div>
     <div role="row" aria-rowindex="4">
       <span role="gridcell" itemprop=first>Ashlyn</span>

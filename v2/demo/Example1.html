@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div role="grid" aria-rowcount="100">
+        <div role="rowgroup">
+            <div role="row" aria-rowindex="1">
+                <span role="columnheader">First Name</span>
+                <span role="columnheader">Last Name</span>
+                <span role="columnheader">Position</span>
+            </div>
+        </div>
+        <div role="rowgroup" be-repeated='{
+            "startIdx": 2,
+            "endIdx": 99999,
+            "templIdx": 0
+          }'>
+            <div role="row" hidden aria-rowindex="0">
+                <span role="gridcell" itemprop=first></span>
+                <span role="gridcell" itemprop=second></span>
+                <span role="gridcell" itemprop=third></span>
+            </div>
+            <div role="row" aria-rowindex="2">
+                <span role="gridcell" itemprop=first>Morgan</span>
+                <span role="gridcell" itemprop=second>Brian</span>
+                <span role="gridcell" itemprop=third>Midfielder</span>
+            </div>
+            <div role="row" aria-rowindex="3">
+                <span role="gridcell" itemprop=first>Abby</span>
+                <span role="gridcell" itemprop=second>Dahlkemper</span>
+                <span role="gridcell" itemprop=third>Defender</span>
+            </div>
+            <div role="row" aria-rowindex="4">
+                <span role="gridcell" itemprop=first>Ashlyn</span>
+                <span role="gridcell" itemprop=second>Harris</span>
+                <span role="gridcell" itemprop=third>Goalkeeper</span>
+            </div>
+        </div>
+    </div>
+
+    <script type=importmap>
+        {
+            "imports": {
+                "be-enhanced/": "../../node_modules/be-enhanced/",
+                "be-hive/":  "../../node_modules/be-hive/",
+                "trans-render/": "../../node_modules/trans-render/",
+                "xtal-element/": "../../node_modules/xtal-element/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-repeated.js';
+    </script>
+</body>
+
+</html>
