@@ -1,91 +1,136 @@
-import {PP, Proxy, Actions, VirtualProps, LoopContext} from './types';
-import {define, BeDecoratedProps} from 'be-decorated/DE.js';
+import {BE, propDefaults, propInfo} from 'be-enhanced/BE.js';
+import {BEConfig} from 'be-enhanced/types';
+import {XE} from 'xtal-element/XE.js';
+import {Actions, AllProps, AP, PAP, ProPAP, POA, Row} from './types';
 import {register} from 'be-hive/register.js';
+import {insertAdjacentClone} from 'trans-render/lib/insertAdjacentClone.js'
 
-export class BeRepeated extends EventTarget implements Actions {
-    async intro(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps){
-        if(proxy.localName !== 'template'){
-            const {convertToTemplate} = await import('./convertToTemplate.js');
-            await convertToTemplate(proxy, target, beDecorProps);
-        }else{
-            proxy.templ = target as HTMLTemplateElement;
+export class BeRepeated extends BE<AP, Actions> implements Actions{
+    static override get beConfig(){
+        return {
+            parse: true,
         }
-        proxy.resolved = true;
     }
-    async finale(proxy: Element & VirtualProps, target:Element){
-        const {unsubscribe}  = await import('trans-render/lib/subscribe.js');
-        unsubscribe(proxy);
-    }
-    async onList({list, proxy}: PP){
-        if(Array.isArray(list)){
-            proxy.listVal = list;
-            return;
+
+    createTempl(self: this): PAP {
+        const {enhancedElement, templIdx} = self;
+        if(templIdx === undefined) return {};
+        console.log('creating templ');
+        const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
+        
+        const templ = document.createElement('template');
+        for(const el of toBeConvertedToTemplate){
+            templ.content.appendChild(el.cloneNode(true));
         }
-        const {hookUp} = await import('be-observant/hookUp.js')
-        hookUp(list, proxy, 'listVal');
-    }
-    #prevList: any[] | undefined;
-    async renderList(pp: PP){
-        const {listVal, transform, proxy, templ, deferRendering} = pp;
-        //because of "isVisible" condition, we might be asked to render the list only because visibility changes
-        //this logic prevents that:
-        if(listVal === this.#prevList) return;
-        const {ListRenderer} = await import ('./ListRenderer.js');
-        if(proxy.listRenderer === undefined){
-            proxy.listRenderer = new ListRenderer(pp);
+        return {
+            templ
         }
-        proxy.listRenderer!.renderList(pp);
-        this.#prevList = listVal;
     }
 
-    async onNestedLoopProp({nestedLoopProp, proxy}: PP){
-        const {upSearch} = await import('trans-render/lib/upSearch.js');
-        const templ = upSearch(proxy, 'template[data-idx]') as HTMLTemplateElement;
-        const {templToCtxMap} = await import ('./ListRenderer.js');
-        const loopContext = templToCtxMap.get(templ);
-        const subList = loopContext!.item[nestedLoopProp!];
-        proxy.listVal = subList;
+    updateRefs(self: this){
+        this.#refs = new Map<number, WeakRef<Element>>();
+        const {enhancedElement} = self;
+        const indices = Array.from(enhancedElement.querySelectorAll(':scope > [aria-rowindex]'));
+        const refs = this.#refs;
+        for(const indx of indices){
+            refs.set(Number(indx.getAttribute('aria-rowindex')!), new WeakRef(indx));
+        }
     }
 
-
+    #refs: Map<number, WeakRef<Element>> | undefined;
+    cloneIfNeeded(self: this, newRows?: Row[]): PAP{
+        console.log('cloneIfNeeded');
+        const {startIdx, endIdx, templ, enhancedElement} = self;
+        if(this.#refs === undefined){
+            this.updateRefs(self);
+        }
+        let lastFoundEl: Element | undefined;
+        const refs = this.#refs!;
+        if(newRows === undefined) newRows = [];
+        for(let idx = startIdx!; idx <= endIdx!; idx++){
+            if(refs.has(idx)){
+                const deref = refs.get(idx)!.deref();
+                if(deref !== undefined){
+                    lastFoundEl = deref;
+                    continue;
+                }else{
+                    this.updateRefs(self);
+                    this.cloneIfNeeded(self, newRows);
+                    return {};
+                }
+            }else{
+                const clone = templ.content.cloneNode(true) as DocumentFragment;
+                const nodes = Array.from(clone.childNodes);
+                const children = Array.from(clone.children);
+                const lastNode = children.at(-1);
+                for(const node of nodes){
+                    if(node instanceof Element){
+                        node.ariaRowIndex = idx.toString();
+                    }
+                }
+                const row: Row = {
+                    idx,
+                    nodes
+                };
+                newRows.push(row);
+                if(lastFoundEl === undefined){
+                    if(refs.keys.length > 0){
+                        enhancedElement.prepend(clone);
+                    }else{
+                        enhancedElement.appendChild(clone);
+                    }
+                    
+                }else{
+                    if(lastFoundEl.nextElementSibling === null){
+                        enhancedElement.appendChild(clone);
+                    }else{
+                        insertAdjacentClone(clone, lastFoundEl, 'afterend');
+                    }
+                }
+                lastFoundEl = lastNode;
+            }
+        }
+        this.dispatchEvent(new CustomEvent('newRows', {
+            detail: {
+                newRows
+            }
+        }))
+        return {
+            resolved: true,
+        }
+    }
 }
 
+export interface BeRepeated extends AllProps{}
+
 const tagName = 'be-repeated';
-
 const ifWantsToBe = 'repeated';
-
 const upgrade = '*';
 
-define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
-    config:{
+const xe = new XE<AP, Actions>({
+    config: {
         tagName,
-        propDefaults:{
-            upgrade,
-            ifWantsToBe,
-            forceVisible: ['template'],
-            intro: 'intro',
-            finale: 'finale',
-            virtualProps: [
-                'list', 'listVal', 'templ', 'transform', 'nestedLoopProp', 'deferRendering', 'listRenderer', 'transformPlugins', 
-                'beLazyPageSize', 'beLazyProps', 'beLazyScaleFactor', 'lBound', 'uBound', 'timestampKey', 'beOosoom', 'isVisible'
-            ],
-            proxyPropDefaults:{
-                beOosoom: 'isVisible',
-                isVisible: true
-            }
+        propDefaults: {
+            ...propDefaults
         },
-        actions:{
-            onList:'list',
-            renderList:{
-                ifAllOf:['transform', 'listVal', 'templ', 'isVisible']
+        propInfo: {
+            ...propInfo,
+            // newRows: {
+            //     notify:{
+            //         dispatch: true
+            //     }
+            // }
+        },
+        actions: {
+            createTempl: {
+                ifKeyIn: ['templIdx'],
             },
-            onNestedLoopProp:'nestedLoopProp'
+            cloneIfNeeded: {
+                ifAllOf: ['startIdx', 'endIdx', 'templ']
+            }
         }
     },
-    complexPropDefaults:{
-        controller: BeRepeated
-    }
+    superclass: BeRepeated
 });
 
 register(ifWantsToBe, upgrade, tagName);
-

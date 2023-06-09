@@ -1,56 +1,32 @@
-import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
-import {RenderContext, TransformPlugins} from 'trans-render/lib/types';
-import {VirtualProps as BeLazyVirtualProps} from 'be-lazy/types';
+import { ActionOnEventConfigs } from "trans-render/froop/types";
+import {IBE} from 'be-enhanced/types';
 
-
-export interface EndUserProps {
-    list?: string | any[],
-    listVal?: any[],
-    nestedLoopProp?: string,
-    transform?: any, 
-    deferRendering?: boolean,
-    transformPlugins?: TransformPlugins,
-    timestampKey?:  string,
-    beLazyPageSize?: number,
-    beLazyProps?: BeLazyVirtualProps,
-    beLazyClass?: string,
-    lBound?: number,
-    uBound?: number,
-    beLazyScaleFactor?: number,
-}
-export interface VirtualProps extends EndUserProps, MinimalProxy{
-    templ?: HTMLTemplateElement,
-    listRenderer: ListRendererActions,
-    beOosoom: string,
-    isVisible?: boolean
+export interface EndUserProps extends IBE{
+    startIdx?: number,
+    endIdx?: number,
+    templIdx?: number,
 }
 
-export interface IGroup{
-    fragmentManager?: HTMLTemplateElement;
-    fragment?: Element[];
+export interface AllProps extends EndUserProps {
+    //newRows: Row | undefined;
+    //allRows: WeakRef<Element>[] | undefined;
+    templ: HTMLTemplateElement
 }
 
-export type Proxy = Element & VirtualProps;
-
-export interface ProxyProps extends VirtualProps{
-    proxy: Proxy,
+export interface Row{
+    nodes: Node[],
+    idx: number,
 }
 
-export type PP = ProxyProps;
+export type AP = AllProps;
 
-export interface Actions {
-    intro(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
-    finale(proxy: Proxy, target:Element): void; 
-    onList(pp: PP): void; 
-    onNestedLoopProp(pp: PP): void;
-    renderList(pp: PP): void; 
-}
+export type PAP = Partial<AP>;
 
-export interface LoopContext {
-    idx: number;
-    item: any;
-}
+export type ProPAP = Promise<PAP>;
 
-export interface ListRendererActions{
-    renderList(pp: PP): void;
+export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
+
+export interface Actions{
+    createTempl(self: this): PAP;
+    cloneIfNeeded(self: this): PAP;
 }
