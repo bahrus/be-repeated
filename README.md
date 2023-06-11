@@ -47,4 +47,4 @@
 What be-repeated does:
 
 1.  Finds the element with aria-index=0, creates a template from it.
-2.  Appends/deletes[TODO] clones of the template, updating the aria-rowindex, until the indexes match the range specified.  When finished, raises an event, allowing subscribers to modify content as needed.
+2.  Appends/deletes clones of the template, updating the aria-rowindex, until the indexes match the range specified.  When finished, raises an event, allowing subscribers to modify content as needed.  This will delete the item with aria-rowindex="0".

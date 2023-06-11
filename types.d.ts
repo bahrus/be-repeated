@@ -28,5 +28,5 @@ export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
 
 export interface Actions{
     createTempl(self: this): PAP;
-    cloneIfNeeded(self: this): PAP;
+    cloneIfNeeded(self: this): void;
 }

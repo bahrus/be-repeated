@@ -21,20 +21,55 @@ export class BeRepeated extends BE {
             templ,
         };
     }
-    updateRefs(self) {
+    #updateRefs(self) {
         this.#refs = new Map();
-        const { enhancedElement } = self;
+        const { enhancedElement, startIdx, endIdx } = self;
         const indices = Array.from(enhancedElement.querySelectorAll(':scope > [aria-rowindex]'));
         const refs = this.#refs;
         for (const indx of indices) {
-            refs.set(Number(indx.getAttribute('aria-rowindex')), new WeakRef(indx));
+            const num = Number(indx.getAttribute('aria-rowindex'));
+            if (num < startIdx) {
+                indx.remove();
+            }
+            else {
+                let weakRefs = refs.get(num);
+                if (weakRefs === undefined) {
+                    weakRefs = [];
+                    refs.set(num, weakRefs);
+                }
+                weakRefs.push(new WeakRef(indx));
+            }
+        }
+    }
+    #purgeRefs(self) {
+        const { enhancedElement, startIdx, endIdx } = self;
+        const elsToPurge = [];
+        for (const [key, val] of this.#refs) {
+            if (key < startIdx || key > endIdx) {
+                elsToPurge.push({
+                    key,
+                    refs: val
+                });
+            }
+        }
+        for (const elToPUrge of elsToPurge) {
+            const { key, refs } = elToPUrge;
+            for (const ref of refs) {
+                const el = ref.deref();
+                if (el !== undefined)
+                    el.remove();
+            }
+            this.#refs?.delete(key);
         }
     }
     #refs;
     cloneIfNeeded(self, newRows) {
         const { startIdx, endIdx, templ, enhancedElement } = self;
         if (this.#refs === undefined) {
-            this.updateRefs(self);
+            this.#updateRefs(self);
+        }
+        else {
+            this.#purgeRefs(self);
         }
         let lastFoundEl;
         const refs = this.#refs;
@@ -42,13 +77,13 @@ export class BeRepeated extends BE {
             newRows = [];
         for (let idx = startIdx; idx <= endIdx; idx++) {
             if (refs.has(idx)) {
-                const deref = refs.get(idx).deref();
+                const deref = refs.get(idx).at(-1)?.deref();
                 if (deref !== undefined) {
                     lastFoundEl = deref;
                     continue;
                 }
                 else {
-                    this.updateRefs(self);
+                    this.#updateRefs(self);
                     this.cloneIfNeeded(self, newRows);
                     return {};
                 }
@@ -58,6 +93,7 @@ export class BeRepeated extends BE {
                 const nodes = Array.from(clone.childNodes);
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
+                refs.set(idx, children.map(child => new WeakRef(child)));
                 for (const node of nodes) {
                     if (node instanceof Element) {
                         node.ariaRowIndex = idx.toString();

@@ -17,7 +17,7 @@
                 <span role="columnheader">Position</span>
             </div>
         </div>
-        <div role="rowgroup" be-repeated='{
+        <div id=test role="rowgroup" be-repeated='{
             "startIdx": 2,
             "endIdx": 999,
             "templIdx": 0
@@ -45,6 +45,8 @@
         </div>
     </div>
 
+    <button onclick="reduceSize()">Reduce size</button>
+
     <script type=importmap>
         {
             "imports": {
@@ -57,6 +59,11 @@
     </script>
     <script type=module>
         import '../be-repeated.js';
+    </script>
+    <script>
+        function reduceSize(){
+            test.beEnhanced.beRepeated.endIdx = 100;
+        }
     </script>
 </body>
 
