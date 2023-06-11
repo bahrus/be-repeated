@@ -15,7 +15,7 @@
       "endIdx": 99,
       "templIdx": 0
     }'>
-    <div role="row" hidden aria-row-index="0">
+    <div role="row" hidden aria-rowindex="0">
         <span role="gridcell" itemprop=first></span>
         <span role="gridcell" itemprop=second></span>
         <span role="gridcell" itemprop=third></span>

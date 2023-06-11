@@ -18,7 +18,7 @@ export class BeRepeated extends BE {
             templ.content.appendChild(el.cloneNode(true));
         }
         return {
-            templ
+            templ,
         };
     }
     updateRefs(self) {
@@ -92,9 +92,6 @@ export class BeRepeated extends BE {
                 newRows
             }
         }));
-        return {
-            resolved: true,
-        };
     }
 }
 const tagName = 'be-repeated';
@@ -104,7 +101,8 @@ const xe = new XE({
     config: {
         tagName,
         propDefaults: {
-            ...propDefaults
+            ...propDefaults,
+            resolved: true,
         },
         propInfo: {
             ...propInfo,

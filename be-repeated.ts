@@ -22,7 +22,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
             templ.content.appendChild(el.cloneNode(true));
         }
         return {
-            templ
+            templ,
         }
     }
 
@@ -93,9 +93,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 newRows
             }
         }))
-        return {
-            resolved: true,
-        }
+
     }
 }
 
@@ -109,7 +107,8 @@ const xe = new XE<AP, Actions>({
     config: {
         tagName,
         propDefaults: {
-            ...propDefaults
+            ...propDefaults,
+            resolved: true,
         },
         propInfo: {
             ...propInfo,
