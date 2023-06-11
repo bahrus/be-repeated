@@ -46,7 +46,5 @@
 
 What be-repeated does:
 
-1.  Finds the element with the highest aria-rowindex.
-2.  If a template hasn't been created yet, create template from the element with the highest aria-rowindex.
-3.  Append/delete clones of the template, updating the aria-rowindex, until the aria-rowcount equals the number of  row.  In case of appending, do to a fragment before inserting into the live DOM document. Raises an event, allowing subscribers to modify content as needed.
-4.  Watches for changes to aria-rowcount.
+1.  Finds the element with aria-index=0, creates a template from it.
+2.  Appends/deletes[TODO] clones of the template, updating the aria-rowindex, until the indexes match the range specified.  When finished, raises an event, allowing subscribers to modify content as needed.
