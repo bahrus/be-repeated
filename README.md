@@ -37,11 +37,6 @@
     </div>
   </div>
 </div>
-<style>
-  [aria-rowindex="0"]{
-    display: none;
-  }
-</style>
 ```
 
 What be-repeated does:

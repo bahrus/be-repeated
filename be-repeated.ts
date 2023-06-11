@@ -55,6 +55,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
 
     #purgeRefs(self: this){
         const {enhancedElement, startIdx, endIdx} = self;
+        const renamedRefs = new Map<number, WeakRef<Element>[]>();
         const elsToPurge: keyVal[] = [];
         for(const [key, val] of this.#refs!){
             if(key < startIdx! || key > endIdx!){
@@ -73,6 +74,10 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
             }
             
             this.#refs?.delete(key);
+        }
+        return {
+            renamedRefs,
+            
         }
     }
 
