@@ -93,27 +93,36 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
     }
 
+    #validateRowStillExists(idx: number){
+        const rowRefs = this.#refs?.get(idx)!;
+        let lastRef: Element | undefined;
+        for(const ref of rowRefs){
+            lastRef = ref.deref();
+            if(lastRef === undefined) return false;
+        }
+        return lastRef;
+    }
+
     #refs: Map<number, WeakRef<Element>[]> | undefined;
-    cloneIfNeeded(self: this, newRows?: Row[]){
+    cloneIfNeeded(self: this, rows?: Row[]){
         const {startIdx, endIdx, templ, enhancedElement} = self;
         if(this.#refs === undefined){
             this.#initializeRefs(self);
         }else{
             this.#purgeRefs(self);
         }
-        let lastFoundEl: Element | undefined;
+        let lastFoundEl: Element | undefined | false;
         const refs = this.#refs!;
-        if(newRows === undefined) newRows = [];
+        if(rows === undefined) rows = [];
         for(let idx = startIdx!; idx <= endIdx!; idx++){
             if(refs.has(idx)){
-                const deref = refs.get(idx)!.at(-1)?.deref();
-                if(deref !== undefined){
-                    lastFoundEl = deref;
-                    continue;
-                }else{
+                lastFoundEl = this.#validateRowStillExists(idx);
+                if(lastFoundEl === false){
                     this.#initializeRefs(self);
-                    this.cloneIfNeeded(self, newRows);
+                    this.cloneIfNeeded(self, rows);
                     return {};
+                }else{
+                    
                 }
             }else{
                 const clone = templ.content.cloneNode(true) as DocumentFragment;
@@ -129,9 +138,10 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 }
                 const row: Row = {
                     idx,
-                    nodes
+                    nodes,
+                    condition: 'new'
                 };
-                newRows.push(row);
+                rows.push(row);
                 if(lastFoundEl === undefined){
                     if(refs.keys.length > 0){
                         enhancedElement.prepend(clone);
@@ -151,7 +161,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
         this.dispatchEvent(new CustomEvent('newRows', {
             detail: {
-                newRows
+                rows
             }
         }))
 

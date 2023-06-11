@@ -7,6 +7,8 @@ export interface EndUserProps extends IBE{
     templIdx?: number,
 }
 
+export type Condition = 'new' | 'existing' | 'renamed';
+
 export interface AllProps extends EndUserProps {
     //newRows: Row | undefined;
     //allRows: WeakRef<Element>[] | undefined;
@@ -16,6 +18,7 @@ export interface AllProps extends EndUserProps {
 export interface Row{
     nodes: Node[],
     idx: number,
+    condition: Condition
 }
 
 export type AP = AllProps;
