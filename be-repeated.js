@@ -21,14 +21,14 @@ export class BeRepeated extends BE {
             templ,
         };
     }
-    #updateRefs(self) {
+    #initializeRefs(self) {
         this.#refs = new Map();
         const { enhancedElement, startIdx, endIdx } = self;
         const indices = Array.from(enhancedElement.querySelectorAll(':scope > [aria-rowindex]'));
         const refs = this.#refs;
         for (const indx of indices) {
             const num = Number(indx.getAttribute('aria-rowindex'));
-            if (num < startIdx) {
+            if (num === 0) {
                 indx.remove();
             }
             else {
@@ -43,14 +43,28 @@ export class BeRepeated extends BE {
     }
     #purgeRefs(self) {
         const { enhancedElement, startIdx, endIdx } = self;
+        const renamedRefs = new Map();
         const elsToPurge = [];
+        let reusePt = startIdx;
         for (const [key, val] of this.#refs) {
             if (key < startIdx || key > endIdx) {
-                elsToPurge.push({
-                    key,
-                    refs: val
-                });
+                if (reusePt > endIdx) {
+                    elsToPurge.push({
+                        key,
+                        refs: val
+                    });
+                }
+                else {
+                    for (const ref of val) {
+                        const deref = ref.deref();
+                        if (deref !== undefined) {
+                            deref.setAttribute('aria-rowindex', reusePt.toString());
+                        }
+                    }
+                    renamedRefs.set(reusePt, val);
+                }
             }
+            reusePt++;
         }
         for (const elToPUrge of elsToPurge) {
             const { key, refs } = elToPUrge;
@@ -61,12 +75,15 @@ export class BeRepeated extends BE {
             }
             this.#refs?.delete(key);
         }
+        return {
+            renamedRefs,
+        };
     }
     #refs;
     cloneIfNeeded(self, newRows) {
         const { startIdx, endIdx, templ, enhancedElement } = self;
         if (this.#refs === undefined) {
-            this.#updateRefs(self);
+            this.#initializeRefs(self);
         }
         else {
             this.#purgeRefs(self);
@@ -83,7 +100,7 @@ export class BeRepeated extends BE {
                     continue;
                 }
                 else {
-                    this.#updateRefs(self);
+                    this.#initializeRefs(self);
                     this.cloneIfNeeded(self, newRows);
                     return {};
                 }

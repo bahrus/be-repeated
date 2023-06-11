@@ -30,14 +30,14 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
     }
 
-    #updateRefs(self: this){
+    #initializeRefs(self: this){
         this.#refs = new Map<number, WeakRef<Element>[]>();
         const {enhancedElement, startIdx, endIdx} = self;
         const indices = Array.from(enhancedElement.querySelectorAll(':scope > [aria-rowindex]'));
         const refs = this.#refs;
         for(const indx of indices){
             const num = Number(indx.getAttribute('aria-rowindex')!);
-            if(num < startIdx!){
+            if(num === 0){
                 indx.remove();
             }else{
                 let weakRefs = refs.get(num);
@@ -90,7 +90,6 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
         return {
             renamedRefs,
-
         }
     }
 
@@ -98,7 +97,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
     cloneIfNeeded(self: this, newRows?: Row[]){
         const {startIdx, endIdx, templ, enhancedElement} = self;
         if(this.#refs === undefined){
-            this.#updateRefs(self);
+            this.#initializeRefs(self);
         }else{
             this.#purgeRefs(self);
         }
@@ -112,7 +111,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                     lastFoundEl = deref;
                     continue;
                 }else{
-                    this.#updateRefs(self);
+                    this.#initializeRefs(self);
                     this.cloneIfNeeded(self, newRows);
                     return {};
                 }
