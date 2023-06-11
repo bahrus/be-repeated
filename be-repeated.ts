@@ -57,14 +57,27 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         const {enhancedElement, startIdx, endIdx} = self;
         const renamedRefs = new Map<number, WeakRef<Element>[]>();
         const elsToPurge: keyVal[] = [];
+        let reusePt = startIdx!;
         for(const [key, val] of this.#refs!){
             if(key < startIdx! || key > endIdx!){
-                elsToPurge.push({
-                    key,
-                    refs: val
-                });
+                if(reusePt > endIdx!){
+                    elsToPurge.push({
+                        key,
+                        refs: val
+                    });
+                }else{
+                    for(const ref of val){
+                        const deref = ref.deref();
+                        if(deref !== undefined){
+                            deref.setAttribute('aria-rowindex', reusePt.toString());
+                        }
+                    }
+                    renamedRefs.set(reusePt, val);
+                }
+
                 
             }
+            reusePt++;
         }
         for(const elToPUrge of elsToPurge){
             const {key, refs} = elToPUrge;
@@ -77,7 +90,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
         return {
             renamedRefs,
-            
+
         }
     }
 
