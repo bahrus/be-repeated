@@ -1,7 +1,7 @@
 import {BE, propDefaults, propInfo} from 'be-enhanced/BE.js';
 import {BEConfig} from 'be-enhanced/types';
 import {XE} from 'xtal-element/XE.js';
-import {Actions, AllProps, AP, PAP, ProPAP, POA, Row} from './types';
+import {Actions, AllProps, AP, PAP, ProPAP, POA, Row, WRM} from './types';
 import {register} from 'be-hive/register.js';
 import {insertAdjacentClone} from 'trans-render/lib/insertAdjacentClone.js'
 
@@ -55,12 +55,13 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
 
     #purgeRefs(self: this){
         const {enhancedElement, startIdx, endIdx} = self;
-        const renamedRefs = new Map<number, WeakRef<Element>[]>();
+        const renamedRefs: WRM = new Map<number, WeakRef<Element>[]>();
         const elsToPurge: keyVal[] = [];
         let reusePt = startIdx!;
-        for(const [key, val] of this.#refs!){
+        const refs = this.#refs!;
+        for(const [key, val] of refs){
             if(key < startIdx! || key > endIdx!){
-                if(reusePt > endIdx!){
+                if(reusePt > endIdx! || refs.has(key)){
                     elsToPurge.push({
                         key,
                         refs: val
@@ -88,6 +89,9 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
             
             this.#refs?.delete(key);
         }
+        for(const [key, val] of renamedRefs){
+            refs.set(key, val);
+        }
         return {
             renamedRefs,
         }
@@ -96,49 +100,68 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
     #validateRowStillExists(idx: number){
         const rowRefs = this.#refs?.get(idx)!;
         let lastRef: Element | undefined;
+        const children: Element[] = [];
         for(const ref of rowRefs){
-            lastRef = ref.deref();
+            lastRef = ref.deref() as Element;
             if(lastRef === undefined) return false;
+            children.push(lastRef);
         }
-        return lastRef;
+        return {
+            lastRef,
+            children
+        }
     }
 
-    #refs: Map<number, WeakRef<Element>[]> | undefined;
+    #refs: WRM | undefined;
     cloneIfNeeded(self: this, rows?: Row[]){
         const {startIdx, endIdx, templ, enhancedElement} = self;
+        let renamedRefs: WRM | undefined;
         if(this.#refs === undefined){
             this.#initializeRefs(self);
         }else{
-            this.#purgeRefs(self);
+            renamedRefs = this.#purgeRefs(self).renamedRefs;
         }
-        let lastFoundEl: Element | undefined | false;
+        let lastFoundEl: Element | undefined;
         const refs = this.#refs!;
         if(rows === undefined) rows = [];
+        if(renamedRefs !== undefined){
+            for(const [idx, children] of renamedRefs){
+                const row: Row = {
+                    idx,
+                    children: children.map(child => child.deref() as Element),
+                    condition: 'renamed'
+                }
+                rows.push(row);
+            }
+        }
         for(let idx = startIdx!; idx <= endIdx!; idx++){
             if(refs.has(idx)){
-                lastFoundEl = this.#validateRowStillExists(idx);
-                if(lastFoundEl === false){
+                const returnObj = this.#validateRowStillExists(idx);
+                if(returnObj === false){
                     this.#initializeRefs(self);
                     this.cloneIfNeeded(self, rows);
                     return {};
                 }else{
-                    
+                    lastFoundEl = returnObj.lastRef;
+                    const {children} = returnObj
+                    const row: Row = {
+                        idx,
+                        children,
+                        condition: 'existing'
+                    }
+                    rows.push(row);
                 }
             }else{
                 const clone = templ.content.cloneNode(true) as DocumentFragment;
-                const nodes = Array.from(clone.childNodes);
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
                 refs.set(idx, children.map(child => new WeakRef<Element>(child)));
-                for(const node of nodes){
-                    if(node instanceof Element){
-                        node.ariaRowIndex = idx.toString();
-                        
-                    }
+                for(const node of children){
+                    node.ariaRowIndex = idx.toString();
                 }
                 const row: Row = {
                     idx,
-                    nodes,
+                    children,
                     condition: 'new'
                 };
                 rows.push(row);

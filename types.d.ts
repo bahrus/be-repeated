@@ -9,6 +9,8 @@ export interface EndUserProps extends IBE{
 
 export type Condition = 'new' | 'existing' | 'renamed';
 
+export type WRM = Map<number, WeakRef<Element>[]>;
+
 export interface AllProps extends EndUserProps {
     //newRows: Row | undefined;
     //allRows: WeakRef<Element>[] | undefined;
@@ -16,7 +18,7 @@ export interface AllProps extends EndUserProps {
 }
 
 export interface Row{
-    nodes: Node[],
+    children: Element[],
     idx: number,
     condition: Condition
 }

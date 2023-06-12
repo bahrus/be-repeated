@@ -46,9 +46,10 @@ export class BeRepeated extends BE {
         const renamedRefs = new Map();
         const elsToPurge = [];
         let reusePt = startIdx;
-        for (const [key, val] of this.#refs) {
+        const refs = this.#refs;
+        for (const [key, val] of refs) {
             if (key < startIdx || key > endIdx) {
-                if (reusePt > endIdx) {
+                if (reusePt > endIdx || refs.has(key)) {
                     elsToPurge.push({
                         key,
                         refs: val
@@ -75,52 +76,85 @@ export class BeRepeated extends BE {
             }
             this.#refs?.delete(key);
         }
+        for (const [key, val] of renamedRefs) {
+            refs.set(key, val);
+        }
         return {
             renamedRefs,
         };
     }
+    #validateRowStillExists(idx) {
+        const rowRefs = this.#refs?.get(idx);
+        let lastRef;
+        const children = [];
+        for (const ref of rowRefs) {
+            lastRef = ref.deref();
+            if (lastRef === undefined)
+                return false;
+            children.push(lastRef);
+        }
+        return {
+            lastRef,
+            children
+        };
+    }
     #refs;
-    cloneIfNeeded(self, newRows) {
+    cloneIfNeeded(self, rows) {
         const { startIdx, endIdx, templ, enhancedElement } = self;
+        let renamedRefs;
         if (this.#refs === undefined) {
             this.#initializeRefs(self);
         }
         else {
-            this.#purgeRefs(self);
+            renamedRefs = this.#purgeRefs(self).renamedRefs;
         }
         let lastFoundEl;
         const refs = this.#refs;
-        if (newRows === undefined)
-            newRows = [];
+        if (rows === undefined)
+            rows = [];
+        if (renamedRefs !== undefined) {
+            for (const [idx, children] of renamedRefs) {
+                const row = {
+                    idx,
+                    children: children.map(child => child.deref()),
+                    condition: 'renamed'
+                };
+                rows.push(row);
+            }
+        }
         for (let idx = startIdx; idx <= endIdx; idx++) {
             if (refs.has(idx)) {
-                const deref = refs.get(idx).at(-1)?.deref();
-                if (deref !== undefined) {
-                    lastFoundEl = deref;
-                    continue;
+                const returnObj = this.#validateRowStillExists(idx);
+                if (returnObj === false) {
+                    this.#initializeRefs(self);
+                    this.cloneIfNeeded(self, rows);
+                    return {};
                 }
                 else {
-                    this.#initializeRefs(self);
-                    this.cloneIfNeeded(self, newRows);
-                    return {};
+                    lastFoundEl = returnObj.lastRef;
+                    const { children } = returnObj;
+                    const row = {
+                        idx,
+                        children,
+                        condition: 'existing'
+                    };
+                    rows.push(row);
                 }
             }
             else {
                 const clone = templ.content.cloneNode(true);
-                const nodes = Array.from(clone.childNodes);
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
                 refs.set(idx, children.map(child => new WeakRef(child)));
-                for (const node of nodes) {
-                    if (node instanceof Element) {
-                        node.ariaRowIndex = idx.toString();
-                    }
+                for (const node of children) {
+                    node.ariaRowIndex = idx.toString();
                 }
                 const row = {
                     idx,
-                    nodes
+                    children,
+                    condition: 'new'
                 };
-                newRows.push(row);
+                rows.push(row);
                 if (lastFoundEl === undefined) {
                     if (refs.keys.length > 0) {
                         enhancedElement.prepend(clone);
@@ -142,7 +176,7 @@ export class BeRepeated extends BE {
         }
         this.dispatchEvent(new CustomEvent('newRows', {
             detail: {
-                newRows
+                rows
             }
         }));
     }
