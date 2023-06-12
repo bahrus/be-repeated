@@ -182,11 +182,12 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 lastFoundEl = lastNode;
             }
         }
-        this.dispatchEvent(new CustomEvent('newRows', {
+        //console.log({rows})
+        this.dispatchEvent(new CustomEvent('rows', {
             detail: {
                 rows
             }
-        }))
+        }));
 
     }
 }
