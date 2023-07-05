@@ -13,10 +13,10 @@
     "repeat"
   ],
   "dependencies": {
-    "be-enhanced": "0.0.33",
-    "be-hive": "0.0.110",
-    "trans-render": "0.0.693",
-    "xtal-element": "0.0.571"
+    "be-enhanced": "0.0.34",
+    "be-hive": "0.0.111",
+    "trans-render": "0.0.694",
+    "xtal-element": "0.0.572"
   },
   "devDependencies": {
     "@playwright/test": "1.35.1",
@@ -38,7 +38,8 @@
     "serve": "node node_modules/may-it-serve/serve.js",
     "test": "playwright test",
     "package-check": "package-check",
-    "doc": "custom-elements-manifest analyze"
+    "doc": "custom-elements-manifest analyze",
+    "update": "ncu -u && npm install"
   },
   "repository": {
     "type": "git",
