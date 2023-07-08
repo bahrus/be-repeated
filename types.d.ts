@@ -5,6 +5,7 @@ export interface EndUserProps extends IBE{
     startIdx?: number,
     endIdx?: number,
     templIdx?: number,
+    rowHandler?: (row: Row) => Promise<void>;
 }
 
 export type Condition = 'new' | 'existing' | 'renamed';

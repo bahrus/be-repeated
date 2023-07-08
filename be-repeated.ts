@@ -113,8 +113,8 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
     }
 
     #refs: WRM | undefined;
-    cloneIfNeeded(self: this, rows?: Row[]){
-        const {startIdx, endIdx, templ, enhancedElement} = self;
+    async cloneIfNeeded(self: this, rows?: Row[]){
+        const {startIdx, endIdx, templ, enhancedElement, rowHandler} = self;
         let renamedRefs: WRM | undefined;
         if(this.#refs === undefined){
             this.#initializeRefs(self);
@@ -131,6 +131,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                     children: children.map(child => child.deref() as Element),
                     condition: 'renamed'
                 }
+                if(rowHandler !== undefined) await rowHandler(row)
                 rows.push(row);
             }
         }
@@ -149,6 +150,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                         children,
                         condition: 'existing'
                     }
+                    if(rowHandler !== undefined) await rowHandler(row);
                     rows.push(row);
                 }
             }else{
@@ -164,6 +166,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                     children,
                     condition: 'new'
                 };
+                if(rowHandler !== undefined) await rowHandler(row);
                 rows.push(row);
                 if(lastFoundEl === undefined){
                     if(refs.keys.length > 0){
@@ -182,7 +185,6 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 lastFoundEl = lastNode;
             }
         }
-        //console.log({rows})
         this.dispatchEvent(new CustomEvent('rows', {
             detail: {
                 rows
@@ -207,6 +209,10 @@ const xe = new XE<AP, Actions>({
         },
         propInfo: {
             ...propInfo,
+            rowHandler: {
+                type: 'Object',
+                parse: false,
+            }
             // newRows: {
             //     notify:{
             //         dispatch: true

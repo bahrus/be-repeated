@@ -99,8 +99,8 @@ export class BeRepeated extends BE {
         };
     }
     #refs;
-    cloneIfNeeded(self, rows) {
-        const { startIdx, endIdx, templ, enhancedElement } = self;
+    async cloneIfNeeded(self, rows) {
+        const { startIdx, endIdx, templ, enhancedElement, rowHandler } = self;
         let renamedRefs;
         if (this.#refs === undefined) {
             this.#initializeRefs(self);
@@ -119,6 +119,8 @@ export class BeRepeated extends BE {
                     children: children.map(child => child.deref()),
                     condition: 'renamed'
                 };
+                if (rowHandler !== undefined)
+                    await rowHandler(row);
                 rows.push(row);
             }
         }
@@ -138,6 +140,8 @@ export class BeRepeated extends BE {
                         children,
                         condition: 'existing'
                     };
+                    if (rowHandler !== undefined)
+                        await rowHandler(row);
                     rows.push(row);
                 }
             }
@@ -154,6 +158,8 @@ export class BeRepeated extends BE {
                     children,
                     condition: 'new'
                 };
+                if (rowHandler !== undefined)
+                    await rowHandler(row);
                 rows.push(row);
                 if (lastFoundEl === undefined) {
                     if (refs.keys.length > 0) {
@@ -174,7 +180,6 @@ export class BeRepeated extends BE {
                 lastFoundEl = lastNode;
             }
         }
-        //console.log({rows})
         this.dispatchEvent(new CustomEvent('rows', {
             detail: {
                 rows
@@ -194,6 +199,10 @@ const xe = new XE({
         },
         propInfo: {
             ...propInfo,
+            rowHandler: {
+                type: 'Object',
+                parse: false,
+            }
             // newRows: {
             //     notify:{
             //         dispatch: true
