@@ -202,11 +202,11 @@ export class BeRepeated extends BE {
                 rows
             }
         }));
+        // const t1 = performance.now();
+        // console.log("Elapsed: " + (t1 - t0));
         return {
             endCnt: self.endCnt + 1
         };
-        //const t1 = performance.now();
-        //console.log("Elapsed: " + (t1 - t0));
     }
     cancelIfNeeded(self) {
         const { startCnt, endCnt, startIdx, endIdx, rendering } = self;

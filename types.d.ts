@@ -39,7 +39,7 @@ export type ProPAP = Promise<PAP>;
 export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
 
 export interface Actions{
-    createTempl(self: this): PAP;
+    createTempl(self: this): ProPAP;
     cloneIfNeeded(self: this): ProPAP;
     cancelIfNeeded(self: this): PAP;
 }

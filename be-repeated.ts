@@ -18,7 +18,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
     }
 
-    async createTempl(self: this): PAP {
+    async createTempl(self: this) {
         const {enhancedElement, templIdx} = self;
         if(templIdx === undefined) return {};
         const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
@@ -207,11 +207,12 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 rows
             }
         }));
+        // const t1 = performance.now();
+        // console.log("Elapsed: " + (t1 - t0));
         return {
             endCnt: self.endCnt! + 1
         } as PAP;
-        //const t1 = performance.now();
-        //console.log("Elapsed: " + (t1 - t0));
+
     }
 
     cancelIfNeeded(self: this){
