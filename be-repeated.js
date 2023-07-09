@@ -100,7 +100,12 @@ export class BeRepeated extends BE {
     }
     #refs;
     async cloneIfNeeded(self, rows) {
-        const { startIdx, endIdx, templ, enhancedElement, rowHandler } = self;
+        //const t0 = performance.now();
+        const { startIdx, endIdx, templ, enhancedElement, rowHandler, rendering } = self;
+        if (rendering !== undefined && rendering[0] === startIdx && rendering[1] === endIdx)
+            return {};
+        self.rendering = [startIdx, endIdx];
+        self.startCnt++;
         let renamedRefs;
         if (this.#refs === undefined) {
             this.#initializeRefs(self);
@@ -125,6 +130,13 @@ export class BeRepeated extends BE {
             }
         }
         for (let idx = startIdx; idx <= endIdx; idx++) {
+            if (self.cancel) {
+                //console.log('canceling');
+                return {
+                    cancel: false,
+                    endCnt: self.endCnt + 1,
+                };
+            }
             if (refs.has(idx)) {
                 const returnObj = this.#validateRowStillExists(idx);
                 if (returnObj === false) {
@@ -185,6 +197,25 @@ export class BeRepeated extends BE {
                 rows
             }
         }));
+        return {
+            endCnt: self.endCnt + 1
+        };
+        //const t1 = performance.now();
+        //console.log("Elapsed: " + (t1 - t0));
+    }
+    cancelIfNeeded(self) {
+        const { startCnt, endCnt, startIdx, endIdx, rendering } = self;
+        //console.log({startCnt, endCnt, startIdx, endIdx, rendering});
+        if (rendering === undefined)
+            return {};
+        if (rendering[0] === startIdx && rendering[1] === endIdx)
+            return {};
+        if (startCnt === endCnt)
+            return {};
+        //console.log('initiate cancel');
+        return {
+            cancel: true
+        };
     }
 }
 const tagName = 'be-repeated';
@@ -196,13 +227,18 @@ const xe = new XE({
         propDefaults: {
             ...propDefaults,
             resolved: true,
+            startCnt: 0,
+            endCnt: 0,
         },
         propInfo: {
             ...propInfo,
             rowHandler: {
                 type: 'Object',
                 parse: false,
-            }
+            },
+            cancel: {
+                type: 'Boolean'
+            },
             // newRows: {
             //     notify:{
             //         dispatch: true
@@ -214,6 +250,10 @@ const xe = new XE({
                 ifKeyIn: ['templIdx'],
             },
             cloneIfNeeded: {
+                ifAllOf: ['startIdx', 'endIdx', 'templ'],
+                ifEquals: ['startCnt', 'endCnt']
+            },
+            cancelIfNeeded: {
                 ifAllOf: ['startIdx', 'endIdx', 'templ']
             }
         }

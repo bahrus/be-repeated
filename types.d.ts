@@ -6,6 +6,7 @@ export interface EndUserProps extends IBE{
     endIdx?: number,
     templIdx?: number,
     rowHandler?: (row: Row) => Promise<void>;
+    
 }
 
 export type Condition = 'new' | 'existing' | 'renamed';
@@ -15,13 +16,18 @@ export type WRM = Map<number, WeakRef<Element>[]>;
 export interface AllProps extends EndUserProps {
     //newRows: Row | undefined;
     //allRows: WeakRef<Element>[] | undefined;
-    templ: HTMLTemplateElement
+    templ: HTMLTemplateElement,
+    startCnt?: number,
+    endCnt?: number,
+    cancel?: boolean,
+    rendering: [number, number],
 }
 
 export interface Row{
     children: Element[],
     idx: number,
-    condition: Condition
+    condition: Condition,
+    
 }
 
 export type AP = AllProps;
@@ -34,5 +40,6 @@ export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
 
 export interface Actions{
     createTempl(self: this): PAP;
-    cloneIfNeeded(self: this): void;
+    cloneIfNeeded(self: this): ProPAP;
+    cancelIfNeeded(self: this): PAP;
 }
