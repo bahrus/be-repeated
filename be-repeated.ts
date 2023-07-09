@@ -4,6 +4,8 @@ import {XE} from 'xtal-element/XE.js';
 import {Actions, AllProps, AP, PAP, ProPAP, POA, Row, WRM} from './types';
 import {register} from 'be-hive/register.js';
 import {insertAdjacentClone} from 'trans-render/lib/insertAdjacentClone.js'
+import {cache, restore} from 'trans-render/lib/cache.js';
+import {toTempl} from 'be-hive/toTempl.js';
 
 interface keyVal {
     key: number,
@@ -16,15 +18,17 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
         }
     }
 
-    createTempl(self: this): PAP {
+    async createTempl(self: this): PAP {
         const {enhancedElement, templIdx} = self;
         if(templIdx === undefined) return {};
         const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
         
-        const templ = document.createElement('template');
+        let div = document.createElement('div');
         for(const el of toBeConvertedToTemplate){
-            templ.content.appendChild(el.cloneNode(true));
+            div.appendChild(el.cloneNode(true));
         }
+        const templ = await toTempl(div, false, enhancedElement);
+        cache(templ);
         return {
             templ,
         }
@@ -167,6 +171,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 }
             }else{
                 const clone = templ.content.cloneNode(true) as DocumentFragment;
+                await restore(clone);
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
                 refs.set(idx, children.map(child => new WeakRef<Element>(child)));

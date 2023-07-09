@@ -2,21 +2,25 @@ import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
 import { insertAdjacentClone } from 'trans-render/lib/insertAdjacentClone.js';
+import { cache, restore } from 'trans-render/lib/cache.js';
+import { toTempl } from 'be-hive/toTempl.js';
 export class BeRepeated extends BE {
     static get beConfig() {
         return {
             parse: true,
         };
     }
-    createTempl(self) {
+    async createTempl(self) {
         const { enhancedElement, templIdx } = self;
         if (templIdx === undefined)
             return {};
         const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
-        const templ = document.createElement('template');
+        let div = document.createElement('div');
         for (const el of toBeConvertedToTemplate) {
-            templ.content.appendChild(el.cloneNode(true));
+            div.appendChild(el.cloneNode(true));
         }
+        const templ = await toTempl(div, false, enhancedElement);
+        cache(templ);
         return {
             templ,
         };
@@ -159,6 +163,7 @@ export class BeRepeated extends BE {
             }
             else {
                 const clone = templ.content.cloneNode(true);
+                await restore(clone);
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
                 refs.set(idx, children.map(child => new WeakRef(child)));
