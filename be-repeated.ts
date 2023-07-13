@@ -119,6 +119,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
     #refs: WRM | undefined;
     async cloneIfNeeded(self: this, rows?: Row[]){
         //const t0 = performance.now();
+        //let cloneCost = 0;
         const {startIdx, endIdx, templ, enhancedElement, rowHandler, rendering} = self;
         if(rendering !== undefined && rendering[0] === startIdx && rendering[1] === endIdx) return {} as PAP;
         self.rendering = [startIdx!, endIdx!];
@@ -143,6 +144,7 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 rows.push(row);
             }
         }
+        //const perf = new Map<string, any>();
         for(let idx = startIdx!; idx <= endIdx!; idx++){
             if(self.cancel){
                 //console.log('canceling');
@@ -170,8 +172,12 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                     rows.push(row);
                 }
             }else{
+                //const t00 = performance.now();
                 const clone = templ.content.cloneNode(true) as DocumentFragment;
+                //console.log('doRestore', performance.now());
                 await restore(clone);
+                //const t01 = performance.now();
+                //cloneCost += t01 - t00;
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
                 refs.set(idx, children.map(child => new WeakRef<Element>(child)));
@@ -207,8 +213,10 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 rows
             }
         }));
-        // const t1 = performance.now();
-        // console.log("Elapsed: " + (t1 - t0));
+        //const t1 = performance.now();
+        //console.log("Elapsed: " + (t1 - t0));
+        //console.log('clone cost: ' + cloneCost);
+        //console.log({perf});
         return {
             endCnt: self.endCnt! + 1
         } as PAP;
