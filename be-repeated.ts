@@ -118,9 +118,10 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
 
     #refs: WRM | undefined;
     async cloneIfNeeded(self: this, rows?: Row[]){
-        //const t0 = performance.now();
+        const t0 = performance.now();
         //let cloneCost = 0;
-        const {startIdx, endIdx, templ, enhancedElement, rowHandler, rendering} = self;
+        const {startIdx, endIdx, templ, enhancedElement, rowHandler, rendering, bufferSize} = self;
+        const bufferSizeD = bufferSize || 50;
         if(rendering !== undefined && rendering[0] === startIdx && rendering[1] === endIdx) return {} as PAP;
         self.rendering = [startIdx!, endIdx!];
         self.startCnt!++;
@@ -145,6 +146,8 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
             }
         }
         //const perf = new Map<string, any>();
+        let bufferCnt = 0;
+        const buffer= document.createElement('div');
         for(let idx = startIdx!; idx <= endIdx!; idx++){
             if(self.cancel){
                 //console.log('canceling');
@@ -193,28 +196,58 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 rows.push(row);
                 if(lastFoundEl === undefined){
                     if(refs.keys.length > 0){
+                        if(bufferCnt > 0){
+                            enhancedElement.append(...buffer.children);
+                            bufferCnt = 0;
+                            buffer.innerHTML = '';
+                        }
                         enhancedElement.prepend(clone);
                     }else{
-                        enhancedElement.appendChild(clone);
+                        buffer.appendChild(clone);
+                        bufferCnt++;
+                        if(bufferCnt === bufferSizeD){
+                            enhancedElement.append(...buffer.children);
+                            bufferCnt = 0;
+                            buffer.innerHTML = '';
+                        }
+                        //enhancedElement.appendChild(clone);
                     }
                     
                 }else{
                     if(lastFoundEl.nextElementSibling === null){
-                        enhancedElement.appendChild(clone);
+                        buffer.appendChild(clone);
+                        bufferCnt++;
+                        if(bufferCnt === bufferSizeD){
+                            enhancedElement.append(...buffer.children);
+                            bufferCnt = 0;
+                            buffer.innerHTML = '';
+                            //debugger;
+                        }
+                        //enhancedElement.appendChild(clone);
                     }else{
+                        if(bufferCnt > 0){
+                            enhancedElement.append(...buffer.children);
+                            bufferCnt = 0;
+                            buffer.innerHTML = '';
+                        }
                         insertAdjacentClone(clone, lastFoundEl, 'afterend');
                     }
                 }
                 lastFoundEl = lastNode;
             }
+
+        }
+        if(bufferCnt > 0){
+            enhancedElement.append(...buffer.children);
+            //debugger;
         }
         this.dispatchEvent(new CustomEvent('rows', {
             detail: {
                 rows
             }
         }));
-        //const t1 = performance.now();
-        //console.log("Elapsed: " + (t1 - t0));
+        const t1 = performance.now();
+        console.log("Elapsed: " + (t1 - t0));
         //console.log('clone cost: ' + cloneCost);
         //console.log({perf});
         return {
