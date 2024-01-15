@@ -13,10 +13,10 @@
     "repeat"
   ],
   "dependencies": {
-    "be-enhanced": "0.0.60",
-    "be-hive": "0.0.131",
-    "trans-render": "0.0.728",
-    "xtal-element": "0.0.585"
+    "be-enhanced": "0.0.61",
+    "be-hive": "0.0.132",
+    "trans-render": "0.0.730",
+    "xtal-element": "0.0.587"
   },
   "devDependencies": {
     "@playwright/test": "1.40.1",
