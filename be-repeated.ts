@@ -4,7 +4,6 @@ import {XE} from 'xtal-element/XE.js';
 import {Actions, AllProps, AP, PAP, ProPAP, POA, Row, WRM} from './types';
 import {register} from 'be-hive/register.js';
 import {insertAdjacentClone} from 'trans-render/lib/insertAdjacentClone.js'
-import {cache, restore} from 'trans-render/lib/cache.js';
 import {toTempl} from 'be-hive/toTempl.js';
 
 interface keyVal {
@@ -28,7 +27,6 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
             div.appendChild(el.cloneNode(true));
         }
         const templ = await toTempl(div, false, enhancedElement);
-        cache(templ);
         return {
             templ,
         }
@@ -178,7 +176,6 @@ export class BeRepeated extends BE<AP, Actions> implements Actions{
                 //const t00 = performance.now();
                 const clone = templ.content.cloneNode(true) as DocumentFragment;
                 //console.log('doRestore', performance.now());
-                await restore(clone);
                 //const t01 = performance.now();
                 //cloneCost += t01 - t00;
                 const children = Array.from(clone.children);
