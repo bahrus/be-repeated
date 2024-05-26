@@ -1,17 +1,7 @@
-import {config as beCnfg} from 'be-enhanced/config.js';
-import {BE, BEConfig} from 'be-enhanced/BE.js';
-import {Actions, AllProps, AP, PAP, ProPAP, POA, Row, WRM} from './types';
-import { Positractions, PropInfo } from 'trans-render/froop/types';
-import {IEnhancement,  BEAllProps} from 'trans-render/be/types';
-
-interface keyVal {
-    key: number,
-    refs: WeakRef<Element>[],
-}
-
-export async function toTempl(templ: Element, fromShadow: boolean, relativeTo: Element){
-    let templateToClone = templ as HTMLTemplateElement;
-    if(templateToClone.localName !== 'template'){
+import { BE } from 'be-enhanced/BE.js';
+export async function toTempl(templ, fromShadow, relativeTo) {
+    let templateToClone = templ;
+    if (templateToClone.localName !== 'template') {
         templateToClone = document.createElement('template');
         // if(fromShadow){
         //     const beHive = (templ.shadowRoot!).querySelector('be-hive') as BeHive;
@@ -27,20 +17,18 @@ export async function toTempl(templ: Element, fromShadow: boolean, relativeTo: E
         //     const beHive = (relativeTo.getRootNode() as DocumentFragment).querySelector('be-hive') as BeHive;
         //     const beatified = await beHive.beatify(templ) as any as HTMLTemplateElement;
         //     templateToClone.innerHTML = beatified.innerHTML;
-            
         // }
     }
     return templateToClone;
 }
-
-export class BeRepeated extends BE implements Actions{
-    static override config: BEConfig<AP & BEAllProps, Actions & IEnhancement, any> = {
-        propDefaults:{
+export class BeRepeated extends BE {
+    static config = {
+        propDefaults: {
             resolved: true,
             startCnt: 0,
             endCnt: 0,
         },
-        propInfo:{
+        propInfo: {
             rowHandler: {},
             cancel: {},
         },
@@ -56,213 +44,216 @@ export class BeRepeated extends BE implements Actions{
                 ifAllOf: ['startIdx', 'endIdx', 'templ']
             }
         }
-    }
-    async createTempl(self: this) {
-        const {enhancedElement, templIdx} = self;
-        if(templIdx === undefined) return {};
+    };
+    async createTempl(self) {
+        const { enhancedElement, templIdx } = self;
+        if (templIdx === undefined)
+            return {};
         const toBeConvertedToTemplate = Array.from(enhancedElement.querySelectorAll(`[aria-rowindex="${templIdx}"]`));
-        
         let div = document.createElement('div');
-        for(const el of toBeConvertedToTemplate){
+        for (const el of toBeConvertedToTemplate) {
             div.appendChild(el.cloneNode(true));
         }
         const templ = await toTempl(div, false, enhancedElement);
         return {
             templ,
-        }
+        };
     }
-
-    #initializeRefs(self: this){
-        this.#refs = new Map<number, WeakRef<Element>[]>();
-        const {enhancedElement, startIdx, endIdx} = self;
+    #initializeRefs(self) {
+        this.#refs = new Map();
+        const { enhancedElement, startIdx, endIdx } = self;
         const indices = Array.from(enhancedElement.querySelectorAll(':scope > [aria-rowindex]'));
         const refs = this.#refs;
-        for(const indx of indices){
-            const num = Number(indx.getAttribute('aria-rowindex')!);
-            if(num === 0){
+        for (const indx of indices) {
+            const num = Number(indx.getAttribute('aria-rowindex'));
+            if (num === 0) {
                 indx.remove();
-            }else{
+            }
+            else {
                 let weakRefs = refs.get(num);
-                if(weakRefs === undefined){
-                    weakRefs = [] as WeakRef<Element>[];
+                if (weakRefs === undefined) {
+                    weakRefs = [];
                     refs.set(num, weakRefs);
                 }
                 weakRefs.push(new WeakRef(indx));
-            
             }
-            
         }
     }
-
-
-    #purgeRefs(self: this){
-        const {enhancedElement, startIdx, endIdx} = self;
-        const renamedRefs: WRM = new Map<number, WeakRef<Element>[]>();
-        const elsToPurge: keyVal[] = [];
-        let reusePt = startIdx!;
-        const refs = this.#refs!;
-        for(const [key, val] of refs){
-            if(key < startIdx! || key > endIdx!){
-                if(reusePt > endIdx! || refs.has(key)){
+    #purgeRefs(self) {
+        const { enhancedElement, startIdx, endIdx } = self;
+        const renamedRefs = new Map();
+        const elsToPurge = [];
+        let reusePt = startIdx;
+        const refs = this.#refs;
+        for (const [key, val] of refs) {
+            if (key < startIdx || key > endIdx) {
+                if (reusePt > endIdx || refs.has(key)) {
                     elsToPurge.push({
                         key,
                         refs: val
                     });
-                }else{
-                    for(const ref of val){
+                }
+                else {
+                    for (const ref of val) {
                         const deref = ref.deref();
-                        if(deref !== undefined){
+                        if (deref !== undefined) {
                             deref.setAttribute('aria-rowindex', reusePt.toString());
                         }
                     }
                     renamedRefs.set(reusePt, val);
                 }
-
-                
             }
             reusePt++;
         }
-        for(const elToPUrge of elsToPurge){
-            const {key, refs} = elToPUrge;
-            for(const ref of refs){
+        for (const elToPUrge of elsToPurge) {
+            const { key, refs } = elToPUrge;
+            for (const ref of refs) {
                 const el = ref.deref();
-                if(el !== undefined) el.remove();
+                if (el !== undefined)
+                    el.remove();
             }
-            
             this.#refs?.delete(key);
         }
-        for(const [key, val] of renamedRefs){
+        for (const [key, val] of renamedRefs) {
             refs.set(key, val);
         }
         return {
             renamedRefs,
-        }
+        };
     }
-
-    #validateRowStillExists(idx: number){
-        const rowRefs = this.#refs?.get(idx)!;
-        let lastRef: Element | undefined;
-        const children: Element[] = [];
-        for(const ref of rowRefs){
-            lastRef = ref.deref() as Element;
-            if(lastRef === undefined) return false;
+    #validateRowStillExists(idx) {
+        const rowRefs = this.#refs?.get(idx);
+        let lastRef;
+        const children = [];
+        for (const ref of rowRefs) {
+            lastRef = ref.deref();
+            if (lastRef === undefined)
+                return false;
             children.push(lastRef);
         }
         return {
             lastRef,
             children
-        }
+        };
     }
-
-    #refs: WRM | undefined;
-    async cloneIfNeeded(self: this, rows?: Row[]){
+    #refs;
+    async cloneIfNeeded(self, rows) {
         const t0 = performance.now();
         //let cloneCost = 0;
-        const {startIdx, endIdx, templ, enhancedElement, rowHandler, rendering, bufferSize} = self;
+        const { startIdx, endIdx, templ, enhancedElement, rowHandler, rendering, bufferSize } = self;
         const bufferSizeD = bufferSize || 50;
-        if(rendering !== undefined && rendering[0] === startIdx && rendering[1] === endIdx) return {} as PAP;
-        self.rendering = [startIdx!, endIdx!];
-        self.startCnt!++;
-        let renamedRefs: WRM | undefined;
-        if(this.#refs === undefined){
+        if (rendering !== undefined && rendering[0] === startIdx && rendering[1] === endIdx)
+            return {};
+        self.rendering = [startIdx, endIdx];
+        self.startCnt++;
+        let renamedRefs;
+        if (this.#refs === undefined) {
             this.#initializeRefs(self);
-        }else{
+        }
+        else {
             renamedRefs = this.#purgeRefs(self).renamedRefs;
         }
-        let lastFoundEl: Element | undefined;
-        const refs = this.#refs!;
-        if(rows === undefined) rows = [];
-        if(renamedRefs !== undefined){
-            for(const [idx, children] of renamedRefs){
-                const row: Row = {
+        let lastFoundEl;
+        const refs = this.#refs;
+        if (rows === undefined)
+            rows = [];
+        if (renamedRefs !== undefined) {
+            for (const [idx, children] of renamedRefs) {
+                const row = {
                     idx,
-                    children: children.map(child => child.deref() as Element),
+                    children: children.map(child => child.deref()),
                     condition: 'renamed'
-                }
-                if(rowHandler !== undefined) await rowHandler(row)
+                };
+                if (rowHandler !== undefined)
+                    await rowHandler(row);
                 rows.push(row);
             }
         }
         //const perf = new Map<string, any>();
         let bufferCnt = 0;
-        const buffer= document.createElement('div');
-        for(let idx = startIdx!; idx <= endIdx!; idx++){
-            if(self.cancel){
+        const buffer = document.createElement('div');
+        for (let idx = startIdx; idx <= endIdx; idx++) {
+            if (self.cancel) {
                 //console.log('canceling');
                 return {
                     cancel: false,
-                    endCnt: self.endCnt! + 1,
-                    
-                } as PAP
+                    endCnt: self.endCnt + 1,
+                };
             }
-            if(refs.has(idx)){
+            if (refs.has(idx)) {
                 const returnObj = this.#validateRowStillExists(idx);
-                if(returnObj === false){
+                if (returnObj === false) {
                     this.#initializeRefs(self);
                     this.cloneIfNeeded(self, rows);
                     return {};
-                }else{
+                }
+                else {
                     lastFoundEl = returnObj.lastRef;
-                    const {children} = returnObj
-                    const row: Row = {
+                    const { children } = returnObj;
+                    const row = {
                         idx,
                         children,
                         condition: 'existing'
-                    }
-                    if(rowHandler !== undefined) await rowHandler(row);
+                    };
+                    if (rowHandler !== undefined)
+                        await rowHandler(row);
                     rows.push(row);
                 }
-            }else{
+            }
+            else {
                 //const t00 = performance.now();
-                const clone = templ.content.cloneNode(true) as DocumentFragment;
+                const clone = templ.content.cloneNode(true);
                 //console.log('doRestore', performance.now());
                 //const t01 = performance.now();
                 //cloneCost += t01 - t00;
                 const children = Array.from(clone.children);
                 const lastNode = children.at(-1);
-                refs.set(idx, children.map(child => new WeakRef<Element>(child)));
-                for(const node of children){
+                refs.set(idx, children.map(child => new WeakRef(child)));
+                for (const node of children) {
                     node.ariaRowIndex = idx.toString();
                 }
-                const row: Row = {
+                const row = {
                     idx,
                     children,
                     condition: 'new'
                 };
-                if(rowHandler !== undefined) await rowHandler(row);
+                if (rowHandler !== undefined)
+                    await rowHandler(row);
                 rows.push(row);
-                if(lastFoundEl === undefined){
-                    if(refs.keys.length > 0){
-                        if(bufferCnt > 0){
+                if (lastFoundEl === undefined) {
+                    if (refs.keys.length > 0) {
+                        if (bufferCnt > 0) {
                             enhancedElement.append(...buffer.children);
                             bufferCnt = 0;
                             buffer.innerHTML = '';
                         }
                         enhancedElement.prepend(clone);
-                    }else{
+                    }
+                    else {
                         buffer.appendChild(clone);
                         bufferCnt++;
-                        if(bufferCnt === bufferSizeD){
+                        if (bufferCnt === bufferSizeD) {
                             enhancedElement.append(...buffer.children);
                             bufferCnt = 0;
                             buffer.innerHTML = '';
                         }
                         //enhancedElement.appendChild(clone);
                     }
-                    
-                }else{
-                    if(lastFoundEl.nextElementSibling === null){
+                }
+                else {
+                    if (lastFoundEl.nextElementSibling === null) {
                         buffer.appendChild(clone);
                         bufferCnt++;
-                        if(bufferCnt === bufferSizeD){
+                        if (bufferCnt === bufferSizeD) {
                             enhancedElement.append(...buffer.children);
                             bufferCnt = 0;
                             buffer.innerHTML = '';
                             //debugger;
                         }
                         //enhancedElement.appendChild(clone);
-                    }else{
-                        if(bufferCnt > 0){
+                    }
+                    else {
+                        if (bufferCnt > 0) {
                             enhancedElement.append(...buffer.children);
                             bufferCnt = 0;
                             buffer.innerHTML = '';
@@ -272,9 +263,8 @@ export class BeRepeated extends BE implements Actions{
                 }
                 lastFoundEl = lastNode;
             }
-
         }
-        if(bufferCnt > 0){
+        if (bufferCnt > 0) {
             enhancedElement.append(...buffer.children);
             //debugger;
         }
@@ -288,23 +278,21 @@ export class BeRepeated extends BE implements Actions{
         //console.log('clone cost: ' + cloneCost);
         //console.log({perf});
         return {
-            endCnt: self.endCnt! + 1
-        } as PAP;
-
+            endCnt: self.endCnt + 1
+        };
     }
-
-    cancelIfNeeded(self: this){
-        const {startCnt, endCnt, startIdx, endIdx, rendering} = self;
+    cancelIfNeeded(self) {
+        const { startCnt, endCnt, startIdx, endIdx, rendering } = self;
         //console.log({startCnt, endCnt, startIdx, endIdx, rendering});
-        if(rendering === undefined) return {};
-        if(rendering[0] === startIdx && rendering[1] === endIdx) return {};
-        if(startCnt === endCnt) return {};
+        if (rendering === undefined)
+            return {};
+        if (rendering[0] === startIdx && rendering[1] === endIdx)
+            return {};
+        if (startCnt === endCnt)
+            return {};
         //console.log('initiate cancel');
         return {
             cancel: true
-        }
+        };
     }
-
 }
-
-export interface BeRepeated extends AP{}
