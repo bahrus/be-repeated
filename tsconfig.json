@@ -9,7 +9,7 @@
 		"forceConsistentCasingInFileNames": true
 	},
 	"files": [
-		"be-repeated.ts"
+		"behivior.ts"
 	],
 	"exclude":[
 		"node_modules"

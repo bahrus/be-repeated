@@ -13,6 +13,7 @@ export async function toTempl(templ: Element, fromShadow: boolean, relativeTo: E
     let templateToClone = templ as HTMLTemplateElement;
     if(templateToClone.localName !== 'template'){
         templateToClone = document.createElement('template');
+        templateToClone.innerHTML = templ.innerHTML;
         // if(fromShadow){
         //     const beHive = (templ.shadowRoot!).querySelector('be-hive') as BeHive;
         //     if(beHive){
@@ -43,6 +44,10 @@ export class BeRepeated extends BE implements Actions{
         propInfo:{
             rowHandler: {},
             cancel: {},
+            templIdx:{},
+            startIdx:{},
+            endIdx:{},
+            templ:{},
         },
         actions: {
             createTempl: {
@@ -267,7 +272,7 @@ export class BeRepeated extends BE implements Actions{
                             bufferCnt = 0;
                             buffer.innerHTML = '';
                         }
-                        insertAdjacentClone(clone, lastFoundEl, 'afterend');
+                        lastFoundEl.after(clone);
                     }
                 }
                 lastFoundEl = lastNode;

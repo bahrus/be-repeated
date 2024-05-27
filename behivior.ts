@@ -5,7 +5,10 @@ const base = 'be-repeated';
 const emc: EnhancementMountCnfg = {
     base,
     map: {
-        '0.0': 'ni'
+        '0.0': {
+            instanceOf: 'Object',
+            mapsTo: '.'
+        }
     },
     enhPropKey: 'beRepeated',
     importEnh: async () => {
