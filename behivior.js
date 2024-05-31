@@ -1,7 +1,7 @@
 import { BeHive } from 'be-hive/be-hive.js';
 import { MountObserver } from 'mount-observer/MountObserver.js';
 const base = 'be-repeated';
-const emc = {
+export const emc = {
     base,
     map: {
         '0.0': {
