@@ -1,8 +1,6 @@
-import { BeHive } from 'be-hive/be-hive.js';
-import { MountObserver } from 'mount-observer/MountObserver.js';
-const base = 'be-repeated';
+import { BeHive, MountObserver, seed } from 'be-hive/be-hive.js';
 export const emc = {
-    base,
+    base: 'be-repeated',
     map: {
         '0.0': {
             instanceOf: 'Object',
@@ -15,7 +13,5 @@ export const emc = {
         return BeRepeated;
     }
 };
-const mose = document.createElement('script');
-mose.id = base;
-mose.synConfig = emc;
+const mose = seed(emc);
 MountObserver.synthesize(document, BeHive, mose);

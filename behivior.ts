@@ -1,9 +1,7 @@
-import {BeHive, EnhancementMountCnfg} from 'be-hive/be-hive.js';
-import {MountObserver, MOSE} from 'mount-observer/MountObserver.js';
+import {BeHive, EMC, MountObserver, seed} from 'be-hive/be-hive.js';
 
-const base = 'be-repeated';
-export const emc: EnhancementMountCnfg = {
-    base,
+export const emc: EMC = {
+    base: 'be-repeated',
     map: {
         '0.0': {
             instanceOf: 'Object',
@@ -17,8 +15,6 @@ export const emc: EnhancementMountCnfg = {
     }
 };
 
-const mose = document.createElement('script') as MOSE<EnhancementMountCnfg>;
-mose.id = base;
-mose.synConfig = emc;
+const mose = seed(emc);
 
 MountObserver.synthesize(document, BeHive, mose);
