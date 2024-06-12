@@ -1,7 +1,6 @@
-import { ActionOnEventConfigs } from "trans-render/froop/types";
-import {IBE} from 'be-enhanced/types';
+import {IEnhancement} from 'trans-render/be/types';
 
-export interface EndUserProps extends IBE{
+export interface EndUserProps extends IEnhancement{
     startIdx?: number,
     endIdx?: number,
     templIdx?: number,
@@ -36,7 +35,6 @@ export type PAP = Partial<AP>;
 
 export type ProPAP = Promise<PAP>;
 
-export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
 
 export interface Actions{
     createTempl(self: this): ProPAP;

@@ -10,7 +10,7 @@ export const emc: EMC = {
     },
     enhPropKey: 'beRepeated',
     importEnh: async () => {
-        const {BeRepeated} = await import('./behance.js');
+        const {BeRepeated} = await import('./be-repeated.js');
         return BeRepeated;
     }
 };

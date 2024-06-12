@@ -1,6 +1,6 @@
 import {config as beCnfg} from 'be-enhanced/config.js';
 import {BE, BEConfig} from 'be-enhanced/BE.js';
-import {Actions, AllProps, AP, PAP, ProPAP, POA, Row, WRM} from './types';
+import {Actions, AllProps, AP, PAP, ProPAP, Row, WRM} from './types';
 import { Positractions, PropInfo } from 'trans-render/froop/types';
 import {IEnhancement,  BEAllProps} from 'trans-render/be/types';
 
@@ -34,7 +34,7 @@ export async function toTempl(templ: Element, fromShadow: boolean, relativeTo: E
     return templateToClone;
 }
 
-export class BeRepeated extends BE implements Actions{
+class BeRepeated extends BE implements Actions{
     static override config: BEConfig<AP & BEAllProps, Actions & IEnhancement, any> = {
         propDefaults:{
             resolved: true,
@@ -312,4 +312,8 @@ export class BeRepeated extends BE implements Actions{
 
 }
 
-export interface BeRepeated extends AP{}
+interface BeRepeated extends AP{}
+
+await BeRepeated.bootUp();
+
+export {BeRepeated}

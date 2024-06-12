@@ -22,7 +22,7 @@ export async function toTempl(templ, fromShadow, relativeTo) {
     }
     return templateToClone;
 }
-export class BeRepeated extends BE {
+class BeRepeated extends BE {
     static config = {
         propDefaults: {
             resolved: true,
@@ -301,3 +301,5 @@ export class BeRepeated extends BE {
         };
     }
 }
+await BeRepeated.bootUp();
+export { BeRepeated };
