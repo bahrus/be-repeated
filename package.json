@@ -13,12 +13,12 @@
     "repeat"
   ],
   "dependencies": {
-    "be-enhanced": "0.0.100",
-    "be-hive": "0.0.178",
-    "trans-render": "0.0.781"
+    "be-enhanced": "0.0.103",
+    "be-hive": "0.0.180",
+    "trans-render": "0.0.787"
   },
   "devDependencies": {
-    "@playwright/test": "1.44.1",
+    "@playwright/test": "1.45.0",
     "may-it-serve": "0.0.6"
   },
   "exports": {
