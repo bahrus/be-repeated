@@ -1,4 +1,4 @@
-# be-repeated (🔁)
+# be-repeated (♻)
 
 ## Example 1
 
