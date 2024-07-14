@@ -6,7 +6,8 @@
 		"experimentalDecorators": false,
 		"newLine": "LF",
 		"strict": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true
 	},
 	"files": [
 		"behivior.ts"

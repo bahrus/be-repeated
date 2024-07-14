@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example 1</title>
+    <title>Example 2</title>
 </head>
 
 <body>
@@ -17,11 +17,11 @@
                 <span role="columnheader">Position</span>
             </div>
         </div>
-        <div id=test role="rowgroup" be-repeated='{
-            "startIdx": 2,
-            "endIdx": 999,
-            "templIdx": 0
-          }'>
+        <div id=test role="rowgroup" 
+            be-repeated-start-idx=2
+            be-repeated-end-idx=999
+            be-repeated-templ-idx=0
+          >
             <div role="row" aria-rowindex="0">
                 <span role="gridcell" itemprop=first></span>
                 <span role="gridcell" itemprop=second></span>

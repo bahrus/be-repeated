@@ -1,12 +1,13 @@
 import {IEnhancement} from 'trans-render/be/types';
 
 export interface EndUserProps extends IEnhancement{
-    startIdx?: number,
-    endIdx?: number,
-    templIdx?: number,
     rowHandler?: (row: Row) => Promise<void>;
     bufferSize?:number;
+    templIdx?: number,
+    startIdx?: number,
+    endIdx?: number,
 }
+
 
 export type Condition = 'new' | 'existing' | 'renamed';
 
