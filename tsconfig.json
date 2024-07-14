@@ -10,7 +10,7 @@
 		"skipLibCheck": true
 	},
 	"files": [
-		"behivior.ts"
+		"♻️.ts"
 	],
 	"exclude":[
 		"node_modules"

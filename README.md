@@ -44,9 +44,11 @@ What be-repeated does:
 
 1.  Finds the element with aria-index=0, creates a template from it.
 2.  Appends/deletes clones of the template, updating the aria-rowindex, until the indexes match the range specified.  When finished, raises an event, allowing subscribers to modify content as needed.  It then deletes the item with aria-rowindex="0".
-3.  This does not alternate server or previously rendered HTML and works around it.
+3.  This does not alter server or previously rendered HTML and works around it.
 
-## Example 2 Alternate name and more semantic syntax [TODO]
+Example 2 in the demo folder shows how we can separate out the JSON attribute into individual attributes.  We will skip that here, in favor of the example below which shows an alternative shorter name that this package provides support for.
+
+## Example 3 Alternate name and more semantic syntax
 
 ```html
 <div role="grid" aria-rowcount="100" >
