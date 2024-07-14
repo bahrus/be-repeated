@@ -53,13 +53,13 @@ Example 2 in the demo folder shows how we can separate out the JSON attribute in
 ```html
 <div role="grid" aria-rowcount="100" >
   <div role="rowgroup">
-    <div role="row" aria-rowindex="1">
+    <div role="row" aria-rowindex="0">
       <span role="columnheader">First Name</span>
       <span role="columnheader">Last Name</span>
       <span role="columnheader">Position</span>
     </div>
   </div>
-  <div role="rowgroup" ♻️-start-idx=2 ♻️-end-idx=99 ♻️-template-idx=0>
+  <div role="rowgroup" ♻️-start-idx=2 ♻️-end-idx=99 ♻️-templ-idx=0>
     <div role="row" aria-rowindex="0">
         <span role="gridcell" itemprop=first></span>
         <span role="gridcell" itemprop=second></span>
