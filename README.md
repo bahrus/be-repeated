@@ -46,7 +46,7 @@ What be-repeated does:
 2.  Appends/deletes clones of the template, updating the aria-rowindex, until the indexes match the range specified.  When finished, raises an event, allowing subscribers to modify content as needed.  It then deletes the item with aria-rowindex="0".
 3.  This does not alter server or previously rendered HTML and works around it.
 
-Example 2 in the demo folder shows how we can separate out the JSON attribute into individual attributes.  We will skip that here, in favor of the example below which shows an alternative shorter name that this package provides support for.
+Example 2 in the demo folder shows how we can separate out the JSON attribute into individual attributes.  We will skip that here, in favor of the example below which shows an alternative shorter name that this package provides [support for](https://github.com/bahrus/be-repeated/blob/baseline/%E2%99%BB%EF%B8%8F.ts).
 
 ## Example 3 Alternate name and more semantic syntax
 
