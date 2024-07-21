@@ -13,9 +13,9 @@
     "repeat"
   ],
   "dependencies": {
-    "be-enhanced": "0.0.113",
-    "be-hive": "0.0.193",
-    "trans-render": "0.0.800"
+    "be-enhanced": "0.0.114",
+    "be-hive": "0.0.194",
+    "trans-render": "0.0.801"
   },
   "devDependencies": {
     "@playwright/test": "1.45.2",
