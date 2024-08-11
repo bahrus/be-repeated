@@ -14,7 +14,8 @@
   <div role="rowgroup" be-repeated='{
       "startIdx": 2,
       "endIdx": 99,
-      "templIdx": 0
+      "templIdx": 0,
+      "ish": "my-item"
     }'>
     <div role="row" aria-rowindex="0">
         <span role="gridcell" itemprop=first></span>
