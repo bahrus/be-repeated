@@ -11,6 +11,7 @@
       <span role="columnheader">Position</span>
     </div>
   </div>
+  <template >
   <div role="rowgroup" be-repeated='{
       "startIdx": 2,
       "endIdx": 99,
