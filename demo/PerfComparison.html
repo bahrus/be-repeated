@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <template id=outer1>
+        <div class="w3-example">
+            <h3>Example</h3>
+            <div class="w3-code notranslate htmlHigh">
+             <span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>p<span class="tagcolor" style="color:#999">&gt;</span></span><br>This paragraph<br>contains a lot of lines<br>in the source code,<br>but 
+             the browser <br>ignores it.<br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>/p<span class="tagcolor" style="color:#999">&gt;</span></span><br><br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>p<span class="tagcolor" style="color:#999">&gt;</span></span><br>This paragraph<br>contains&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+             a lot of spaces<br>in the source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+             code,<br>but the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; browser <br>ignores 
+             it.<br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>/p<span class="tagcolor" style="color:#999">&gt;</span></span> </div>
+            <a class="w3-btn w3-margin-bottom" href="tryit.asp?filename=tryhtml_paragraphs2" target="_blank">Try it Yourself »</a>
+        </div>
+        <template id=inner1></template>
+    </template>
+    <template id=inner2>
+        <div class="w3-example">
+            <h3>Example</h3>
+            <div class="w3-code notranslate htmlHigh">
+             <span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>p<span class="tagcolor" style="color:#999">&gt;</span></span><br>&nbsp; My Bonnie lies over 
+             the ocean.<br><br>&nbsp; My Bonnie lies over the sea.<br><br>&nbsp; My Bonnie 
+             lies over the ocean.<br><br>&nbsp; Oh, bring back my Bonnie to me.<br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>/p<span class="tagcolor" style="color:#999">&gt;</span></span> </div>
+            <a class="w3-btn w3-margin-bottom" href="tryit.asp?filename=tryhtml_poem" target="_blank">Try it Yourself »</a>
+        </div>
+    </template>
+    <template id=outer2>
+        <div class="w3-example">
+            <h3>Example</h3>
+            <div class="w3-code notranslate htmlHigh">
+             <span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>p<span class="tagcolor" style="color:#999">&gt;</span></span><br>This paragraph<br>contains a lot of lines<br>in the source code,<br>but 
+             the browser <br>ignores it.<br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>/p<span class="tagcolor" style="color:#999">&gt;</span></span><br><br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>p<span class="tagcolor" style="color:#999">&gt;</span></span><br>This paragraph<br>contains&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+             a lot of spaces<br>in the source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+             code,<br>but the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; browser <br>ignores 
+             it.<br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>/p<span class="tagcolor" style="color:#999">&gt;</span></span> </div>
+            <a class="w3-btn w3-margin-bottom" href="tryit.asp?filename=tryhtml_paragraphs2" target="_blank">Try it Yourself »</a>
+        </div>
+        <div class="w3-example">
+            <h3>Example</h3>
+            <div class="w3-code notranslate htmlHigh">
+             <span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>p<span class="tagcolor" style="color:#999">&gt;</span></span><br>&nbsp; My Bonnie lies over 
+             the ocean.<br><br>&nbsp; My Bonnie lies over the sea.<br><br>&nbsp; My Bonnie 
+             lies over the ocean.<br><br>&nbsp; Oh, bring back my Bonnie to me.<br><span class="tagnamecolor" style="color:#905"><span class="tagcolor" style="color:#999">&lt;</span>/p<span class="tagcolor" style="color:#999">&gt;</span></span> </div>
+            <a class="w3-btn w3-margin-bottom" href="tryit.asp?filename=tryhtml_poem" target="_blank">Try it Yourself »</a>
+        </div>
+    </template>
+    <button onclick="test1()">Test 1</button>
+    <button onclick="test2()">Test 2</button>
+    <script>
+        const ubound = 10000;
+        function test1(){
+            const start = performance.now();
+            for(let i = 0; i< ubound; i++){
+                const clonedOuter1 = outer1.content.cloneNode(true);
+                const clonedInner1 = inner2.content.cloneNode(true);
+                const target = clonedOuter1.querySelector('#inner1');
+                target.after(clonedInner1);
+            }
+            const end = performance.now();
+            console.log('test1', end - start);
+        }
+
+        function test2(){
+            const start = performance.now();
+            for(let i = 0; i< ubound; i++){
+                const clonedOuter2 = outer2.content.cloneNode(true);
+            }
+            const end = performance.now();
+            console.log('test2', end - start);
+        }
+    </script>
+
+</body>
+</html>
